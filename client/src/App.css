@@ -7,19 +7,24 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+/*@media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
+}*/
 
 .App-body{
   background-color: #F5F8FA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 50vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,11 +42,56 @@
   color: #00B2FF;
 }
 
-@keyframes App-logo-spin {
+.btn {
+  color: #006AFF;
+}
+
+.btn:hover{
+  color: #00B2FF;
+}
+
+/*@keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
+}*/
+
+.textform{
+  border-bottom: solid black;
+}
+
+.textform:focus{
+  
+  border-bottom: solid blue ;
+}
+
+.textarea{
+  border-bottom: solid black;
+  height:20px;
+}
+
+.textarea:focus{
+  border-bottom: solid blue ;
+}
+
+.submit{
+  color:white;
+}
+
+.signupForm{
+  display:inline-block;
+  flex-direction: column;
+  padding: 20px;
+
+}
+
+.mb-3{
+  padding:2px;
+}
+
+.select{
+  padding:5px;
 }
