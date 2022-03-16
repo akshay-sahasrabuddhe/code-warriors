@@ -60,6 +60,7 @@
 }*/
 
 .textform{
+  
   border-bottom: solid black;
 }
 
@@ -89,6 +90,7 @@
 }
 
 .mb-3{
+  width:auto;
   padding:2px;
 }
 
