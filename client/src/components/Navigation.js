@@ -5,7 +5,7 @@ import '../App.css';
 const Navigation = (props) => {
     return (
         // ---------- Start of Navigation ---------- // 
-       <section className="section nav-section">
+       <section className="section nav-section fixed-top bg-white">
             <nav className="navbar navbar-expand-lg horizontal-navigation navbar-expand-lg navbar-light">
                 <a class="navbar-brand" href="#">Navbar</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,14 +15,29 @@ const Navigation = (props) => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
                 </form>
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
                         <a className="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Link</a>
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">Akshay</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">Friends</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">Videos</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">Memories</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">News</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link mobile-nav-link" aria-current="page" href="#">Weather</a>
                     </li>
                     {/* <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

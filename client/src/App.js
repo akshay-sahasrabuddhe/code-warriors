@@ -18,12 +18,16 @@ function App() {
           <Navigation></Navigation>
         </header>
         
-        <div className='App-body pt-5 pb-5'>
-          <Routes>
-            
-            <Route  path = '/signup' element={<Signup />}/>
-            <Route  path = '/login' element={<Login />}/>
-          </Routes>
+        <div className='App-body'>
+          <div className='row'>
+            <div className='col-sm-12'>
+              <Routes>
+                
+                <Route  path = '/signup' element={<Signup />}/>
+                <Route  path = '/login' element={<Login />}/>
+              </Routes>
+            </div>
+          </div>
         </div>
        
       </div>

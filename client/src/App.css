@@ -30,11 +30,11 @@
   width: 100%; 
   left: 0; 
 }
-/* 
+ 
 .horizontal-navigation{  
   animation: 0.50s ease-out slideInFromUp;
   border-bottom: 2px solid #AAB8C2;
-}  */
+} 
 
 @keyframes slideInFromUp {
   0% {
@@ -80,7 +80,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
 }
 /* 
 .App-header {
@@ -209,6 +208,9 @@
   right: -25px;
 }
 
+.horizontal-navigation.navbar-light .navbar-nav .nav-link.active{
+  color: #006AFF;
+}
 
 
 /*  Start of Media Queries */
@@ -217,6 +219,9 @@
   
   .vertical-navigation{
     display: flex;
+  }
+  .horizontal-navigation .nav-link.mobile-nav-link{
+    display: none;
   }
 }
 

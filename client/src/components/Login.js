@@ -7,7 +7,7 @@ import '../App.css';
 
 const Login = (props) => {
     return(
-        <div className="App-body">
+        <div className="App-body pt-5 mt-5">
             <h2>Login Form</h2>
             <Form className='signupForm'>
                 <Form.Group>
