@@ -1,6 +1,67 @@
-.App {
-  text-align: center;
+/* Start of Background Colors */
+
+.messanger-dark-background{
+  background-color: #006AFF;
 }
+
+.messanger-dark-color{
+  color: #006AFF;
+}
+
+.twitter-light-gray{
+  color: #AAB8C2;
+}
+  
+/* End of Background Colors */
+
+.navbar .nav-item:after {    
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0px;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  background: #006AFF;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0px;
+}
+
+.navbar .nav-item:hover:after { 
+  width: 100%; 
+  left: 0; 
+}
+/* 
+.horizontal-navigation{  
+  animation: 0.50s ease-out slideInFromUp;
+  border-bottom: 2px solid #AAB8C2;
+}  */
+
+@keyframes slideInFromUp {
+  0% {
+      transform: translateY(-100%);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+
+.vertical-navigation{
+  animation: 0.50s ease-out slideInFromLeft;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+      transform: translateX(-100%);
+  }
+  100% {
+      transform: translateX(0);
+  }
+}
+
+
+/* .App {
+  text-align: center;
+} */
 
 .App-logo {
   height: 40vmin;
@@ -14,14 +75,14 @@
 }*/
 
 .App-body{
-  background-color: #F5F8FA;
+  /* background-color: #F5F8FA; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
 }
-
+/* 
 .App-header {
   background-color: #282c34;
   min-height: 60vh;
@@ -31,7 +92,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
 .App-link {
   /*color: #61dafb;*/
@@ -170,3 +231,65 @@
 .card-link{
   text-decoration: none;
 }
+.vertical-navigation{
+  display: none;
+  position: absolute;
+}
+
+.vertical-navigation .nav-link{
+  color:#006AFF;
+  font-size: 16px;
+  text-align: center;
+  padding: 5px 90px 5px 15px;
+  transition: all 0.25s;
+  display: flex;
+}
+
+.vertical-navigation .nav-link:hover{
+  background: #006AFF;
+  color: #ffffff;
+  border-radius: 5px;
+  border: 0.5px solid gray;
+}
+
+.vertical-navigation .nav-link span {
+  cursor: pointer;
+  display: block;
+  position: relative;
+  transition: 0.25s;
+  align-self: center;
+}
+
+.vertical-navigation .material-icons.nav-icons{
+  font-size: 225%;
+  margin-right: 10px;
+}
+
+.nav-link span:after {
+  content: '\00bb';
+  font-size: 36px;
+  position: absolute;
+  opacity: 0;
+  top: -18px;
+  right: -20px;
+  transition: 0.15s;
+}
+
+
+.nav-link:hover span:after {
+  opacity: 1;
+  right: -25px;
+}
+
+
+
+/*  Start of Media Queries */
+
+@media(min-width:1024px){
+  
+  .vertical-navigation{
+    display: flex;
+  }
+}
+
+/*  End of Media Queries */

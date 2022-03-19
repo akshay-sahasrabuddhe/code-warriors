@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Navigation from './components/Navigation';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import News from './components/News';
@@ -17,9 +18,12 @@ function App() {
           <Link className='App-link' to='signup'>Signup</Link>
           <Link className='App-link' to='login'>Login</Link>
           <Link className='App-link' to='news'>News</Link>
+          {/* <Link className='App-link' to='signup'>Signup</Link>
+          <Link className='App-link' to='login'>Login</Link> */}
+          <Navigation></Navigation>
         </header>
         
-        <div className='App-body'>
+        <div className='App-body pt-5 pb-5'>
           <Routes>
             
             <Route  path = '/signup' element={<Signup />}/>
