@@ -45,7 +45,7 @@ const Navigation = (props) => {
 
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>
-                <a className="nav-link" href="/"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
+                <a className="nav-link" href="/news"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">wb_sunny</aside><span>Weather</span></a>
 
                 <a className="nav-link" href="/login">Login</a>

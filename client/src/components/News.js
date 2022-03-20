@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from "react";
 import {Card} from "react-bootstrap";
 import axios from "axios";
+import Navigation from "./Navigation";
 import '../App.css';
 //Api Key - e0ef8de9236a4c608dcdadbc7f2c3b2c
 const API_KEY = 'e0ef8de9236a4c608dcdadbc7f2c3b2c';
@@ -45,11 +46,14 @@ const News = (props) => {
     else{
     return(
         <div>
-            <h1>News</h1>
+            <Navigation></Navigation>  
+            
         <div className="cards">
             
             {newsList}
         </div>
+
+              
         </div>
     );
     }
