@@ -30,6 +30,15 @@
   width: 0px;
 }
 
+.navbar .nav-item{
+  cursor: pointer;
+}
+
+.home-icon{
+  font-size: 31px;
+  color: #006AFF;
+}
+
 .navbar .nav-item:hover:after { 
   width: 100%; 
   left: 0; 
@@ -305,13 +314,29 @@
   color: #006AFF;
 }
 
+.logo-img{
+  width: 110%;
+}
 
+.logo-link{
+  width: 35px;
+}
+
+.navbar-brand.logo-link{
+  padding: 0px;
+}
+
+.search-textbox{
+  width: 11rem;
+  border-radius: 25px;
+}
 /*  Start of Media Queries */
 
 @media(min-width:1024px){
   
   .vertical-navigation{
     display: flex;
+    width: 20%;
   }
   .horizontal-navigation .nav-link.mobile-nav-link{
     display: none;
