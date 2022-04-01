@@ -5,9 +5,9 @@ import '../App.css';
 const Navigation = (props) => {
     return (
         // ---------- Start of Navigation ---------- // 
-       <section className="section nav-section fixed-top bg-white">
-            <nav className="navbar navbar-expand-lg horizontal-navigation navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="#">Navbar</a>
+       <section className="section nav-section fixed-top facebook-light-gray-color">
+            <nav className="navbar navbar-expand-lg horizontal-navigation navbar-expand-lg navbar-light facebook-light-gray-color">
+                <a class="navbar-brand" href="#"><img src="public/logo.gif" alt="img"/></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 
                 <span class="navbar-toggler-icon"></span>
@@ -54,17 +54,13 @@ const Navigation = (props) => {
                 
                 </div>
             </nav>
-            <nav className="nav flex-column vertical-navigation">
+            <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">account_circle</aside><span>Akshay</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a>
-
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>
-                <a className="nav-link" href="/"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
+                <a className="nav-link" href="/news"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">wb_sunny</aside><span>Weather</span></a>
-
-                <a className="nav-link" href="/login">Login</a>
-                <a className="nav-link" href="/Signup">Signup</a>
             </nav>
        </section>
         // ---------- End of Navigation ---------- // 
