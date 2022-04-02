@@ -9,22 +9,23 @@ const Navigation = (props) => {
        <section className="section nav-section fixed-top facebook-light-gray-color">
             <nav className="navbar navbar-expand-lg horizontal-navigation navbar-expand-lg navbar-light facebook-light-gray-color">
                     <a className="navbar-brand logo-link me-3 ms-3" href="#">
-                    <img class="responsive-img logo-img" src={logoImg} alt="img" />
+                    <img className="responsive-img logo-img" src={logoImg} alt="img" />
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div className="d-flex justify-content-between w-100">
                     <div>
-                        <form class="d-flex">
-                            <input class="form-control search-textbox" type="search" placeholder="Search" aria-label="Search"/>
-                            {/* <button class="btn btn-outline-primary" type="submit">Search</button> */}
+                        <form className="d-flex">
+                            <input className="form-control search-textbox" type="search" placeholder="Search" aria-label="Search"/>
+                            {/* <button className="btn btn-outline-primary" type="submit">Search</button> */}
                         </form>
                     </div>
                     <div>
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <span class="material-icons home-icon">home</span>
+                                <span className="material-icons home-icon">home</span>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link mobile-nav-link" aria-current="page" href="#">Home</a>
@@ -61,7 +62,8 @@ const Navigation = (props) => {
                         </ul>
                     </div>
                     <div>
-                        <button class="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
+                        <button className="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
+                    </div>
                     </div>
                 
                 </div>

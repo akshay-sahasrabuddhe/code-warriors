@@ -22,7 +22,7 @@ const News = (props) => {
     },[]);
 
     newsList = news && news.articles.map((n) => {
-        return <Card key={n.title} className="card" >
+        return <Card key={n.title} className="card news-card" >
             <Card.Body className="card-body">
             <a className="card-link" href={n.url} target="_blank">
                 <Card.Img className="card-img" variant="top" 
