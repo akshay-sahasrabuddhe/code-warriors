@@ -28,7 +28,7 @@ import '../App.css';
 const Signup = (props) => {
     //const classes = useStyles();
     return (
-        <div className="App-body">
+        <div className="App-body pt-5 mt-5">
             <Form className='signupForm'>
                <h2>Signup Form</h2>
                <Row className="mb-4">
