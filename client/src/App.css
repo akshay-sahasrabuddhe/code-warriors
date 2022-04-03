@@ -119,14 +119,14 @@
 .App-link:hover{
   color: #00B2FF;
 }
-
+/* 
 .btn {
   color: #006AFF;
 }
 
 .btn:hover{
   color:white;
-}
+} */
 
 /*@keyframes App-logo-spin {
   from {
@@ -345,6 +345,24 @@
 .card.post-card{
   border-radius: 10px;
 }
+
+.post-heading{
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.mobile-text-center{
+  text-align: center;
+}
+
+.post-row{
+  display: flex;
+}
+
+.post-buttons{
+  flex: 1;
+}
+
 /*  Start of Media Queries */
 
 @media(min-width:1024px){
@@ -355,6 +373,13 @@
   }
   .horizontal-navigation .nav-link.mobile-nav-link{
     display: none;
+  }
+  .mobile-text-center{
+    text-align: left;
+  }
+  .post-heading{
+    font-size: 18px;
+    line-height: 22px;
   }
 }
 
