@@ -7,6 +7,7 @@ import Login from './components/Login';
 import News from './components/News';
 import Weather from './components/Weather'
 import Posts  from './components/Posts';
+import Memories  from './components/Memories';
 import './App.css';
 import {BrowserRouter as Router, Routes ,Route, Link} from 'react-router-dom';
 
@@ -35,6 +36,7 @@ function App() {
                   <Route path = '/posts' element={<Posts />}/>
                   <Route path= '/news' element={<News />} />
                   <Route path= '/weather' element={<Weather />}/>
+                  <Route path= '/memories' element={<Memories />}/>
                 </Routes>
               </div>
             </div>  
