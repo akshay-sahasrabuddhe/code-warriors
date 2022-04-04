@@ -36,10 +36,10 @@ const Navigation = (props) => {
                                     <a className="nav-link mobile-nav-link" aria-current="page" href="#">Videos</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link mobile-nav-link" aria-current="page" href="#">Memories</a>
+                                    <a className="nav-link mobile-nav-link" aria-current="page" href="/memories">Memories</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link mobile-nav-link" aria-current="page" href="#">News</a>
+                                    <a className="nav-link mobile-nav-link" aria-current="page" href="/news">News</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link mobile-nav-link" aria-current="page" href="#">Weather</a>
@@ -56,7 +56,7 @@ const Navigation = (props) => {
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">account_circle</aside><span>Akshay</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
-                <a className="nav-link" href="/"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>
+                <a className="nav-link" href="/memories"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>
                 <a className="nav-link" href="/news"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">wb_sunny</aside><span>Weather</span></a>
             </nav>
