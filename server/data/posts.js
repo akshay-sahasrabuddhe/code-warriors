@@ -120,8 +120,14 @@ module.exports = {
 
     const post = await this.get(id);
     newLikes = post.likes;
-    newLikes.push(userID);
-    console.log(newLikes);
+    if (newLikes.includes(userID)) {
+      let index = newLikes.indexOf(userID);
+      if (index !== -1) {
+        newLikes.splice(index, 1);
+      }
+    } else {
+      newLikes.push(userID);
+    }
 
     let updatedPost = {
       title: post.title,
