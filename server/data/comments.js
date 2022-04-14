@@ -41,7 +41,7 @@ module.exports = {
     const commentobj = await this.get(newId);
     await postFunctions.addCommentToPost(postId, newId, commentobj);
 
-    return newId;
+    return commentobj;
   },
 
   async getAll(postId) {
