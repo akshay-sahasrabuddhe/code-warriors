@@ -1,7 +1,8 @@
-const usersData = require('./users')
-
-
+const usersData = require("./users");
+const postData = require("./posts");
+const errorhandlerData = require("./errorhandlers");
 module.exports = {
-  users:usersData
-  
+  posts: postData,
+  errorhandlers: errorhandlerData,
+  users: usersData,
 };
