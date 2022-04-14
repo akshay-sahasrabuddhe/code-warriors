@@ -15,6 +15,7 @@ const Weather = (props) => {
     const [longitude, setLong] = useState(null);
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(null);
+    const [region, setRegion] = useState(null);
     let result = null;
    
 /*
@@ -100,7 +101,10 @@ const Weather = (props) => {
             '&q='+location;
                 console.log(url);
             const { data } = await axios.get(url);
-
+            const url2 = 'http://api.weatherapi.com/v1/forecast.json?key='+API_KEY+'&q='+location+'&days=1&aqi=no&alerts=no';
+            const  loc  = await axios.get(url2);
+            console.log(loc);
+            setRegion(loc);
             setWeather(data.current);
             }
         
@@ -115,19 +119,37 @@ const Weather = (props) => {
     
 
     console.log(weather);
-
+    console.log(region);
 
    if(weather){
        
-   result = weather.condition;
+   result = weather;
+ 
+
         return(
+            <div>
+                <Navigation></Navigation>
             <div className="cards">
                 <Card className="card">
+                <Card.Header>
+                <img class="wicon" src={result.condition.icon}/>{result.condition.text}
+                 <h2>{region.data.location.region}</h2>
+                </Card.Header>
                 <Card.Body className="card-body">
-                <Card.Title className="card-title">{result.text}</Card.Title>
-                <img src={result.icon}/>
+                
+                <Card.Text>
+                
+                <h4>Temperature - {result.temp_f}F</h4>
+                <small>Feels Like {result.feelslike_f}F</small>
+                
+                <h4>Wind Direction - {result.wind_dir}</h4>
+                
+                </Card.Text>    
                 </Card.Body>
+               
+               
                 </Card>
+            </div>
             </div>
         );
    }
