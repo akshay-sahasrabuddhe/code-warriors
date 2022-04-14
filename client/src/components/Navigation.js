@@ -42,7 +42,7 @@ const Navigation = (props) => {
                                     <a className="nav-link mobile-nav-link" aria-current="page" href="/news">News</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link mobile-nav-link" aria-current="page" href="#">Weather</a>
+                                    <a className="nav-link mobile-nav-link" aria-current="page" href="/weather">Weather</a>
                                 </li>
                             </ul>
                         </div>
@@ -58,7 +58,7 @@ const Navigation = (props) => {
                 <a className="nav-link" href="/"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
                 <a className="nav-link" href="/memories"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>
                 <a className="nav-link" href="/news"><aside className="material-icons nav-icons">newspaper</aside><span>News</span></a>
-                <a className="nav-link" href="/"><aside className="material-icons nav-icons">wb_sunny</aside><span>Weather</span></a>
+                <a className="nav-link" href="/weather"><aside className="material-icons nav-icons">wb_sunny</aside><span>Weather</span></a>
             </nav>
        </section>
         // ---------- End of Navigation ---------- // 
