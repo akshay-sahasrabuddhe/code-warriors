@@ -10,7 +10,7 @@ const moment = require("moment");
 async function main() {
   const db = await dbConnection.dbConnection();
   await db.dropDatabase();
-
+  //Seed users
   const userid1 = await users.signUp(
     "Priyanka",
     "Popeta",
@@ -47,7 +47,7 @@ async function main() {
     ["Cricket"],
     "Jersey City"
   );
-
+  //seeds posts
   const post1 = await posts.create(
     `Post by ${userid1.firstName}`,
     "body",
@@ -65,6 +65,30 @@ async function main() {
     "body",
     { _id: userid3._id, firstName: userid3.firstName },
     true
+  );
+  //seed comments
+
+  await comments.create(
+    post1._id,
+    { _id: userid2._id, firstName: userid2.firstName },
+    "First comment on post1"
+  );
+  await comments.create(
+    post1._id,
+    { _id: userid3._id, firstName: userid3.firstName },
+    "Second comment on post1"
+  );
+
+  await comments.create(
+    post2._id,
+    { _id: userid1._id, firstName: userid1.firstName },
+    "First comment on post2"
+  );
+
+  await comments.create(
+    post3._id,
+    { _id: userid3._id, firstName: userid3.firstName },
+    "First comment on post3"
   );
 
   console.log("Done seeding database");
