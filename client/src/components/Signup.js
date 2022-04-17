@@ -27,10 +27,100 @@ import '../App.css';
 
 const Signup = (props) => {
     //const classes = useStyles();
+    let firstName;
+    let lastName;
+    let signEmail;
+    let signPswd;
+    let confirmPswd;
+    let dob;
+    let gender;
+    let relationStatus;
+    let interests
+
     return (
         <div className="App-body pt-5 mt-5">
-            <Form className='signupForm'>
-               <h2>Signup Form</h2>
+            
+            <h2>Signup Form</h2>
+            <Form className='signupForm' onSubmit={
+                (e)=>{
+                    e.preventDefault();
+                   
+                   if(!firstName.value){
+                       alert("Please enter first name");
+                       return;
+                   }
+
+                   if(!lastName.value){
+                       alert("Please enter last name");
+                       return;
+                   }
+                   if(!signEmail.value){
+                       alert("Please enter email");
+                       return;
+                   }
+
+                   let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+
+                if(!regE.test(signEmail.value)){
+                    alert("Please enter a valid email");
+                    return;
+                }
+
+                   if(!signPswd.value){
+                       alert("Please enter password");
+                       return;
+                   }
+
+                   let regP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+                if(!regP.test(signPswd.value)){
+                    alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
+                    return;
+                }
+
+                   if(!confirmPswd.value){
+                       alert("Please enter confirm password");
+                       return;
+                   }
+
+                   if(signPswd.value !== confirmPswd.value){
+                       alert("Passwords don't match");
+                       return;
+                   }
+
+                   if(!dob.value){
+                       alert("Please provide your date of birth");
+                       return;
+                   }
+
+                   if(dob.value){
+                       let birth = new Date(dob.value);
+                       var month_diff = Date.now() - birth.getTime();  
+      
+    //convert the calculated difference in date format  
+                        let age_dt = new Date(month_diff);   
+      
+    //extract year from date      
+                        let year = age_dt.getUTCFullYear();  
+      
+    //now calculate the age of the user  
+                        let age = Math.abs(year - 1970);  
+                        console.log(age);
+
+                        if(age < 18){
+                            alert("Should be 18 or older");
+                            dob.value = "";
+                            return;
+                        }
+                   }
+
+                   if(!gender.value){
+                       alert("Please provide gender");
+                       return;
+                   }
+                   
+                }
+            }>
+               
                <Row className="mb-4">
                <Form.Group as={Col}>
                <FloatingLabel
@@ -38,8 +128,11 @@ const Signup = (props) => {
                 label="First Name"
                 className="mb-3"
                 >
-                    <Form.Control type="text" placeholder="First Name"
+                    <Form.Control  type="text" placeholder="First Name"
                         className="textform"
+                        ref={(node)=>{
+                            firstName = node;
+                        }}
                     />
                 </FloatingLabel>
                 </Form.Group>
@@ -49,8 +142,11 @@ const Signup = (props) => {
                         label="Last Name"
                         className="mb-3"
                     >
-                    <Form.Control type="text" placeholder="Last Name"
+                    <Form.Control required type="text" placeholder="Last Name"
                         className="textform"
+                        ref={(node)=>{
+                            lastName = node;
+                        }}
                     />
                     </FloatingLabel>
                 </Form.Group>
@@ -62,33 +158,49 @@ const Signup = (props) => {
                         label="Email"
                         className="mb-3"
                     >
-                    <Form.Control type="email" placeholder="name@example.com"
+                    <Form.Control required type="email" placeholder="name@example.com"
                         className="textform"
+                        ref={(node)=>{
+                            signEmail = node;
+                        }}
                     />
                 </FloatingLabel>
   
   
                 <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-                    <Form.Control type="password" placeholder="Password" 
+                    <Form.Control required type="password" placeholder="Password" 
                         className="textform"
+                        ref={(node)=>{
+                            signPswd = node;
+                        }}
                     />
                 </FloatingLabel>
 
                 <FloatingLabel controlId="floatingCPassword" label="Confirm Password" className="mb-3">
-                    <Form.Control type="password" placeholder="Confirm Password"
+                    <Form.Control required type="password" placeholder="Confirm Password"
                         className="textform"
+                        ref={(node)=>{
+                            confirmPswd = node;
+                        }}
                     />
                 </FloatingLabel>
 
                 <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
-                    <Form.Control type="date" placeholder="Date of Birth" 
+                    <Form.Control required type="date" placeholder="Date of Birth" 
                         className="textform"
+                        ref={(node)=>{
+                            dob = node;
+                        }}
                     />
                 </FloatingLabel>
 
                 <Form.Label className="select" >
                 Gender
-                <Form.Select aria-label="Gender" size='lg' className="textform">
+                <Form.Select required aria-label="Gender" size='lg'
+                 className="textform"
+                 ref={(node)=>{
+                     gender = node;
+                 }}>
                     <option></option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -99,7 +211,11 @@ const Signup = (props) => {
 
                 <Form.Label  className="select">
                 Relationship Status
-                <Form.Select aria-label="relationship status" className="textform" size='lg'>
+                <Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
+                 ref={(node)=>{
+                     relationStatus = node;
+                 }}>
                 <option></option>
                 <option value="married">Married</option>
                 <option value="single">Single</option>
@@ -112,6 +228,9 @@ const Signup = (props) => {
                 <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3">
                     <Form.Control as="textarea" rows={10} placeholder="Interests"
                     className="textarea"
+                    ref={(node)=>{
+                        interests = node;
+                    }}
                 />
                 </FloatingLabel>
 
@@ -122,7 +241,7 @@ const Signup = (props) => {
     Submit
                 </Button>
             </Form> 
-        
+
         </div>
     );
 };

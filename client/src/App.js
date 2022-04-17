@@ -8,6 +8,7 @@ import News from './components/News';
 import Weather from './components/Weather'
 import Posts  from './components/Posts';
 import Memories  from './components/Memories';
+import Main from './components/Main';
 import './App.css';
 import {BrowserRouter as Router, Routes ,Route, Link} from 'react-router-dom';
 
@@ -32,7 +33,7 @@ function App() {
             <div className='row'>
               <div className='col-sm-12'>
                 <Routes>
-                  <Route index path = '/' element={<Login />}/>
+                  <Route index path = '/' element={<Main />}/>
                   <Route path = '/posts' element={<Posts />}/>
                   <Route path= '/news' element={<News />} />
                   <Route path= '/weather' element={<Weather />}/>

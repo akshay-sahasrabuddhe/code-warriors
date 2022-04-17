@@ -122,27 +122,32 @@ const Weather = (props) => {
     console.log(region);
 
    if(weather){
-       
+      let day; 
    result = weather;
- 
+        if(result.is_day){
+            day = true;
+        }
+        else{
+            day = false;
+        }
 
         return(
             <div>
                 <Navigation></Navigation>
             <div className="cards">
-                <Card className="card">
+                <Card id={day?"day":"night"} className="card">
                 <Card.Header>
-                <img class="wicon" src={result.condition.icon}/>{result.condition.text}
+                <img className="wicon" src={result.condition.icon}/>{result.condition.text}
                  <h2>{region.data.location.region}</h2>
                 </Card.Header>
                 <Card.Body className="card-body">
                 
                 <Card.Text>
                 
-                <h4>Temperature - {result.temp_f}F</h4>
-                <small>Feels Like {result.feelslike_f}F</small>
-                
-                <h4>Wind Direction - {result.wind_dir}</h4>
+                Temperature - {result.temp_f}F<br/>
+                <sub>Feels Like {result.feelslike_f}F</sub>
+                <br/>
+                Wind Direction - {result.wind_dir}
                 
                 </Card.Text>    
                 </Card.Body>
