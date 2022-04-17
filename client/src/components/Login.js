@@ -4,127 +4,79 @@ import { Link } from 'react-router-dom';
 //import { FormControlLabel, FormLabel } from "@material-ui/core";
 import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
 import '../App.css';
+import Signup from "./Signup";
 
 const Login = (props) => {
+    let loginEmail;
+    let loginPswd;
+
+    
     return(
       
         <div className="App-body  pt-5 mt-5">
-            
-            <Form className='loginForm'>
             <h2>Login Form</h2>
+            <Form className='loginForm' onSubmit={(e) =>{
+                e.preventDefault();
+                console.log(loginEmail.value);
+                console.log(loginPswd.value);
+
+                if(!loginEmail.value){
+                    alert("Please enter Email");
+                    loginEmail.value = "";
+                    loginPswd.value = "";
+                    return;
+                }
+
+                if(!loginPswd.value){
+                    alert("Please enter Password");
+                    loginEmail.value = "";
+                    loginPswd.value = "";
+                    return;
+                }
+
+                let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+
+                if(!regE.test(loginEmail.value)){
+                    alert("Either email or password are invalid");
+                    loginEmail.value = "";
+                    loginPswd.value = "";
+                    return;
+                }
+
+                let regP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+                if(!regP.test(loginPswd.value)){
+                    alert("Either email or password are invalid");
+                    loginEmail.value = "";
+                    loginPswd.value = "";
+                    return;
+                }
+
+
+            }}>
+            
                 <Form.Group>
                 <FloatingLabel
     controlId="floatingInput"
     label="Email address"
     className="mb-3"
   >
-    <Form.Control type="email" className="textform" placeholder="name@example.com" />
+    <Form.Control  type="email"
+     className="textform" placeholder="name@example.com"
+      ref={(node)=> {
+          loginEmail = node;
+      }} />
   </FloatingLabel>
   <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-    <Form.Control type="password" className="textform" placeholder="Password" />
+    <Form.Control required type="password" className="textform" 
+    placeholder="Password" ref={(node)=> {
+        loginPswd = node;
+    }} />
   </FloatingLabel>
                 </Form.Group>
                 <Button variant="primary" type="submit" className="submit">
     Submit
                 </Button>
             </Form>
-
-
-            <Form className='signupForm'>
-               <h2>Signup Form</h2>
-               <Row className="mb-4">
-               <Form.Group as={Col}>
-               <FloatingLabel
-                controlId="firstName"
-                label="First Name"
-                className="mb-3"
-                >
-                    <Form.Control type="text" placeholder="First Name"
-                        className="textform"
-                    />
-                </FloatingLabel>
-                </Form.Group>
-                <Form.Group as={Col}>
-                    <FloatingLabel
-                        controlId="lastName"
-                        label="Last Name"
-                        className="mb-3"
-                    >
-                    <Form.Control type="text" placeholder="Last Name"
-                        className="textform"
-                    />
-                    </FloatingLabel>
-                </Form.Group>
-                </Row>
-  
-                <Form.Group>
-                    <FloatingLabel
-                        controlId="email"
-                        label="Email"
-                        className="mb-3"
-                    >
-                    <Form.Control type="email" placeholder="name@example.com"
-                        className="textform"
-                    />
-                </FloatingLabel>
-  
-  
-                <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-                    <Form.Control type="password" placeholder="Password" 
-                        className="textform"
-                    />
-                </FloatingLabel>
-
-                <FloatingLabel controlId="floatingCPassword" label="Confirm Password" className="mb-3">
-                    <Form.Control type="password" placeholder="Confirm Password"
-                        className="textform"
-                    />
-                </FloatingLabel>
-
-                <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
-                    <Form.Control type="date" placeholder="Date of Birth" 
-                        className="textform"
-                    />
-                </FloatingLabel>
-
-                <Form.Label className="select" >
-                Gender
-                <Form.Select aria-label="Gender" size='lg' className="textform">
-                    <option></option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="others">Others</option>
-                    <option value="nodisclosure">Prefer not to disclose</option>
-                </Form.Select>
-                </Form.Label>
-
-                <Form.Label  className="select">
-                Relationship Status
-                <Form.Select aria-label="relationship status" className="textform" size='lg'>
-                <option></option>
-                <option value="married">Married</option>
-                <option value="single">Single</option>
-                <option value="inarelation">In a Relationship</option>
-                <option value="nodisclosure">Prefer not to disclose</option>
-                </Form.Select>
-                </Form.Label>
-
-
-                <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3">
-                    <Form.Control as="textarea" rows={10} placeholder="Interests"
-                    className="textarea"
-                />
-                </FloatingLabel>
-
-                </Form.Group>
- 
-  
-                <Button variant="primary" type="submit" className="submit">
-    Submit
-                </Button>
-            </Form> 
-        
-
 
         </div>
 
