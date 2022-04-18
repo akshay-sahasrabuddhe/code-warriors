@@ -3,6 +3,9 @@ import { Form } from "react-bootstrap";
 import Navigation from "./Navigation";
 import '../App.css';
 import logoImg from '../images/logo.gif';
+import maleUser from '../images/male-user.svg';
+import femaleUser from '../images/female-user.svg';
+import otherUser from '../images/other.svg';
 import $, { event } from 'jquery';
 import { Modal } from 'bootstrap';
 
@@ -12,13 +15,9 @@ const Userprofile = (props) => {
         // ---------- Start of Posts ---------- // 
         <> 
         <Navigation></Navigation>  
-        <section className="section posts-section">
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
-                       
-                    </div>
-                </div>
+        <section className="posts-section">
+            <div className="user-profile-box">
+                <img src={maleUser} class="user-profile-pic" alt="User Profile Pic" />
             </div>
         </section>
 

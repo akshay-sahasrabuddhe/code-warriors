@@ -2,6 +2,10 @@
   overflow: hidden;
 }
 
+.section{
+  padding: 3rem 0rem;
+}
+
 /* Start of Background Colors */
 
 .messanger-dark-background{
@@ -391,6 +395,18 @@
   background-color: #ffffff;
 }
 
+.user-profile-box{
+  background-color: #006AFF;
+  height: 275px;
+  display: flex;
+  justify-content: center;
+}
+
+.user-profile-pic{
+  position: absolute;
+  transform: translateY(175px);
+  width: 175px;
+}
 
 /*  Start of Media Queries */
 

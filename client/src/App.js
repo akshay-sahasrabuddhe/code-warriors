@@ -27,10 +27,10 @@ function App() {
           
         </header>
         
-        <div className='App-body pt-5 pb-5'>
+        <div className='App-body'>
         <div className='container'>
         <div className='row'>
-          <div className='col-sm-12 col-md-6 offset-md-3'>
+          <div className='col-sm-12 col-lg-6 offset-lg-3'>
             <div className='row'>
               <div className='col-sm-12'>
                 <Routes>

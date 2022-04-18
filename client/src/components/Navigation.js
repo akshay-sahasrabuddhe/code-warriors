@@ -5,7 +5,7 @@ import logoImg from '../images/logo.gif';
 const Navigation = (props) => {
     return (
         // ---------- Start of Navigation ---------- // 
-       <section className="section nav-section fixed-top facebook-light-gray-color">
+       <section className="nav-section fixed-top facebook-light-gray-color">
             <nav className="navbar navbar-expand-lg horizontal-navigation navbar-light facebook-light-gray-color">
                     <a className="navbar-brand logo-link me-3 ms-3" href="#">
                     <img className="responsive-img logo-img" src={logoImg} alt="img" />
