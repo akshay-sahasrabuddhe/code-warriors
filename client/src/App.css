@@ -2,6 +2,10 @@
   overflow: hidden;
 }
 
+.section{
+  padding: 3rem 0rem;
+}
+
 /* Start of Background Colors */
 
 .messanger-dark-background{
@@ -369,9 +373,18 @@
   border-radius: 25px;
 }
 
-.post-row .right-header-box .card-title,.post-row .right-header-box .card-subtitle{
+.post-row .right-header-box .card-title,.post-row .right-header-box .card-subtitle,.about-heading{
   font-size: 14px;
   line-height: 18px;
+}
+
+
+.about-subheading{
+  font-size: 12px;
+  line-height: 16px;
+}
+.material-icons-outlined.about-box-img{
+  font-size: 35px;
 }
 
 .comments-box{
@@ -391,8 +404,38 @@
   background-color: #ffffff;
 }
 
+.user-profile-box{
+  background-color: #006AFF;
+  height: 275px;
+  display: flex;
+  justify-content: center;
+}
+
+.user-profile-pic{
+  position: absolute;
+  transform: translateY(175px);
+  width: 175px;
+}
+
+.user-profiel-tabs-section{
+  padding: 150px 0px;
+}
+
+.user-profiel-tabs-section .nav-item{
+  width: 33.33%;
+}
+
+.user-profiel-tabs-section .nav-link{
+  font-size: 13px;
+}
 
 /*  Start of Media Queries */
+
+@media(min-width:768px){
+  .user-profiel-tabs-section .nav-link{
+    font-size: 16px;
+  }
+}
 
 @media(max-width:1024px){
   
