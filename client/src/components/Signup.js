@@ -29,8 +29,8 @@ const Signup = (props) => {
     //const classes = useStyles();
     let firstName;
     let lastName;
-    let signEmail;
-    let signPswd;
+    let email;
+    let pswd;
     let confirmPswd;
     let dob;
     let gender;
@@ -54,25 +54,25 @@ const Signup = (props) => {
                        alert("Please enter last name");
                        return;
                    }
-                   if(!signEmail.value){
+                   if(!email.value){
                        alert("Please enter email");
                        return;
                    }
 
-                   let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
-
-                if(!regE.test(signEmail.value)){
+                   //let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+                   let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if(!regE.test(email.value.toLowerCase())){
                     alert("Please enter a valid email");
                     return;
                 }
 
-                   if(!signPswd.value){
+                   if(!pswd.value){
                        alert("Please enter password");
                        return;
                    }
 
-                   let regP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
-                if(!regP.test(signPswd.value)){
+                   let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
+                if(!regP.test(pswd.value)){
                     alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
                     return;
                 }
@@ -82,7 +82,7 @@ const Signup = (props) => {
                        return;
                    }
 
-                   if(signPswd.value !== confirmPswd.value){
+                   if(pswd.value !== confirmPswd.value){
                        alert("Passwords don't match");
                        return;
                    }
@@ -106,8 +106,8 @@ const Signup = (props) => {
                         let age = Math.abs(year - 1970);  
                         console.log(age);
 
-                        if(age < 18){
-                            alert("Should be 18 or older");
+                        if(!(age > 13 && age < 120)){
+                            alert("Should be between age 13 and 120");
                             dob.value = "";
                             return;
                         }
@@ -161,7 +161,7 @@ const Signup = (props) => {
                     <Form.Control required type="email" placeholder="name@example.com"
                         className="textform"
                         ref={(node)=>{
-                            signEmail = node;
+                            email = node;
                         }}
                     />
                 </FloatingLabel>
@@ -171,7 +171,7 @@ const Signup = (props) => {
                     <Form.Control required type="password" placeholder="Password" 
                         className="textform"
                         ref={(node)=>{
-                            signPswd = node;
+                            pswd = node;
                         }}
                     />
                 </FloatingLabel>
