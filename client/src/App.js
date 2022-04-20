@@ -8,6 +8,7 @@ import News from './components/News';
 import Weather from './components/Weather'
 import Posts  from './components/Posts';
 import Memories  from './components/Memories';
+import Userprofile  from './components/Userprofile';
 import Main from './components/Main';
 import './App.css';
 import {BrowserRouter as Router, Routes ,Route, Link} from 'react-router-dom';
@@ -27,10 +28,10 @@ function App() {
           
         </header>
         
-        <div className='App-body pt-5 pb-5'>
+        <div className='App-body'>
         <div className='container'>
         <div className='row'>
-          <div className='col-sm-12 col-md-6 offset-md-3'>
+          <div className='col-sm-12 col-lg-6 offset-lg-3'>
             <div className='row'>
               <div className='col-sm-12'>
                 <Routes>
@@ -40,6 +41,7 @@ function App() {
                   <Route path= '/weather' element={<Weather />}/>
                   <Route path= '/videos' element={<Videos />}/>
                   <Route path= '/memories' element={<Memories />}/>
+                  <Route path= '/userprofile' element={<Userprofile />}/>
                 </Routes>
               </div>
             </div>  
