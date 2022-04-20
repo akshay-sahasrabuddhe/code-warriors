@@ -403,7 +403,7 @@ function isString(x)                    //common code for strings
 
 router.post("/signup", async(req,res)=>{
 
-
+console.log("Called");
 const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location}=req.body
 
 

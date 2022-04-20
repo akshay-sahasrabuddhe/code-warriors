@@ -34,16 +34,16 @@ const Login = (props) => {
                     return;
                 }
 
-                let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+                let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-                if(!regE.test(loginEmail.value)){
+                if(!regE.test(loginEmail.value.toLowerCase())){
                     alert("Either email or password are invalid");
                     loginEmail.value = "";
                     loginPswd.value = "";
                     return;
                 }
 
-                let regP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+                let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
                 if(!regP.test(loginPswd.value)){
                     alert("Either email or password are invalid");
                     loginEmail.value = "";
