@@ -113,7 +113,7 @@ const Userprofile = (props) => {
                         <div className="row">
                             <div className="col-sm-4">
                                 <div className="card text-center">
-                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
                                     <div className="card-body">
                                         <h5 className="card-title text-center">Akshay</h5>
                                         <a href="#" className="btn btn-primary">Remove</a>
@@ -122,7 +122,7 @@ const Userprofile = (props) => {
                             </div>
                             <div className="col-sm-4">
                                 <div className="card text-center">
-                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
                                     <div className="card-body">
                                         <h5 className="card-title text-center">Roshan</h5>
                                         <a href="#" className="btn btn-primary">Remove</a>
@@ -131,7 +131,7 @@ const Userprofile = (props) => {
                             </div>
                             <div className="col-sm-4">
                                 <div className="card text-center">
-                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
                                     <div className="card-body">
                                         <h5 className="card-title text-center">Juzar</h5>
                                         <a href="#" className="btn btn-primary">Remove</a>
@@ -140,7 +140,7 @@ const Userprofile = (props) => {
                             </div>
                             <div className="col-sm-4">
                                 <div className="card text-center">
-                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
                                     <div className="card-body">
                                         <h5 className="card-title text-center">Tapish</h5>
                                         <a href="#" className="btn btn-primary">Remove</a>
@@ -149,9 +149,9 @@ const Userprofile = (props) => {
                             </div>
                             <div className="col-sm-4">
                                 <div className="card text-center">
-                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
                                     <div className="card-body">
-                                        <h5 className="card-title text-center">Akhilesh</h5>
+                                        <h5 className="card-title text-center">Akhil</h5>
                                         <a href="#" className="btn btn-primary">Remove</a>
                                     </div>
                                 </div>
