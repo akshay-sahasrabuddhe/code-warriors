@@ -42,7 +42,7 @@ const Userprofile = (props) => {
                         <div className="col-md-5 offset-2 offset-md-1">
                             <div className="d-flex  pt-4 pb-4">
                                 <div className="d-flex align-self-center">
-                                    <span class="material-icons-outlined about-box-img">email</span>
+                                    <span className="material-icons-outlined about-box-img">email</span>
                                 </div>
                                 <div className="d-flex flex-column m-2">
                                     <span className="about-heading">asahasra@stevens.edu</span>
@@ -77,7 +77,7 @@ const Userprofile = (props) => {
                         <div className="col-md-5 offset-2 offset-md-1">
                             <div className="d-flex  pt-4 pb-4">
                                 <div className="d-flex align-self-center">
-                                    <span class="material-icons-outlined about-box-img">favorite</span>
+                                    <span className="material-icons-outlined about-box-img">favorite</span>
                                 </div>
                                 <div className="d-flex flex-column m-2">
                                     <span className="about-heading">Single</span>
@@ -98,7 +98,57 @@ const Userprofile = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                <div className="tab-pane fade pt-4 friends-tab" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm-4">
+                                <div className="card text-center">
+                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <div className="card-body">
+                                        <h5 className="card-title text-center">Akshay</h5>
+                                        <a href="#" className="btn btn-primary">Add Friend</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-4">
+                                <div className="card text-center">
+                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <div className="card-body">
+                                        <h5 className="card-title text-center">Roshan</h5>
+                                        <a href="#" className="btn btn-primary">Add Friend</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-4">
+                                <div className="card text-center">
+                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <div className="card-body">
+                                        <h5 className="card-title text-center">Juzar</h5>
+                                        <a href="#" className="btn btn-primary">Add Friend</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-4">
+                                <div className="card text-center">
+                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <div className="card-body">
+                                        <h5 className="card-title text-center">Tapish</h5>
+                                        <a href="#" className="btn btn-primary">Add Friend</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-4">
+                                <div className="card text-center">
+                                    <img src={maleUser} className="" alt="User Profile Pic" />
+                                    <div className="card-body">
+                                        <h5 className="card-title text-center">Akhilesh</h5>
+                                        <a href="#" className="btn btn-primary">Add Friend</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
             </div>
         </section>

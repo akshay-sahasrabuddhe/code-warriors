@@ -434,6 +434,9 @@
   font-size: 13px;
 }
 
+.friends-tab .card{
+  margin-bottom: 1.5rem;
+}
 /*  Start of Media Queries */
 
 @media(min-width:768px){
