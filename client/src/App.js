@@ -12,6 +12,7 @@ import Userprofile  from './components/Userprofile';
 import Main from './components/Main';
 import './App.css';
 import {BrowserRouter as Router, Routes ,Route, Link} from 'react-router-dom';
+import Videos from './components/Videos';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                   <Route path = '/posts' element={<Posts />}/>
                   <Route path= '/news' element={<News />} />
                   <Route path= '/weather' element={<Weather />}/>
+                  <Route path= '/videos' element={<Videos />}/>
                   <Route path= '/memories' element={<Memories />}/>
                   <Route path= '/userprofile' element={<Userprofile />}/>
                 </Routes>

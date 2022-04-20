@@ -273,6 +273,11 @@
 .card.news-card .card-link{
   text-decoration: none;
 }
+
+.vid-card{
+  width: fit-content;
+  height: fit-content;
+}
 .vertical-navigation{
   display: none;
   position: absolute;
