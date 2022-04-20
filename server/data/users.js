@@ -8,10 +8,13 @@ const crypto = require('crypto')
 
 
 
-function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location)
+function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 {
 
     
+    const genders=["male","female","others","nodisclosure"]
+
+    const relationship=["married", "single", "inarelation", "nodisclosure"]
 
 
     if(!firstName)                                                             //firstName check 
@@ -29,9 +32,9 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter firstName without spaces"
         }
-        else if(/^([a-zA-Z0-9]{4,})*$/.test(firstName)==false)
+        else if(/^([a-zA-Z0-9]{2,})*$/.test(firstName)==false)
         {
-            throw 'firstName should be at least four characters'
+            throw 'firstName should be at least two characters'
         }
 
 
@@ -54,9 +57,9 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter lastName without spaces"
         }
-        else if(/^([a-zA-Z0-9]{4,})*$/.test(lastName)==false)
+        else if(/^([a-zA-Z0-9]{2,})*$/.test(lastName)==false)
         {
-            throw 'lastName should be at least four characters'
+            throw 'lastName should be at least two characters'
         }
 
 
@@ -161,10 +164,10 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter gender without spaces"
         }
-        else if(gender!="Male" && gender!="Female" && gender!="Others" && gender!="Prefer not to disclose")
+        else if(!(genders.includes(gender)))
         {
 
-            throw 'Please enter a valid gender Male, Female , Others, Prefer not to disclose'
+            throw 'Please enter a valid gender male, female , others, nodisclosure'
         }
         
 
@@ -173,31 +176,6 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
 
 
 
-    if(hobbies)                                                              //hobbies check             
-    {
-
-        if(Array.isArray(hobbies) && hobbies.length>0)
-        {
-            for(let i=0;i<hobbies.length;i++)
-            {
-    
-                if(typeof hobbies[i]!= 'string')
-                {
-                    throw "Enter only strings in hobbies";
-                }
-                else if(check_for_spaces(hobbies[i]))
-                {
-                    throw "hobbies should not contain empty data"
-                }
-            }
-    
-        }
-        else
-        {
-            throw "Enter hobbies as array of strings"
-        }
-
-    }
 
 
 
@@ -229,25 +207,15 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter relationshipStatus without spaces"
         }
-      
+        else if(!(relationship.includes(relationshipStatus)))
+        {
+
+            throw 'Please enter a valid gender married, single, inarelation, nodisclosure'
+        }
 
     }
 
 
-    if(location)                                                              //location check             
-    {
-
-        if(!isString(location))
-        {
-            throw 'Enter location as string';
-        }
-        else if(check_for_spaces(location))
-        {
-            throw "Enter location without spaces"
-        }
-      
-
-    }
 
     
 }
@@ -429,10 +397,10 @@ async function getUser(id)
 
 
 
-async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location){
+async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus){
 
 
-    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location)
+    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
     const userinfo= await findUser(email)
         if(userinfo!=null)
@@ -454,9 +422,7 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
         gender,
         friends:[],
         interestedIn,
-        relationshipStatus,
-        hobbies,
-        location
+        relationshipStatus
         
     }
 
