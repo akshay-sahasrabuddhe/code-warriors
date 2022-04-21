@@ -372,10 +372,18 @@ router.post("/signup", async(req,res)=>{
 
 const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}=req.body
 
-
 try{
 
     signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+}
+
+catch(e)
+{
+    res.status(400).json({error:e}) 
+    return
+}
+
+try{
 
     let user= await usersData.signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
