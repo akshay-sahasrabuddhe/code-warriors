@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
 import '../App.css';
 import Signup from "./Signup";
+import axios from "axios";
 
 const Login = (props) => {
     let loginEmail;
@@ -15,7 +16,8 @@ const Login = (props) => {
       
         <div className="App-body  pt-5 mt-5">
             <h2>Login Form</h2>
-            <Form className='loginForm' onSubmit={(e) =>{
+            <Form className='loginForm' onSubmit={
+                async (e) =>{
                 e.preventDefault();
                 console.log(loginEmail.value);
                 console.log(loginPswd.value);
@@ -34,16 +36,16 @@ const Login = (props) => {
                     return;
                 }
 
-                let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+                let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-                if(!regE.test(loginEmail.value)){
+                if(!regE.test(loginEmail.value.toLowerCase())){
                     alert("Either email or password are invalid");
                     loginEmail.value = "";
                     loginPswd.value = "";
                     return;
                 }
 
-                let regP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+                let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
                 if(!regP.test(loginPswd.value)){
                     alert("Either email or password are invalid");
                     loginEmail.value = "";
@@ -51,6 +53,19 @@ const Login = (props) => {
                     return;
                 }
 
+                let user = {
+                    email: loginEmail.value,
+                    password: loginPswd.value
+                }
+
+
+                await axios.post(`http://localhost:3000/login`, user)
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
 
             }}>
             

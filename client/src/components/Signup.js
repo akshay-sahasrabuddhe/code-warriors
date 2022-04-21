@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 //import { FormControlLabel, FormLabel } from "@material-ui/core";
 import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
 import '../App.css';
+import axios from 'axios';
 
 /*const useStyles = makeStyles(theme => ({
     root: {
@@ -34,15 +35,15 @@ const Signup = (props) => {
     let confirmPswd;
     let dob;
     let gender;
-    let relationStatus;
-    let interests
+    let relationStatus = "";
+    let interests = "";
 
     return (
         <div className="App-body pt-5 mt-5">
             
             <h2>Signup Form</h2>
             <Form className='signupForm' onSubmit={
-                (e)=>{
+                async (e)=>{
                     e.preventDefault();
                    
                    if(!firstName.value){
@@ -50,10 +51,24 @@ const Signup = (props) => {
                        return;
                    }
 
+                   let regf = /^([a-zA-Z]{2,})*$/;
+                   if(!regf.test(firstName.value)){
+                        alert("Please enter valid first name");
+                        return;
+                   }
+
                    if(!lastName.value){
                        alert("Please enter last name");
                        return;
                    }
+
+                   let regl = /^([a-zA-Z]{2,})*$/;
+                   if(!regl.test(lastName.value)){
+                        alert("Please enter valid first name");
+                        return;
+                   }
+
+
                    if(!email.value){
                        alert("Please enter email");
                        return;
@@ -112,11 +127,58 @@ const Signup = (props) => {
                             return;
                         }
                    }
+                   let dateOfBirth = new Date(dob.value + ' EST' );
+                   console.log(dateOfBirth);
 
+                   dateOfBirth = String(dateOfBirth.getMonth()+1).padStart(2,'0')+'/'+String(dateOfBirth.getDate()).padStart(2,'0')+'/'+dateOfBirth.getFullYear();
+                  
                    if(!gender.value){
                        alert("Please provide gender");
                        return;
                    }
+
+                  // console.log(gender.value);
+
+                   /*if((gender.value.toString() !== 'male') || 
+                   (gender.value.toString() !== 'female')
+                   || (gender.value.toString() !== 'others') ||
+                    (gender.value.toString() !== 'nodisclosure')){
+                        alert("Please provide valid gender");
+                       return;
+                    }*/
+
+                    if(relationStatus.value){
+                        if(relationStatus.value !== 'single' || 
+                        relationStatus.value !== 'married' || 
+                        relationStatus.value !== 'inarelation' ||
+                        relationStatus.value !== 'nodisclosure'){
+                            alert("Please provide valid relation status");
+                            return;
+                        }
+                    }
+
+                    let user = {
+                        firstName: firstName.value,
+                        lastName : lastName.value,
+                        email: email.value,
+                        password: pswd.value,
+                        dateOfBirth:dateOfBirth,
+                        gender: gender.value,
+                        relationshipStatus: relationStatus.value,
+                        interestedIn : interests.value
+                    }
+                   // let temp = JSON.parse(user);
+                   let url = 'http:/localhost:3000/signup'
+                    console.log(user);
+                    //let msg = await axios.post('http:/localhost:3000/signup', user);
+                    await axios.post(`http://localhost:3000/signup`, user)
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                    
                    
                 }
             }>
@@ -187,6 +249,7 @@ const Signup = (props) => {
 
                 <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
                     <Form.Control required type="date" placeholder="Date of Birth" 
+                        
                         className="textform"
                         ref={(node)=>{
                             dob = node;
