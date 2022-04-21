@@ -7,10 +7,12 @@ const nodemailer= require('nodemailer')
 const crypto = require('crypto')
 
 
-function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location)
+function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 {
 
-    
+    const genders=["male","female","others","nodisclosure"]    
+
+    const relationship=["married", "single", "inarelation", "nodisclosure"]
 
 
     if(!firstName)                                                             //firstName check 
@@ -28,9 +30,9 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter firstName without spaces"
         }
-        else if(/^([a-zA-Z0-9]{4,})*$/.test(firstName)==false)
+        else if(/^([a-zA-Z]{2,})*$/.test(firstName)==false)
         {
-            throw 'firstName should be at least four characters without spaces'
+            throw 'firstName should be at least two characters without spaces'
         }
 
 
@@ -53,9 +55,9 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter lastName without spaces"
         }
-        else if(/^([a-zA-Z0-9]{4,})*$/.test(lastName)==false)
+        else if(/^([a-zA-Z]{2,})*$/.test(lastName)==false)
         {
-            throw 'lastName should be at least four characters without spaces'
+            throw 'lastName should be at least two characters without spaces'
         }
 
 
@@ -145,6 +147,7 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
 
 
 
+    
     if(!gender)                                                              //gender check
     {
         throw 'please enter gender'
@@ -160,10 +163,10 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter gender without spaces"
         }
-        else if(gender!="Male" && gender!="Female" && gender!="Others" && gender!="Prefer not to disclose")
+        else if(!(genders.includes(gender)))
         {
 
-            throw 'Please enter a valid gender Male, Female , Others, Prefer not to disclose'
+            throw 'Please enter a valid gender male, female , others, nodisclosure'
         }
         
 
@@ -171,33 +174,7 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
 
 
 
-
-    if(hobbies)                                                              //hobbies check             
-    {
-
-        if(Array.isArray(hobbies) && hobbies.length>0)
-        {
-            for(let i=0;i<hobbies.length;i++)
-            {
     
-                if(typeof hobbies[i]!= 'string')
-                {
-                    throw "Enter only strings in hobbies";
-                }
-                else if(check_for_spaces(hobbies[i]))
-                {
-                    throw "hobbies should not contain empty data"
-                }
-            }
-    
-        }
-        else
-        {
-            throw "Enter hobbies as array of strings"
-        }
-
-    }
-
 
 
     if(interestedIn)                                                            //interestedIn check             
@@ -228,25 +205,14 @@ function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,intere
         {
             throw "Enter relationshipStatus without spaces"
         }
-      
+        else if(!(relationship.includes(relationshipStatus)))
+        {
+
+            throw 'Please enter a valid relationshipStatus married, single, inarelation, nodisclosure'
+        }
 
     }
 
-
-    if(location)                                                              //location check             
-    {
-
-        if(!isString(location))
-        {
-            throw 'Enter location as string';
-        }
-        else if(check_for_spaces(location))
-        {
-            throw "Enter location without spaces"
-        }
-      
-
-    }
 
     
 }
@@ -403,15 +369,15 @@ function isString(x)                    //common code for strings
 
 router.post("/signup", async(req,res)=>{
 
-console.log("Called");
-const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location}=req.body
+
+const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}=req.body
 
 
 try{
 
-    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location)
+    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
-    let user= await usersData.signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,hobbies,location)
+    let user= await usersData.signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
     res.json({signup:"Successful"}).status(200)
 
@@ -420,7 +386,12 @@ try{
 catch(e)
 {
 
+    if(e=='email already exists')
+
     res.status(400).json({error:e}) 
+
+    else
+    res.status(500).json({error:"Internal Server Error"}) 
 
 }
 
@@ -448,6 +419,7 @@ router.post('/login', async(req,res)=>{
       catch(e)
     {
       res.status(400).json({error:e}) 
+      return
   
     }
 
@@ -458,12 +430,15 @@ router.post('/login', async(req,res)=>{
   
         req.session.user={email : login.email, _id : login._id}
       
-        res.status(200).json(login)
+        res.status(200).json({email : login.email, _id : login._id})
       }
   
         catch(e)
       {
+          if(e=='Either the username or password is invalid')
         res.status(403).json({error:e}) 
+        else
+        res.status(500).json({error:"Internal Server Error"})
     
       }
      

@@ -434,6 +434,9 @@
   font-size: 13px;
 }
 
+.friends-tab .card{
+  margin-bottom: 1.5rem;
+}
 /*  Start of Media Queries */
 
 @media(min-width:768px){
@@ -446,6 +449,15 @@
   
   .navigation-box{
     flex-direction: column;
+    align-items: center;
+  }
+
+  .friend-list-card-img{
+    width: 60%;
+  }
+
+  
+  .friends-tab .card{
     align-items: center;
   }
 }
