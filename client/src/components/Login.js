@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
 import '../App.css';
 import Signup from "./Signup";
+import axios from "axios";
 
 const Login = (props) => {
     let loginEmail;
@@ -15,7 +16,8 @@ const Login = (props) => {
       
         <div className="App-body  pt-5 mt-5">
             <h2>Login Form</h2>
-            <Form className='loginForm' onSubmit={(e) =>{
+            <Form className='loginForm' onSubmit={
+                async (e) =>{
                 e.preventDefault();
                 console.log(loginEmail.value);
                 console.log(loginPswd.value);
@@ -51,6 +53,19 @@ const Login = (props) => {
                     return;
                 }
 
+                let user = {
+                    email: loginEmail.value,
+                    password: loginPswd.value
+                }
+
+
+                await axios.post(`http://localhost:3000/login`, user)
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
 
             }}>
             

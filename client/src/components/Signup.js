@@ -127,7 +127,11 @@ const Signup = (props) => {
                             return;
                         }
                    }
+                   let dateOfBirth = new Date(dob.value + ' EST' );
+                   console.log(dateOfBirth);
 
+                   dateOfBirth = String(dateOfBirth.getMonth()+1).padStart(2,'0')+'/'+String(dateOfBirth.getDate()).padStart(2,'0')+'/'+dateOfBirth.getFullYear();
+                  
                    if(!gender.value){
                        alert("Please provide gender");
                        return;
@@ -158,7 +162,7 @@ const Signup = (props) => {
                         lastName : lastName.value,
                         email: email.value,
                         password: pswd.value,
-                        dateOfBirth:dob.value,
+                        dateOfBirth:dateOfBirth,
                         gender: gender.value,
                         relationshipStatus: relationStatus.value,
                         interestedIn : interests.value
@@ -167,7 +171,7 @@ const Signup = (props) => {
                    let url = 'http:/localhost:3000/signup'
                     console.log(user);
                     //let msg = await axios.post('http:/localhost:3000/signup', user);
-                    axios.post(`http://localhost:3000/signup`, user)
+                    await axios.post(`http://localhost:3000/signup`, user)
                       .then(function (response) {
                         console.log(response);
                       })
@@ -245,6 +249,7 @@ const Signup = (props) => {
 
                 <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
                     <Form.Control required type="date" placeholder="Date of Birth" 
+                        
                         className="textform"
                         ref={(node)=>{
                             dob = node;
