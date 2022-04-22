@@ -8,10 +8,30 @@ import Signup from "./Signup";
 import Login from "./Login";
 
 const Main = (props) =>{
+
+    const [showModal , setShowModal] = useState(false);
+
+       
+    const handleOpenModal = () => {
+        setShowModal(true);
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    }
+
     return(
         <div>
             <Login></Login>
-            <Signup></Signup>
+            <Button className='button' onClick={handleOpenModal}>Signup</Button>
+
+            {showModal && showModal && (
+          <Signup
+            isOpen={showModal}
+            handleClose={handleCloseModal}
+            modal='signup'
+          />
+        )}
         </div>
     );
 }
