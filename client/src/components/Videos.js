@@ -41,7 +41,7 @@ const Videos = (props) => {
          
         <Card.Body className="card-body"> 
         <iframe width="420" height="315"
-        src={link} frameborder="0" allowfullscreen>
+        src={link} frameBorder="0" allowFullScreen>
         </iframe>
         </Card.Body>
         </Card>
