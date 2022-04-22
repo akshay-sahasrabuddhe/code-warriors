@@ -30,10 +30,16 @@ import ReactModal from 'react-modal';
   ReactModal.setAppElement('#root');
   const customStyles = {
     content: {
-      
-        width:'fit-content',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width: '50%',
       border: '1px solid #28547a',
-      borderRadius: '4px'
+      borderRadius: '4px',
+      overflow: 'scroll'
     }
   };
 
@@ -323,8 +329,6 @@ const Signup = (props) => {
             </FloatingLabel>
 
             </Form.Group>
-
-
             <Button variant="primary" type="submit" className="submit">
 Submit
             </Button>
@@ -337,12 +341,38 @@ Submit
             <ReactModal name='signupModal'
             isOpen={showModal}
             contentLabel='Signup Modal'
-            style={customStyles}
+            style={{
+                overlay: {
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(255, 255, 255, 0.75)'
+                },
+                content: {
+                    marginLeft:'400px',
+                    width:'500px',
+                    height:'410px',
+                  position: 'relative',
+                  top: '30px',
+                  left: '30px',
+                  right: '30px',
+                  bottom: '30px',
+                  border: '1px solid #ccc',
+                  background: '#fff',
+                  overflow: 'auto',
+                  WebkitOverflowScrolling: 'auto',
+                  borderRadius: '10px',
+                  padding: '20px',
+                  
+                }
+              }}
             >
-                <h2>Signup Form</h2>
+                <h4>Signup Form</h4>
                 {body}
-                <br/>
-            <Button className='button cancel-button' onClick={handleCloseModal}>
+          
+            <Button variant="danger" className='button cancel-button' onClick={handleCloseModal}>
           Cancel
         </Button>
             </ReactModal>
