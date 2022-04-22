@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 //import { makeStyles, TextField, Button, Radio, RadioGroup } from '@material-ui/core';
 //import { FormControlLabel, FormLabel } from "@material-ui/core";
-import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
+import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap';
+import logoImg from '../images/logo.gif';
 import '../App.css';
 import Signup from "./Signup";
 import Login from "./Login";
@@ -21,9 +22,11 @@ const Main = (props) =>{
     }
 
     return(
-        <div>
+        <div className="FormContent">
+            <img className="responsive-img frontImg logo-img" src={logoImg} alt="img" />
             <Login></Login>
-            <Button className='button' onClick={handleOpenModal}>Signup</Button>
+            
+            <Button  className='button signup-btn' onClick={handleOpenModal}>Signup</Button>
 
             {showModal && showModal && (
           <Signup

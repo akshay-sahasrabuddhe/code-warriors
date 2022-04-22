@@ -103,6 +103,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center; */
+  padding: 10px;
+  
 }
 /* 
 .App-header {
@@ -143,8 +145,9 @@
 }*/
 
 .textform{
-  
+
   border-bottom: solid black;
+
 }
 
 .textform:focus{
@@ -163,15 +166,57 @@
 
 .submit{
   color:white;
+
+}
+
+.cancel-button{
+  background-color: #ee0000;
+}
+
+.signup-btn{
+  width:30%;
+  background-color: #218900;
+  border: none;
+  float: right;
+}
+
+.signup-btn:hover{
+  background-color: #2EB300 ;
+}
+
+.signup-btn:focus{
+  background-color: #2EB300 ;
+  border: none;
+}
+
+h4{
+  margin-bottom: -4%;
 }
 
 .signupForm{
-  display:inline-block;
-  flex-direction: column;
-  padding: 20px;
-  width: auto;
-  border-left: solid #F5F8FA;
+  /*display:inline-block;
+  flex-direction: column;*/
+ 
+  width: fit-content;
+  height:210%;
+  padding:10%;
+  
 
+}
+
+.FormContent{
+  display: inline-flexbox;
+  margin-top: 50px;
+  float: left;
+  width: 150%;
+}
+.log{
+  display: block;
+  
+  height: fit-content;
+  padding: 10px;
+  width: 50%;
+  float: right;
 }
 
 .loginForm{
@@ -189,7 +234,7 @@
 }
 
 .select{
-  padding:5px;
+  padding:2px;
 }
 
 /*
@@ -334,6 +379,12 @@
 
 .logo-img{
   width: 110%;
+}
+
+.frontImg{
+  width:40%;
+  position: relative;
+  float: left;
 }
 
 .logo-link{

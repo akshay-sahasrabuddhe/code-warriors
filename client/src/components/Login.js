@@ -16,8 +16,8 @@ const Login = (props) => {
 
     return(
       
-        <div className="App-body  pt-5 mt-5">
-            <h2>Login Form</h2>
+        <div className="log">
+            <h4>Login Form</h4>
             <Form className='loginForm' onSubmit={
                 async (e) =>{
                 e.preventDefault();
