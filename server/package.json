@@ -3,6 +3,7 @@
     "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
@@ -11,7 +12,8 @@
     "moment": "^2.29.2",
     "mongodb": "^4.2.0",
     "multer": "^1.4.4",
-    "nodemailer": "^6.6.1"
+    "nodemailer": "^6.6.1",
+    "redis": "2.8"
   },
   "name": "project-554",
   "version": "1.0.0",
