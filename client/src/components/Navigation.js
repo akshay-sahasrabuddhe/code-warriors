@@ -3,6 +3,16 @@ import '../App.css';
 import logoImg from '../images/logo.gif';
 
 const Navigation = (props) => {
+    //console.log(localStorage.getItem("userSession"));
+
+
+
+    let user = localStorage.getItem("user");
+
+    const handleLogout = async () => {
+        
+    }
+
     return (
         // ---------- Start of Navigation ---------- // 
        <section className="nav-section fixed-top facebook-light-gray-color">
@@ -47,13 +57,13 @@ const Navigation = (props) => {
                             </ul>
                         </div>
                         <div>
-                            <button className="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
+                            <button onClick={handleLogout} className="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
                         </div>
                     </div>
                 </div>
             </nav>
             <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
-                <a className="nav-link" href="/userprofile"><aside className="material-icons nav-icons">account_circle</aside><span>Akshay</span></a>
+                <a className="nav-link" href="/userprofile"><aside className="material-icons nav-icons">account_circle</aside><span>{user}</span></a>
                 {/* <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a> */}
                 <a className="nav-link" href="/videos"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
                 <a className="nav-link" href="/memories"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>

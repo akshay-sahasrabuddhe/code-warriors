@@ -5,8 +5,29 @@ import '../App.css';
 import logoImg from '../images/logo.gif';
 import $, { event } from 'jquery';
 import { Modal } from 'bootstrap';
+import { useNavigate, Navigate } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 
 const Posts = (props) => {
+
+    const navigate = useNavigate();
+    console.log(localStorage);
+    //localStorage.clear();
+    let user = null;
+    console.log(localStorage.length);
+    if(localStorage.length === 0){
+        console.log("Here");
+        return (
+        <Navigate to="/" replace />
+        );
+
+    }
+    else{
+        user = localStorage.getItem("user");
+    }
+
+    
+
     function openModal (){
         let myModal = new Modal(document.getElementById('myModal'));
         myModal.show();
@@ -28,6 +49,7 @@ const Posts = (props) => {
       };
 
     return (
+        
         // ---------- Start of Posts ---------- // 
         <> 
         <Navigation></Navigation>  
@@ -64,7 +86,7 @@ const Posts = (props) => {
                                     <div className="right-header-box d-flex align-items-center">
                                         <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
                                             <strong>
-                                                <p className="post-heading mobile-text-center">Akshay Sahasrabuddhe</p>
+                                                <p className="post-heading mobile-text-center">{user}</p>
                                             </strong>
                                         </div>
                                     </div>
