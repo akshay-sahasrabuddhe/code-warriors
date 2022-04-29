@@ -17,14 +17,14 @@ app.use(session({
   name: 'AuthCookie',
   secret: 'some secret string!',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
 }))
 
 
 
 app.get('/logout', async(req,res,next)=>
 {
-
+  console.log(Window.localStorage);
     if(!req.session.user)
     {
       res.status(403).json({user:"User is not logged in"});

@@ -45,7 +45,7 @@ import ReactModal from 'react-modal';
 
 const Signup = (props) => {
     //const classes = useStyles();
-
+    const [success, setSuccess] = useState(false);
     const [showModal, setShowModal] = useState(props.isOpen);
     let firstName;
     let lastName;
@@ -70,32 +70,40 @@ const Signup = (props) => {
         <Form className='signupForm' onSubmit={
             async (e)=>{
                 e.preventDefault();
-               
+
+
+               let btn = document.getElementById("sub");
+              btn.disabled = true;
                if(!firstName.value){
                    alert("Please enter first name");
+                   btn.disabled = false;
                    return;
                }
 
                let regf = /^([a-zA-Z]{2,})*$/;
                if(!regf.test(firstName.value)){
                     alert("Please enter valid first name");
+                    btn.disabled = false;
                     return;
                }
 
                if(!lastName.value){
                    alert("Please enter last name");
+                   btn.disabled = false;
                    return;
                }
 
                let regl = /^([a-zA-Z]{2,})*$/;
                if(!regl.test(lastName.value)){
                     alert("Please enter valid first name");
+                    btn.disabled = false;
                     return;
                }
 
 
                if(!email.value){
                    alert("Please enter email");
+                   btn.disabled = false;
                    return;
                }
 
@@ -103,32 +111,38 @@ const Signup = (props) => {
                let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if(!regE.test(email.value.toLowerCase())){
                 alert("Please enter a valid email");
+                btn.disabled = false;
                 return;
             }
 
                if(!pswd.value){
                    alert("Please enter password");
+                   btn.disabled = false;
                    return;
                }
 
                let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
             if(!regP.test(pswd.value)){
                 alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
+                btn.disabled = false;
                 return;
             }
 
                if(!confirmPswd.value){
                    alert("Please enter confirm password");
+                   btn.disabled = false;
                    return;
                }
 
                if(pswd.value !== confirmPswd.value){
                    alert("Passwords don't match");
+                   btn.disabled = false;
                    return;
                }
 
                if(!dob.value){
                    alert("Please provide your date of birth");
+                   btn.disabled = false;
                    return;
                }
 
@@ -149,6 +163,7 @@ const Signup = (props) => {
                     if(!(age > 13 && age < 120)){
                         alert("Should be between age 13 and 120");
                         dob.value = "";
+                        btn.disabled = false;
                         return;
                     }
                }
@@ -159,9 +174,16 @@ const Signup = (props) => {
               
                if(!gender.value){
                    alert("Please provide gender");
+                   btn.disabled = false;
                    return;
                }
+               const genders=["male","female","others","nodisclosure"];
 
+               if(!genders.includes(gender.value)){
+                alert("Please provide valid gender");
+                btn.disabled = false;
+                return;
+               }
               // console.log(gender.value);
 
                /*if((gender.value.toString() !== 'male') || 
@@ -171,13 +193,13 @@ const Signup = (props) => {
                     alert("Please provide valid gender");
                    return;
                 }*/
-
+                const relationship=["married", "single", "inarelation", "nodisclosure"]
+                console.log(relationStatus.value);
                 if(relationStatus.value){
-                    if(relationStatus.value !== 'single' || 
-                    relationStatus.value !== 'married' || 
-                    relationStatus.value !== 'inarelation' ||
-                    relationStatus.value !== 'nodisclosure'){
+                    console.log(relationStatus.value);
+                    if(!relationship.includes(relationStatus.value)){
                         alert("Please provide valid relation status");
+                        btn.disabled = false;
                         return;
                     }
                 }
@@ -193,6 +215,7 @@ const Signup = (props) => {
                     interestedIn : interests.value
                 }
                // let temp = JSON.parse(user);
+               let flag = false;
                let url = 'http:/localhost:3000/signup'
                 console.log(user);
                 //let msg = await axios.post('http:/localhost:3000/signup', user);
@@ -201,16 +224,22 @@ const Signup = (props) => {
                     console.log(response);
                     if(response.status === 200){
                         alert("User registered");
-                        
+                        flag = true;
                     }
                   })
                   .catch(function (error) {
                     console.log(error);
+                    //setSuccess(false);
                     alert("There was some error please try again");
                    
                   });
                 
                   e.target.reset();
+                  btn.disabled = false;
+                   if(flag){
+                    setShowModal(true);
+                    props.handleClose(false);
+                   }            
             }
         }>
            
@@ -329,7 +358,7 @@ const Signup = (props) => {
             </FloatingLabel>
 
             </Form.Group>
-            <Button variant="primary" type="submit" className="submit">
+            <Button id="sub" variant="primary" type="submit" className="submit">
 Submit
             </Button>
         </Form> );

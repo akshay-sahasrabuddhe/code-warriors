@@ -546,7 +546,12 @@ function isString(x)                    //common code for strings
 
 
 
-
+router.get('/session', async(req,res) => {
+    console.log(req.session.user);
+    if(req.session.user){
+        res.json({user:req.session.user});
+    }
+})
 
 
 router.post("/signup", async(req,res)=>{
