@@ -6,7 +6,8 @@ let { ObjectId } = require("mongodb");
 const moment = require("moment");
 
 module.exports = {
-  async create(title, body, userThatPosted, isPublic) {
+  async create(title, body, userThatPosted, isPublic, imagePath) {
+    errorhandle.checkProperString(imagePath, "ImagePath");
     errorhandle.checkProperString(title, "Title");
     errorhandle.checkProperString(body, "Body");
     errorhandle.checkProperObject(userThatPosted);
@@ -24,6 +25,7 @@ module.exports = {
       dateOfPost: moment().format("DD/MM/YYYY HH:mm:ss"),
       isPublic: isPublic,
       userThatPosted: userThatPosted,
+      imagePath: imagePath,
       comments: [],
       likes: [],
     };

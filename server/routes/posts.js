@@ -5,7 +5,13 @@ const errorhandle = data.errorhandlers;
 const postData = data.posts;
 const commentData = data.comments;
 let { ObjectId } = require("mongodb");
-
+//For S3 bucket
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const { uploadFile, getFileStream } = require("../helpers/s3");
 router.get("/:id", async (req, res) => {
   try {
     let id = req.params.id;
@@ -37,9 +43,27 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
+  // console.log(req.formdata);
   let postInfo = req.body;
+  postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
+  postInfo.isPublic = postData.isPublic == "true";
+  console.log(postInfo);
+  console.log(req.file);
+  let imagePath = `null`;
   try {
+    if (errorhandle.checkImage(req.file)) {
+      errorhandle.checkProperImage(req.file);
+      const file = req.file;
+      console.log(file);
+      const result = await uploadFile(file);
+      await unlinkFile(file.path);
+      console.log(result);
+      imagePath = `/images/${result.Key}`;
+      // res.send({ imagePath: `/images/${result.Key}` });
+      // store {imagePath: `/images/${result.Key}`} in posts data
+    }
+
     errorhandle.checkProperString(postInfo.title, "Title");
     errorhandle.checkProperString(postInfo.body, "Body");
     errorhandle.checkProperObject(postInfo.userThatPosted);
@@ -55,13 +79,15 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: e });
     return;
   }
+  console.log(imagePath);
 
   try {
     const newPost = await postData.create(
       postInfo.title,
       postInfo.body,
       postInfo.userThatPosted,
-      postInfo.isPublic
+      postInfo.isPublic,
+      imagePath
     );
     res.json(newPost);
     return;
@@ -212,5 +238,11 @@ router.post("/like/:id", async (req, res) => {
     return;
   }
 });
+router.get("/images/:key", (req, res) => {
+  console.log(req.params);
+  const key = req.params.key;
+  const readStream = getFileStream(key);
 
+  readStream.pipe(res);
+});
 module.exports = router;
