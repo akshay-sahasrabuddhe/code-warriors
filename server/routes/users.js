@@ -547,6 +547,7 @@ function isString(x)                    //common code for strings
 
 
 router.get('/session', async(req,res) => {
+    console.log(req.session.cookie);
     console.log(req.session.user);
     if(req.session.user){
         res.json({user:req.session.user});
@@ -605,7 +606,7 @@ router.post('/login', async(req,res)=>{
 
     let email=req.body.email;
     let password=req.body.password;
-  
+        
     try{
   
       loginCheck(email,password)
@@ -624,9 +625,10 @@ router.post('/login', async(req,res)=>{
         const login= await usersData.login(req.body.email,req.body.password)
   
         req.session.user={name: login.firstName + " " +login.lastName , _id : login._id}
-      
+        
         res.status(200).json({name: login.firstName + " " +login.lastName, _id : login._id})
-      }
+       
+    }
   
         catch(e)
       {

@@ -1,16 +1,38 @@
 import React, { useState, useEffect } from "react";
 import '../App.css';
 import logoImg from '../images/logo.gif';
-
+import axios from 'axios';
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const Navigation = (props) => {
     //console.log(localStorage.getItem("userSession"));
 
-
+    const navigate = useNavigate();
 
     let user = localStorage.getItem("user");
 
     const handleLogout = async () => {
-        
+
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+          withCredentials: true,
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+            },
+          validateStatus: function (status) {
+              return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+
+        const resp  = await instance.get(`http://localhost:3000/logout`);
+          if(resp.status === 200){
+              console.log("logging out");
+              localStorage.clear();
+              navigate('/');
+          }
+        console.log(resp);
     }
 
     return (
