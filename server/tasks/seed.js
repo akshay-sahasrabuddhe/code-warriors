@@ -17,9 +17,9 @@ async function main() {
     "priyankap@gmail.com",
     "123456Pp",
     "01/01/1995",
-    "Female",
-    "Male",
-    "Singe",
+    "female",
+    "male",
+    "single",
     ["Dance"],
     "Jersey City"
   );
@@ -29,9 +29,9 @@ async function main() {
     "tapishc@gmail.com",
     "asd12@",
     "01/01/1997",
-    "Male",
-    "Female",
-    "Single",
+    "male",
+    "female",
+    "single",
     ["Coding", "Football"],
     "Jersey City"
   );
@@ -41,55 +41,55 @@ async function main() {
     "roshanb@gmail.com",
     "asd12@",
     "01/01/1997",
-    "Male",
-    "Female",
-    "Single",
+    "male",
+    "female",
+    "single",
     ["Cricket"],
     "Jersey City"
   );
   //seeds posts
-  const post1 = await posts.create(
-    `Post by ${userid1.firstName}`,
-    "body",
-    { _id: userid1._id, firstName: userid1.firstName },
-    true
-  );
-  const post2 = await posts.create(
-    `Post by ${userid2.firstName}`,
-    "body",
-    { _id: userid2._id, firstName: userid2.firstName },
-    false
-  );
-  const post3 = await posts.create(
-    `Post by ${userid3.firstName}`,
-    "body",
-    { _id: userid3._id, firstName: userid3.firstName },
-    true
-  );
-  //seed comments
+  // const post1 = await posts.create(
+  //   `Post by ${userid1.firstName}`,
+  //   "body",
+  //   { _id: userid1._id, firstName: userid1.firstName },
+  //   true
+  // );
+  // const post2 = await posts.create(
+  //   `Post by ${userid2.firstName}`,
+  //   "body",
+  //   { _id: userid2._id, firstName: userid2.firstName },
+  //   false
+  // );
+  // const post3 = await posts.create(
+  //   `Post by ${userid3.firstName}`,
+  //   "body",
+  //   { _id: userid3._id, firstName: userid3.firstName },
+  //   true
+  // );
+  // //seed comments
 
-  await comments.create(
-    post1._id,
-    { _id: userid2._id, firstName: userid2.firstName },
-    "First comment on post1"
-  );
-  await comments.create(
-    post1._id,
-    { _id: userid3._id, firstName: userid3.firstName },
-    "Second comment on post1"
-  );
+  // await comments.create(
+  //   post1._id,
+  //   { _id: userid2._id, firstName: userid2.firstName },
+  //   "First comment on post1"
+  // );
+  // await comments.create(
+  //   post1._id,
+  //   { _id: userid3._id, firstName: userid3.firstName },
+  //   "Second comment on post1"
+  // );
 
-  await comments.create(
-    post2._id,
-    { _id: userid1._id, firstName: userid1.firstName },
-    "First comment on post2"
-  );
+  // await comments.create(
+  //   post2._id,
+  //   { _id: userid1._id, firstName: userid1.firstName },
+  //   "First comment on post2"
+  // );
 
-  await comments.create(
-    post3._id,
-    { _id: userid3._id, firstName: userid3.firstName },
-    "First comment on post3"
-  );
+  // await comments.create(
+  //   post3._id,
+  //   { _id: userid3._id, firstName: userid3.firstName },
+  //   "First comment on post3"
+  // );
 
   console.log("Done seeding database");
 

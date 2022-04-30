@@ -21,7 +21,7 @@ const checkProperString = (string, parameter) => {
   }
 };
 
-const isValidURL = string => {
+const isValidURL = (string) => {
   if (string.startsWith("http://www.") || string.startsWith("https://www.")) {
     if (/.([./])com$/.test(string)) {
       if (string.length < 20)
@@ -62,7 +62,7 @@ const checkProperNumber = (num, parameter) => {
   if (isNaN(num)) throw `Error: ${parameter} is not a number`;
 };
 
-const checkProperDate = dor => {
+const checkProperDate = (dor) => {
   let checkdate = new Date(dor);
   let dorArray = dor.split("/");
   let month = parseInt(dorArray[0], 10);
@@ -87,12 +87,22 @@ const checkProperDate = dor => {
   }
 };
 
-const checkProperBoolean= (bo,parameter)=>{
-  if( typeof bo != "boolean"){
-    throw `${parameter} is not boolean`
+const checkProperBoolean = (bo, parameter) => {
+  if (typeof bo != "boolean") {
+    throw `${parameter} is not boolean`;
   }
-}
-
+};
+const checkImage = (image) => {
+  if (image == undefined) {
+    return false;
+  }
+  return true;
+};
+const checkProperImage = (image) => {
+  if (image.mimetype.split("/")[0] !== "image") {
+    throw "File is not an Image";
+  }
+};
 module.exports = {
   checkAndGetID,
   checkProperString,
@@ -102,5 +112,7 @@ module.exports = {
   checkProperObject,
   checkProperNumber,
   checkProperDate,
-  checkProperBoolean
+  checkProperBoolean,
+  checkImage,
+  checkProperImage,
 };
