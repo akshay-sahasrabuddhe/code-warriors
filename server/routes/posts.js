@@ -44,14 +44,25 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
-  // console.log(req.formdata);
-  let postInfo = req.body;
-  postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
-  postInfo.isPublic = postData.isPublic == "true";
+  console.log(req.body.formdata);
+  let postInfo = JSON.parse(req.body.formdata);
+  // let postInfo = req.body.formdata;
+  console.log(postInfo);
+  // postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
+  postInfo.isPublic = postInfo.isPublic.toLowerCase() === "true";
   console.log(postInfo);
   console.log(req.file);
   let imagePath = `null`;
   try {
+    errorhandle.checkProperString(postInfo.title, "Title");
+    errorhandle.checkProperString(postInfo.body, "Body");
+    errorhandle.checkProperObject(postInfo.userThatPosted);
+    errorhandle.checkProperBoolean(postInfo.isPublic, "isPublic");
+    errorhandle.checkProperString(
+      postInfo.userThatPosted.firstName,
+      "User Name"
+    );
+    let userID = errorhandle.checkAndGetID(postInfo.userThatPosted._id);
     if (errorhandle.checkImage(req.file)) {
       errorhandle.checkProperImage(req.file);
       const file = req.file;
@@ -59,22 +70,10 @@ router.post("/", upload.single("image"), async (req, res) => {
       const result = await uploadFile(file);
       await unlinkFile(file.path);
       console.log(result);
-      imagePath = `/images/${result.Key}`;
+      imagePath = `/posts/images/${result.Key}`;
       // res.send({ imagePath: `/images/${result.Key}` });
       // store {imagePath: `/images/${result.Key}`} in posts data
     }
-
-    errorhandle.checkProperString(postInfo.title, "Title");
-    errorhandle.checkProperString(postInfo.body, "Body");
-    errorhandle.checkProperObject(postInfo.userThatPosted);
-    errorhandle.checkProperBoolean(postInfo.isPublic, "isPublic");
-
-    errorhandle.checkProperString(
-      postInfo.userThatPosted.firstName,
-      "User Name"
-    );
-
-    let userID = errorhandle.checkAndGetID(postInfo.userThatPosted._id);
   } catch (e) {
     res.status(400).json({ error: e });
     return;

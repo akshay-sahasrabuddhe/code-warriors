@@ -27,6 +27,13 @@ function uploadFile(file) {
 }
 exports.uploadFile = uploadFile;
 
+// Deletes a file from s3
+function DeleteFile(filename) {
+  s3.deleteObject({ Bucket: BUCKET, Key: filename }).promise();
+  return "File Deleted Successfully";
+}
+exports.DeleteFile = DeleteFile;
+
 // downloads a file from s3
 function getFileStream(fileKey) {
   const downloadParams = {
