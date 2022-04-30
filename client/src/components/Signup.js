@@ -235,7 +235,7 @@ const Signup = (props) => {
                   });
                 
                   e.target.reset();
-                  btn.disabled = false;
+                  //btn.disabled = false;
                    if(flag){
                     setShowModal(true);
                     props.handleClose(false);

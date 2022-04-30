@@ -16,7 +16,9 @@ const Posts = (props) => {
     let user = null;
     console.log(localStorage.length);
     if(localStorage.length === 0){
+
         console.log("Here");
+        alert("You should login first");
         return (
         <Navigate to="/" replace />
         );
