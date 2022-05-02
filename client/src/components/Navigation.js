@@ -1,8 +1,40 @@
 import React, { useState, useEffect } from "react";
 import '../App.css';
 import logoImg from '../images/logo.gif';
-
+import axios from 'axios';
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const Navigation = (props) => {
+    //console.log(localStorage.getItem("userSession"));
+
+    const navigate = useNavigate();
+
+    let user = localStorage.getItem("user");
+
+    const handleLogout = async () => {
+
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+          withCredentials: true,
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+            },
+          validateStatus: function (status) {
+              return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+
+        const resp  = await instance.get(`http://localhost:3000/logout`);
+          if(resp.status === 200){
+              console.log("logging out");
+              localStorage.clear();
+              navigate('/');
+          }
+        console.log(resp);
+    }
+
     return (
         // ---------- Start of Navigation ---------- // 
        <section className="nav-section fixed-top facebook-light-gray-color">
@@ -47,13 +79,13 @@ const Navigation = (props) => {
                             </ul>
                         </div>
                         <div>
-                            <button className="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
+                            <button onClick={handleLogout} className="btn btn-outline-primary me-3 ms-3" type="submit">Logout</button>
                         </div>
                     </div>
                 </div>
             </nav>
             <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
-                <a className="nav-link" href="/userprofile"><aside className="material-icons nav-icons">account_circle</aside><span>Akshay</span></a>
+                <a className="nav-link" href="/userprofile"><aside className="material-icons nav-icons">account_circle</aside><span>{user}</span></a>
                 {/* <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a> */}
                 <a className="nav-link" href="/videos"><aside className="material-icons nav-icons">ondemand_video</aside><span>Videos</span></a>
                 <a className="nav-link" href="/memories"><aside className="material-icons nav-icons">history</aside><span>Memories</span></a>

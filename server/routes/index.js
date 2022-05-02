@@ -5,7 +5,11 @@ const videosRoutes = require("./videos");
 const cors = require('cors');
 
 const constructorMethod = (app) => {
-  app.use(cors());
+  app.use(cors({
+    origin:['http://localhost:4000'],
+  methods:['GET','POST'],
+  credentials: true
+  }));
   app.use("/posts", postRoutes);
   app.use("/comments", commentRoutes);
   app.use("/videos", videosRoutes);

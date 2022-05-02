@@ -3,6 +3,12 @@ const users = mongoCollections.users;
 const bcrypt = require('bcryptjs');
 const saltRounds = 16;
 const crypto = require('crypto')
+const redis = require('redis');
+const client = redis.createClient();
+const bluebird = require("bluebird");
+const { use } = require('../routes/users');
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
 
 
 
@@ -284,6 +290,197 @@ function loginCheck(email,password)
 
 
 
+
+
+
+
+
+function updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+{
+
+    const genders=["male","female","others","nodisclosure"]    
+
+    const relationship=["married", "single", "inarelation", "nodisclosure"]
+
+
+     if(firstName)
+    {
+
+        if(!isString(firstName))
+        {
+            throw 'Enter firstName as string';
+        }
+        else if(check_for_spaces(firstName))
+        {
+            throw "Enter firstName without spaces"
+        }
+        else if(/^([a-zA-Z]{2,})*$/.test(firstName)==false)
+        {
+            throw 'firstName should be at least two characters without spaces'
+        }
+
+
+    }
+
+
+
+     if(lastName)
+    {
+
+        if(!isString(lastName))
+        {
+            throw 'Enter lastName as string';
+        }
+        else if(check_for_spaces(lastName))
+        {
+            throw "Enter lastName without spaces"
+        }
+        else if(/^([a-zA-Z]{2,})*$/.test(lastName)==false)
+        {
+            throw 'lastName should be at least two characters without spaces'
+        }
+
+
+    }
+    
+
+
+
+    if(email)
+    {
+
+        if(!isString(email))
+        {
+            throw 'Enter email as string';
+        }
+        else if(check_for_spaces(email))
+        {
+            throw "Enter email without spaces"
+        }
+        else if((/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(email.toLowerCase())==false)
+        {
+            throw "Email is in wrong format, please check";
+        }
+
+
+    }
+
+
+
+    if(password)
+    {
+
+        if(!isString(password))
+        {
+            throw 'Enter password as string';
+        }
+        else if(check_for_spaces(password))
+        {
+            throw "Enter password without spaces"
+        }
+        else if(/^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/.test(password)==false)
+        {
+            throw 'password should be at least six characters without spaces'
+        }
+
+
+    }
+
+
+    if(dateOfBirth)
+    {
+
+        if(!isString(dateOfBirth))
+        {
+            throw 'Enter dateOfBirth as string';
+        }
+        else if(check_for_spaces(dateOfBirth))
+        {
+            throw "Enter dateOfBirth without spaces"
+        }
+        else if(!isDate(dateOfBirth))
+        {
+            throw 'Please enter a correct DOB in the format mm/dd/yyyy'
+        }
+
+        let age=dateOfBirthCheck(dateOfBirth)
+
+        if(!(age>13 && age<120))
+        {
+            throw 'Sorry your age is not appropriate'
+        } 
+
+
+    }
+
+
+
+    
+    if(gender)
+    {
+
+        if(!isString(gender))
+        {
+            throw 'Enter gender as string';
+        }
+        else if(check_for_spaces(gender))
+        {
+            throw "Enter gender without spaces"
+        }
+        else if(!(genders.includes(gender)))
+        {
+
+            throw 'Please enter a valid gender male, female , others, nodisclosure'
+        }
+        
+
+    }
+
+
+
+    
+
+
+    if(interestedIn)                                                            //interestedIn check             
+    {
+
+        if(!isString(interestedIn))
+        {
+            throw 'Enter interestedIn as string';
+        }
+        else if(check_for_spaces(interestedIn))
+        {
+            throw "Enter interestedIn without spaces"
+        }
+      
+
+    }
+
+
+
+    if(relationshipStatus)                                                       //relationshipStatus check             
+    {
+
+        if(!isString(relationshipStatus))
+        {
+            throw 'Enter relationshipStatus as string';
+        }
+        else if(check_for_spaces(relationshipStatus))
+        {
+            throw "Enter relationshipStatus without spaces"
+        }
+        else if(!(relationship.includes(relationshipStatus)))
+        {
+
+            throw 'Please enter a valid relationshipStatus married, single, inarelation, nodisclosure'
+        }
+
+    }
+
+
+    
+}
+
 function dateOfBirthCheck(dateOfBirth)
 {
 
@@ -376,7 +573,6 @@ async function getUser(id)
 
 
 
-
     async function findUser(email)
     {
         const userCollection=await users()
@@ -412,11 +608,14 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
     const hash = await bcrypt.hash(password, saltRounds); 
 
 
+    let lowerEmail=email.toLowerCase()
+
+
     let userdata={
 
         firstName,
         lastName,
-        email,
+        email:lowerEmail,
         password:hash,
         dateOfBirth,
         gender,
@@ -466,10 +665,32 @@ async function login(email,password)
 
         let compare = await bcrypt.compare(password, storedPassword);
 
+        userinfo._id=userinfo._id.toString()
+
 
         if(compare)
         {
-            userinfo._id=userinfo._id.toString()
+           
+
+
+            let userdata={
+
+                firstName: userinfo.firstName,
+                lastName: userinfo.lastName,
+                email: userinfo.email,
+                dateOfBirth: userinfo.dateOfBirth,
+                gender: userinfo.gender,
+                interestedIn: userinfo.interestedIn,
+                relationshipStatus: userinfo.relationshipStatus
+                
+            }
+ 
+ 
+            let stringUserData= JSON.stringify(userdata)
+
+         await client.hsetAsync("userList",  userinfo._id, stringUserData);
+    
+
             
             return userinfo
         }
@@ -483,12 +704,190 @@ async function login(email,password)
 
 
 
+    async function logout(id)
+    {
+
+        let {ObjectId}=require('mongodb');
+
+        let parsedId= ObjectId(id);
+
+
+        const userinfo=await getUser(parsedId);
+      
+
+        userinfo._id=userinfo._id.toString()
+
+        await client.hdelAsync("userList",  userinfo._id);
+    }
+
+
+
+    async function updateProfile(id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+    {
+
+
+    updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+
+
+
+    let update= await updateData(id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+
+    
+    
+    const user= await users()
+
+
+    
+    let {ObjectId}=require('mongodb');
+
+    let parsedId= ObjectId(id);
+
+    
+
+
+    await user.updateOne({_id:parsedId},{ $set: /* {
+    
+            "firstName": updateData.firstName,
+            "lastName": updateData.lastName,
+            "email": updateData.email,
+            "dateOfBirth": updateData.dateOfBirth,
+            "gender": updateData.gender,
+            "interestedIn": updateData.interestedIn,
+            "relationshipStatus": updateData.relationshipStatus
+        } */ update});
+
+    
+
+
+        const userinfo=await getUser(parsedId);
+
+        userinfo._id=userinfo._id.toString()
+
+        let userdata={
+
+            firstName: userinfo.firstName,
+            lastName: userinfo.lastName,
+            email: userinfo.email,
+            dateOfBirth: userinfo.dateOfBirth,
+            gender: userinfo.gender,
+            interestedIn: userinfo.interestedIn,
+            relationshipStatus: userinfo.relationshipStatus
+            
+        }
+
+
+        await client.hsetAsync("userList",  userinfo._id, JSON.stringify(userdata));
+        
+    }
+
+
+
+    async function updateData(id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+    {
+
+        let updateData={}
+
+
+                    
+                let {ObjectId}=require('mongodb');
+
+                let parsedId= ObjectId(id);
+
+                let object=await getUser(parsedId);
+
+
+        if(firstName && firstName!=object.firstName)
+        {
+                updateData.firstName= firstName
+    
+        }
+    
+        
+    
+        if(lastName && lastName!=object.lastName)
+        {
+                updateData.lastName= lastName
+    
+        }
+    
+      
+    
+        if(email && email.toLowerCase()!=object.email)
+        {
+                updateData.email= email.toLowerCase()
+    
+        }
+    
+
+        
+
+        if(password)
+        {
+
+            storedPassword= object.password
+
+            let compare = await bcrypt.compare(password, storedPassword);
+    
+
+            if(!compare)
+            {
+            const hash = await bcrypt.hash(password, saltRounds); 
+
+                updateData.password= hash
+            }
+    
+        }
+    
+       
+        if(dateOfBirth && dateOfBirth!=object.dateOfBirth)
+        {
+                updateData.dateOfBirth= dateOfBirth
+    
+        }
+    
+       
+    
+    
+        if(gender && gender!=object.gender)
+        {
+                updateData.gender= gender
+    
+        }
+    
+        
+    
+    
+        if(interestedIn && interestedIn!=object.interestedIn)
+        {
+                updateData.interestedIn= interestedIn
+    
+        }
+    
+       
+    
+        if(relationshipStatus && relationshipStatus!=object.relationshipStatus)
+        {
+                updateData.relationshipStatus= relationshipStatus
+    
+        }
+    
+       
+
+        return updateData
+
+
+
+    }
+
+
 
 
 
 module.exports={
 
     signUp,
-    login
+    login,
+    logout,
+    updateProfile
 
 }

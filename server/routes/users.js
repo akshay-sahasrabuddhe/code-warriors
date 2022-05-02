@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const usersData=data.users;
-const jwt= require('jsonwebtoken')
-const nodemailer= require('nodemailer')
-const crypto = require('crypto')
 
 
 function signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
@@ -281,6 +278,191 @@ function loginCheck(email,password)
 
 
 
+function updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+{
+
+    const genders=["male","female","others","nodisclosure"]    
+
+    const relationship=["married", "single", "inarelation", "nodisclosure"]
+
+
+     if(firstName)
+    {
+
+        if(!isString(firstName))
+        {
+            throw 'Enter firstName as string';
+        }
+        else if(check_for_spaces(firstName))
+        {
+            throw "Enter firstName without spaces"
+        }
+        else if(/^([a-zA-Z]{2,})*$/.test(firstName)==false)
+        {
+            throw 'firstName should be at least two characters without spaces'
+        }
+
+
+    }
+
+
+
+     if(lastName)
+    {
+
+        if(!isString(lastName))
+        {
+            throw 'Enter lastName as string';
+        }
+        else if(check_for_spaces(lastName))
+        {
+            throw "Enter lastName without spaces"
+        }
+        else if(/^([a-zA-Z]{2,})*$/.test(lastName)==false)
+        {
+            throw 'lastName should be at least two characters without spaces'
+        }
+
+
+    }
+    
+
+
+    if(email)
+    {
+
+        if(!isString(email))
+        {
+            throw 'Enter email as string';
+        }
+        else if(check_for_spaces(email))
+        {
+            throw "Enter email without spaces"
+        }
+        else if((/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(email.toLowerCase())==false)
+        {
+            throw "Email is in wrong format, please check";
+        }
+
+
+    }
+
+
+
+    if(password)
+    {
+
+        if(!isString(password))
+        {
+            throw 'Enter password as string';
+        }
+        else if(check_for_spaces(password))
+        {
+            throw "Enter password without spaces"
+        }
+        else if(/^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/.test(password)==false)
+        {
+            throw 'password should be at least six characters without spaces'
+        }
+
+
+    }
+
+    if(dateOfBirth)
+    {
+
+        if(!isString(dateOfBirth))
+        {
+            throw 'Enter dateOfBirth as string';
+        }
+        else if(check_for_spaces(dateOfBirth))
+        {
+            throw "Enter dateOfBirth without spaces"
+        }
+        else if(!isDate(dateOfBirth))
+        {
+            throw 'Please enter a correct DOB in the format mm/dd/yyyy'
+        }
+
+        let age=dateOfBirthCheck(dateOfBirth)
+
+        if(!(age>13 && age<120))
+        {
+            throw 'Sorry your age is not appropriate'
+        } 
+
+
+    }
+
+
+
+    
+    if(gender)
+    {
+
+        if(!isString(gender))
+        {
+            throw 'Enter gender as string';
+        }
+        else if(check_for_spaces(gender))
+        {
+            throw "Enter gender without spaces"
+        }
+        else if(!(genders.includes(gender)))
+        {
+
+            throw 'Please enter a valid gender male, female , others, nodisclosure'
+        }
+        
+
+    }
+
+
+
+    
+
+
+    if(interestedIn)                                                            //interestedIn check             
+    {
+
+        if(!isString(interestedIn))
+        {
+            throw 'Enter interestedIn as string';
+        }
+        else if(check_for_spaces(interestedIn))
+        {
+            throw "Enter interestedIn without spaces"
+        }
+      
+
+    }
+
+
+
+    if(relationshipStatus)                                                       //relationshipStatus check             
+    {
+
+        if(!isString(relationshipStatus))
+        {
+            throw 'Enter relationshipStatus as string';
+        }
+        else if(check_for_spaces(relationshipStatus))
+        {
+            throw "Enter relationshipStatus without spaces"
+        }
+        else if(!(relationship.includes(relationshipStatus)))
+        {
+
+            throw 'Please enter a valid relationshipStatus married, single, inarelation, nodisclosure'
+        }
+
+    }
+
+
+    
+}
+
+
 function dateOfBirthCheck(dateOfBirth)
 {
 
@@ -364,7 +546,13 @@ function isString(x)                    //common code for strings
 
 
 
-
+router.get('/session', async(req,res) => {
+    console.log(req.session.cookie);
+    console.log(req.session.user);
+    if(req.session.user){
+        res.json({user:req.session.user});
+    }
+})
 
 
 router.post("/signup", async(req,res)=>{
@@ -418,7 +606,7 @@ router.post('/login', async(req,res)=>{
 
     let email=req.body.email;
     let password=req.body.password;
-  
+        
     try{
   
       loginCheck(email,password)
@@ -436,10 +624,11 @@ router.post('/login', async(req,res)=>{
   
         const login= await usersData.login(req.body.email,req.body.password)
   
-        req.session.user={email : login.email, _id : login._id}
-      
-        res.status(200).json({email : login.email, _id : login._id})
-      }
+        req.session.user={name: login.firstName + " " +login.lastName , _id : login._id}
+        
+        res.status(200).json({name: login.firstName + " " +login.lastName, _id : login._id})
+       
+    }
   
         catch(e)
       {
@@ -462,11 +651,25 @@ router.post('/login', async(req,res)=>{
 
     if(req.session.user)
     {
-    req.session.destroy()
     
-    res.clearCookie('AuthCookie')
-  
-    res.status(200).json({user: "logged out"})
+    try{
+
+        usersData.logout(req.session.user._id)
+
+        res.clearCookie('AuthCookie').status(200).json({user: "logged out"})
+
+        req.session.destroy()
+
+    }
+
+    catch(e)
+    {
+        res.status(500).json({error:"Internal Server Error"})  
+
+      
+    }
+
+
     }
   
   
@@ -475,7 +678,40 @@ router.post('/login', async(req,res)=>{
   
 
 
+    router.patch('/updateprofile', async(req,res)=>{
 
+
+        const {firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}= req.body
+
+        try{
+
+            updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+        }
+        
+        catch(e)
+        {
+            res.status(400).json({error:e}) 
+            return
+        }
+
+
+        try{
+
+        await usersData.updateProfile(req.session.user._id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+
+        res.json({updateprofile:"Successful"}).status(200)
+
+        }
+
+        catch(e)
+        {
+            res.status(500).json({error:"Internal Server Error"}) 
+        }
+        
+
+
+
+    })
 
 
 
