@@ -12,6 +12,7 @@ const unlinkFile = util.promisify(fs.unlink);
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const { uploadFile, getFileStream } = require("../helpers/s3");
+
 router.get("/:id", async (req, res) => {
   try {
     let id = req.params.id;
@@ -130,6 +131,7 @@ router.put("/:id", async (req, res) => {
     return;
   }
 });
+
 router.patch("/:id", async (req, res) => {
   const updatedData = req.body;
   try {
@@ -195,6 +197,7 @@ router.patch("/:id", async (req, res) => {
     return;
   }
 });
+
 router.delete("/:id", async (req, res) => {
   try {
     await postData.get(req.params.id);
@@ -237,6 +240,7 @@ router.post("/like/:id", async (req, res) => {
     return;
   }
 });
+
 router.get("/images/:key", (req, res) => {
   console.log(req.params);
   const key = req.params.key;
@@ -244,4 +248,5 @@ router.get("/images/:key", (req, res) => {
 
   readStream.pipe(res);
 });
+
 module.exports = router;
