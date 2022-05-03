@@ -721,6 +721,13 @@ router.post('/login', async(req,res)=>{
 
         catch(e)
         {
+            if(e=="User already exists with this email")
+            {
+                res.status(400).json({error:e}) 
+
+                return
+            }
+
             res.status(500).json({error:"Internal Server Error"}) 
         }
         
@@ -731,7 +738,23 @@ router.post('/login', async(req,res)=>{
 
 
 
+    router.get('/getUserData', async(req,res)=>{
 
+        try{
+
+            let userData= await usersData.getUserData(req.session.user._id)
+
+                res.status(200).json(userData)
+
+        }
+
+        catch(e)
+        {
+            res.status(500).json({error:"Internal Server Error"})
+        }
+  
+    
+    })
 
 
 module.exports = router;
