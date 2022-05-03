@@ -6,13 +6,19 @@ import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
 import '../App.css';
 import Signup from "./Signup";
 import axios from "axios";
+import {ReactSession} from "react-client-session";
 import { useNavigate } from "react-router-dom";
+
 const Login = (props) => {
+
+  ReactSession.setStoreType("localStorage");
+    const [state, setState] = useState(undefined);
+
     const navigate = useNavigate();
     let loginEmail;
-    let loginPswd;
+    let loginPswd; 
 
-    console.log(localStorage);
+    //console.log(localStorage);
  
 
     return(
@@ -100,8 +106,9 @@ const Login = (props) => {
                
                 if(!('error' in data)){
                     localStorage.setItem("user",data.name);
-                    localStorage.setItem("userId",data._id)
-                  
+                   // localStorage.setItem("userId",data._id)
+                   localStorage.setItem("userSession", data._id);
+                   
                    btn.disabled = false;
                    navigate('/posts');
                }
