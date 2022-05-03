@@ -716,7 +716,23 @@ router.post('/login', async(req,res)=>{
 
 
 
+    router.get('/getUserData', async(req,res)=>{
 
+        try{
+
+            let userData= await usersData.getUserData(req.session.user._id)
+
+                res.status(200).json(userData)
+
+        }
+
+        catch(e)
+        {
+            res.status(500).json({error:"Internal Server Error"})
+        }
+  
+    
+    })
 
 
 module.exports = router;

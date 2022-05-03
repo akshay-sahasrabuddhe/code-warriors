@@ -717,7 +717,7 @@ async function login(email,password)
 
         userinfo._id=userinfo._id.toString()
 
-        await client.hdelAsync("userList",  userinfo._id);
+        await client.delAsync("userList");
     }
 
 
@@ -881,6 +881,16 @@ async function login(email,password)
 
 
 
+    async function getUserData(id)
+    {
+
+        let cacheData= await client.hgetAsync('userList',id);
+
+
+        cacheData=JSON.parse(cacheData)
+
+        return cacheData
+    }
 
 
 module.exports={
@@ -888,6 +898,7 @@ module.exports={
     signUp,
     login,
     logout,
-    updateProfile
+    updateProfile,
+    getUserData
 
 }
