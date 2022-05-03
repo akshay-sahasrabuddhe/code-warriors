@@ -705,6 +705,13 @@ router.post('/login', async(req,res)=>{
 
         catch(e)
         {
+            if(e=="User already exists with this email")
+            {
+                res.status(400).json({error:e}) 
+
+                return
+            }
+
             res.status(500).json({error:"Internal Server Error"}) 
         }
         

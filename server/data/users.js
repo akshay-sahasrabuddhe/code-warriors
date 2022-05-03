@@ -814,6 +814,12 @@ async function login(email,password)
     
         if(email && email.toLowerCase()!=object.email)
         {
+
+            if(await findUser(email)!=null)
+            {
+                throw "User already exists with this email"
+            }
+            
                 updateData.email= email.toLowerCase()
     
         }
