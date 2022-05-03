@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React,{useEffect, useState} from "react";
 import Navigation from "./Navigation";
 import '../App.css';
+import axios from "axios";
 import logoImg from '../images/logo.gif';
 import maleUser from '../images/male-user.svg';
 import femaleUser from '../images/female-user.svg';
@@ -8,8 +9,19 @@ import otherUser from '../images/other.svg';
 import $, { event } from 'jquery';
 import { Modal } from 'bootstrap';
 import {Form, FloatingLabel, Button, Row, Col} from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
+
+const url = "http://localhost:3000/session";
 
 const Userprofile = (props) => {
+    
+    // const navigate = useNavigate();
+
+    // let userId = localStorage.getItem("userId");
+
+        
+   
+   
 
     let firstName;
     let lastName;
@@ -20,6 +32,40 @@ const Userprofile = (props) => {
     let gender;
     let relationStatus;
     let interests;
+
+    
+    const [userprof , setuserprof] = useState(undefined);
+    //const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchData(){
+            //const { data } = await axios.get(url);
+
+            const instance = axios.create({
+                baseURL: '*',
+                timeout: 20000,
+              withCredentials: true,
+              headers: {
+                  'Content-Type': 'application/json;charset=UTF-8',
+                  "Access-Control-Allow-Origin": "*",
+                },
+              validateStatus: function (status) {
+                  return status < 500; // Resolve only if the status code is less than 500
+                }
+            });
+
+            //const { data } = await axios.post(`http://localhost:3000/login`[user[instance]]);
+            const { data } = await instance.get(`http://localhost:3000/session`);  
+            console.log(data);
+
+
+            console.log(url);
+            setuserprof(data);
+            console.log(userprof);
+        }
+        fetchData();
+    },[]);
+
 
     return (
         <> 
