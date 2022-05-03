@@ -3,21 +3,24 @@ import {Card} from "react-bootstrap";
 import axios from "axios";
 import Navigation from "./Navigation";
 import { geolocated } from "react-geolocation";
-
+import { useNavigate, Navigate } from "react-router-dom";
+import cryptojs from 'crypto-js';
 import '../App.css';
-
+import {ReactSession} from "react-client-session";
 const API_KEY = '4581b147b62a4819b9d165739222003';
 
 const Weather = (props) => {
-
+    let flag = false;
     const [weather, setWeather] = useState(undefined);
     const [latitude, setLat] = useState(null);
     const [longitude, setLong] = useState(null);
     const [loading, setLoading] = useState(true);
     const [state, setState] = useState(null);
     const [region, setRegion] = useState(null);
+    const [session , setSession] = useState(true);
     let result = null;
-   
+    
+    console.log(localStorage);
 /*
     useEffect(() => {
         async function fetchData(){ 
@@ -88,6 +91,59 @@ const Weather = (props) => {
    }*/
   
     useEffect(() => {
+        async function checkSession(){
+            try{
+                const instance = axios.create({
+                    baseURL: '*',
+                    timeout: 20000,
+                  withCredentials: true,
+                  headers: {
+                      'Content-Type': 'application/json;charset=UTF-8',
+                      "Access-Control-Allow-Origin": "*",
+                    },
+                  validateStatus: function (status) {
+                      return status < 500; // Resolve only if the status code is less than 500
+                    }
+                });
+  
+                const { data } = await instance.get(`http://localhost:3000/session`);
+                console.log(data);
+                if('error' in data){
+                    setSession(false);
+                    setLoading(true);
+                    //return;
+                }
+                else{
+                    
+                    let bytes1 = cryptojs.AES.decrypt(data._id, 'MySecretKey');
+                    console.log(bytes1);
+                    let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
+                    
+                    let id = localStorage.getItem("userSession");
+                    let bytes = cryptojs.AES.decrypt(id, 'MySecretKey');
+                    console.log(bytes);
+                   // let decid = JSON.parse(temp);
+                   let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)); 
+                   
+                   
+                   if(tempid === decid.toString()){
+                    
+                    console.log("here");
+                       console.log("works");
+                       setSession(true);
+                        setLoading(false);
+                   }
+                   else{
+                    setSession(false);
+                    setLoading(false); 
+                   }
+                }
+            }
+            catch(e){
+                console.log(e);
+            }
+        }
+
         async function fetchData() {
             try{
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -106,6 +162,7 @@ const Weather = (props) => {
             console.log(loc);
             setRegion(loc);
             setWeather(data.current);
+            setLoading(false);
             }
         
             
@@ -114,12 +171,31 @@ const Weather = (props) => {
             console.log(e);
         }
       }
-    fetchData();
+
+    if(localStorage.length !== 0){
+        checkSession();
+        if(session){
+            fetchData();
+        }
+        //return;
+    }
+    else{
+        console.log("here in the outer if");
+        setSession(false);
+    }
+    
     }, [latitude, longitude]);
     
 
     console.log(weather);
     console.log(region);
+
+    if(!session){
+        alert("You should login first");
+        return (
+        <Navigate to="/" replace />
+        );
+    }
 
    if(weather){
       let day; 
@@ -130,7 +206,7 @@ const Weather = (props) => {
         else{
             day = false;
         }
-
+        if(!loading){
         return(
             <div>
                 <Navigation></Navigation>
@@ -157,12 +233,13 @@ const Weather = (props) => {
             </div>
             </div>
         );
-   }
+   }}
    else{
       // setStatus(null);
        return(
         <div>
-            <span>Could not get the location</span>
+            <Navigation></Navigation>
+            <span>Loading...</span>
         </div>
        );
    }

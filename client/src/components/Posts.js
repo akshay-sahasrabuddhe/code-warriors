@@ -7,6 +7,12 @@ import $, { event } from 'jquery';
 import { Modal } from 'bootstrap';
 import { useNavigate, Navigate } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
+import cryptojs from 'crypto-js';
+import Session from "react-session-api";
+import {ReactSession} from "react-client-session";
+//const bcrypt = require('bcryptjs');
+//const saltRounds = 16;
 
 const Posts = (props) => {
 
@@ -14,27 +20,87 @@ const Posts = (props) => {
     console.log(localStorage);
     //localStorage.clear();
     let user = null;
-    console.log(localStorage.length);
-    if(localStorage.length === 0){
-
-        console.log("Here");
-        alert("You should login first");
-        return (
-        <Navigate to="/" replace />
-        );
-
-    }
-    else{
-        user = localStorage.getItem("user");
-    }
-
     
-
+    //console.log(ReactSession.get("userSession"));
+    const [session , setSession] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        async function checkSession(){
+            try{
+                const instance = axios.create({
+                    baseURL: '*',
+                    timeout: 20000,
+                  withCredentials: true,
+                  headers: {
+                      'Content-Type': 'application/json;charset=UTF-8',
+                      "Access-Control-Allow-Origin": "*",
+                    },
+                  validateStatus: function (status) {
+                      return status < 500; // Resolve only if the status code is less than 500
+                    }
+                });
+    
+                const { data } = await instance.get(`http://localhost:3000/session`);
+                console.log(data);
+                if('error' in data){
+                    setSession(false);
+                    setLoading(false);
+                   // return;
+                }
+                else{
+                    let bytes1 = cryptojs.AES.decrypt(data._id, 'MySecretKey');
+                    console.log(bytes1);
+                    let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
+                    
+                    let id = localStorage.getItem("userSession");
+                    let bytes = cryptojs.AES.decrypt(id, 'MySecretKey');
+                    console.log(bytes);
+                   // let decid = JSON.parse(temp);
+                   let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)); 
+                   
+                   
+                   if(tempid === decid.toString()){
+                    
+                    console.log("here");
+                       console.log("works");
+                       setSession(true);
+                        setLoading(false);
+                   }
+                   else{
+                    setSession(false);
+                    setLoading(false); 
+                   }
+                       // return;
+                }
+            }
+            catch(e){
+                console.log(e);
+            }
+        }
+    
+        if(localStorage.length !== 0){
+            console.log("here");
+            checkSession();
+            //return;
+        }
+        else{
+            console.log("here in the outer if");
+            setLoading(false);
+            setSession(false);
+        }
+    
+    },[]);
+    if(localStorage.getItem("user") && localStorage.getItem('user') !== "undefined"){
+        //console.log(localStorage.getItem("user"));
+    let bytes = cryptojs.AES.decrypt(localStorage.getItem('user'), 'MySecretKey');
+    user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+    }
+    
     function openModal (){
         let myModal = new Modal(document.getElementById('myModal'));
         myModal.show();
     }
-
 
     const openComments = param => event => {
         let a = "";
@@ -50,8 +116,22 @@ const Posts = (props) => {
             },0);
       };
 
+      if(loading){
+        return(
+            <div>
+                <span>Loading....</span>
+            </div>
+        );
+    }
+    else{
+        if(!session){
+            return (
+                <Navigate to="/" replace />
+                );
+        }
+        else{
+
     return (
-        
         // ---------- Start of Posts ---------- // 
         <> 
         <Navigation></Navigation>  
@@ -350,6 +430,8 @@ const Posts = (props) => {
         </>
         
     );
+        }
+    }
 };
 
 export default Posts;
