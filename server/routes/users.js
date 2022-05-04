@@ -640,7 +640,7 @@ router.post('/login', async(req,res)=>{
         let id = login._id;
         const nameHash = cryptojs.AES.encrypt(JSON.stringify(name), 'MySecretKey').toString();;
         const idHash =  cryptojs.AES.encrypt(JSON.stringify(id), 'MySecretKey').toString();;
-        req.session.user={name: nameHash , _id : idHash}
+        req.session.user={name: nameHash , _id : idHash, id:login._id}
         console.log(nameHash);
         res.status(200).json({name: nameHash, _id : idHash});
        
@@ -670,7 +670,7 @@ router.post('/login', async(req,res)=>{
     
     try{
 
-        usersData.logout(req.session.user._id)
+        usersData.logout(req.session.user.id)
 
         res.clearCookie('AuthCookie').status(200).json({user: "logged out"})
 
@@ -713,7 +713,7 @@ router.post('/login', async(req,res)=>{
 
         try{
 
-        await usersData.updateProfile(req.session.user._id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+        await usersData.updateProfile(req.session.user.id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
         res.json({updateprofile:"Successful"}).status(200)
 
@@ -742,7 +742,11 @@ router.post('/login', async(req,res)=>{
 
         try{
 
-            let userData= await usersData.getUserData(req.session.user._id)
+            /* let bytes = cryptojs.AES.decrypt(req.session.user._id, 'MySecretKey');
+
+            let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)) */;
+
+            let userData= await usersData.getUserData(req.session.user.id)
 
                 res.status(200).json(userData)
 
