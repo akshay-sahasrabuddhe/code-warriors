@@ -2,7 +2,7 @@ const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 const bcrypt = require('bcryptjs');
 const saltRounds = 16;
-const crypto = require('crypto')
+//const crypto = require('crypto')
 const redis = require('redis');
 const client = redis.createClient();
 const bluebird = require("bluebird");
@@ -814,6 +814,12 @@ async function login(email,password)
     
         if(email && email.toLowerCase()!=object.email)
         {
+
+            if(await findUser(email)!=null)
+            {
+                throw "User already exists with this email"
+            }
+            
                 updateData.email= email.toLowerCase()
     
         }

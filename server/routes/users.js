@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const data = require('../data');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('MySecretKey');
+const bcrypt = require('bcryptjs');
+var cryptojs = require("crypto-js");
+const saltRounds = 16;
 const usersData=data.users;
 
 
@@ -547,10 +552,16 @@ function isString(x)                    //common code for strings
 
 
 router.get('/session', async(req,res) => {
-    console.log(req.session.cookie);
-    console.log(req.session.user);
+    //console.log(document.cookie);
+    //console.log(req.session.cookie);
+    //console.log(req.session.user);
+    //const nameHash = cryptojs.AES.encrypt(JSON.stringify(req.session.user.name), 'MySecretKey').toString();;
+    //const idHash =  cryptojs.AES.encrypt(JSON.stringify(req.session.user._id), 'MySecretKey').toString();;
+
     if(req.session.user){
-        res.json({user:req.session.user});
+        res.status(200).json(req.session.user);
+    }else{
+    res.status(404).json({error:"not logged in"});
     }
 })
 
@@ -624,10 +635,15 @@ router.post('/login', async(req,res)=>{
     try{
   
         const login= await usersData.login(req.body.email,req.body.password)
-  
-        req.session.user={name: login.firstName + " " +login.lastName , _id : login._id}
-        
-        res.status(200).json({name: login.firstName + " " +login.lastName, _id : login._id})
+        console.log("here");
+       
+        let name = login.firstName + " " +login.lastName;
+        let id = login._id;
+        const nameHash = cryptojs.AES.encrypt(JSON.stringify(name), 'MySecretKey').toString();;
+        const idHash =  cryptojs.AES.encrypt(JSON.stringify(id), 'MySecretKey').toString();;
+        req.session.user={name: nameHash , _id : idHash}
+        console.log(nameHash);
+        res.status(200).json({name: nameHash, _id : idHash});
        
     }
   
@@ -706,6 +722,13 @@ router.post('/login', async(req,res)=>{
 
         catch(e)
         {
+            if(e=="User already exists with this email")
+            {
+                res.status(400).json({error:e}) 
+
+                return
+            }
+
             res.status(500).json({error:"Internal Server Error"}) 
         }
         
