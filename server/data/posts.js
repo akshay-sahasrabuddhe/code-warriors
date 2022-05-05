@@ -22,7 +22,7 @@ module.exports = {
     let newPost = {
       title: title,
       body: body,
-      dateOfPost: moment().format(),
+      dateOfPost: moment().toISOString(),
       isPublic: isPublic,
       userThatPosted: userThatPosted,
       imagePath: imagePath,
@@ -57,12 +57,13 @@ module.exports = {
 
     const postList = await postCollection
       .find({})
-      .sort({ dateOfPost: 1 })
+      .sort({ dateOfPost: -1 })
       .toArray();
     const pstList = [];
     postList.forEach((item) => {
       let obj = item;
       obj._id = item._id.toString();
+      obj.dateOfPost = moment(obj.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
       // obj.name = item.name;
       pstList.push(obj);
     });
@@ -209,87 +210,72 @@ module.exports = {
   async memories(userID) {
     let USERID = errorhandle.checkAndGetID(userID, "Post ID");
     const postCollection = await posts();
-
+    // console.log(USERID);
     //For last months post
     const monthList = await postCollection
       .find({
-        userThatPosted: {
-          _id: USERID,
-        },
+        "userThatPosted._id": USERID,
         dateOfPost: {
-          $gt: moment()
-            .subtract(1, "month")
-            .startOf("month")
-            .format("DD/MM/YYYY HH:mm:ss"),
-          $lte: moment()
-            .subtract(1, "month")
-            .endOf("month")
-            .format("DD/MM/YYYY HH:mm:ss"),
+          $gt: moment().subtract(1, "month").startOf("month").toISOString(),
+
+          $lte: moment().subtract(1, "month").endOf("month").toISOString(),
         },
       })
       .sort({ dateOfPost: -1 })
       .toArray();
+    // console.log(monthList);
     const monList = [];
     monthList.forEach((item) => {
       let obj = item;
       obj._id = item._id.toString();
+      obj.dateOfPost = moment(obj.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
       // obj.name = item.name;
       monList.push(obj);
-    });
-
-    //For todays post
-    const todayList = await postCollection
-      .find({
-        userThatPosted: {
-          _id: USERID,
-        },
-        dateOfPost: {
-          $gt: moment()
-            .subtract(1, "month")
-            .startOf("month")
-            .format("DD/MM/YYYY HH:mm:ss"),
-          $lte: moment()
-            .subtract(1, "month")
-            .endOf("month")
-            .format("DD/MM/YYYY HH:mm:ss"),
-        },
-      })
-      .sort({ dateOfPost: -1 })
-      .toArray();
-    const todList = [];
-    todayList.forEach((item) => {
-      let obj = item;
-      obj._id = item._id.toString();
-      // obj.name = item.name;
-      todList.push(obj);
     });
 
     //for last weeks posts
     const weekList = await postCollection
       .find({
-        userThatPosted: {
-          _id: USERID,
-        },
+        "userThatPosted._id": USERID,
         dateOfPost: {
-          $gt: moment()
-            .subtract(1, "week")
-            .startOf("week")
-            .format("DD/MM/YYYY HH:mm:ss"),
-          $lte: moment()
-            .subtract(1, "week")
-            .endOf("week")
-            .format("DD/MM/YYYY HH:mm:ss"),
+          $gt: moment().subtract(1, "week").startOf("week").toISOString(),
+          $lte: moment().subtract(1, "week").endOf("week").toISOString(),
         },
       })
       .sort({ dateOfPost: -1 })
       .toArray();
+    // console.log(weekList);
     const wekList = [];
     weekList.forEach((item) => {
       let obj = item;
       obj._id = item._id.toString();
+      obj.dateOfPost = moment(obj.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
       // obj.name = item.name;
       wekList.push(obj);
     });
+
+    //For todays post
+
+    const todayList = await postCollection
+      .find({
+        "userThatPosted._id": USERID,
+        dateOfPost: {
+          $gt: moment().startOf("day").toISOString(),
+
+          $lte: moment().endOf("day").toISOString(),
+        },
+      })
+      .sort({ dateOfPost: -1 })
+      .toArray();
+    // console.log(todayList);
+    const todList = [];
+    todayList.forEach((item) => {
+      let obj = item;
+      obj._id = item._id.toString();
+      obj.dateOfPost = moment(obj.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
+      todList.push(obj);
+    });
+
     return [
       {
         today: todList,
@@ -301,6 +287,7 @@ module.exports = {
 };
 
 // console.log(
-//   moment().subtract(1, "week").startOf("week").format("DD/MM/YYYY HH:mm:ss") +
-//     moment().subtract(1, "week").endOf("week").format("DD/MM/YYYY HH:mm:ss")
+//   typeof new Date() +
+//     typeof new Date(moment().subtract(1, "week").startOf("week").format())
+//   // moment().subtract(1, "week").endOf("week").format("DD/MM/YYYY HH:mm:ss")
 // );
