@@ -22,7 +22,7 @@ module.exports = {
     let newPost = {
       title: title,
       body: body,
-      dateOfPost: moment().format("DD/MM/YYYY HH:mm:ss"),
+      dateOfPost: moment().format(),
       isPublic: isPublic,
       userThatPosted: userThatPosted,
       imagePath: imagePath,
@@ -48,13 +48,17 @@ module.exports = {
       throw "Error: No post with that id";
     }
     post._id = post._id.toString();
+    post.dateOfPost = moment(post.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
     return post;
   },
 
   async getAll() {
     const postCollection = await posts();
 
-    const postList = await postCollection.find({}).toArray();
+    const postList = await postCollection
+      .find({})
+      .sort({ dateOfPost: 1 })
+      .toArray();
     const pstList = [];
     postList.forEach((item) => {
       let obj = item;
@@ -201,4 +205,102 @@ module.exports = {
 
     return await this.get(postId);
   },
+
+  async memories(userID) {
+    let USERID = errorhandle.checkAndGetID(userID, "Post ID");
+    const postCollection = await posts();
+
+    //For last months post
+    const monthList = await postCollection
+      .find({
+        userThatPosted: {
+          _id: USERID,
+        },
+        dateOfPost: {
+          $gt: moment()
+            .subtract(1, "month")
+            .startOf("month")
+            .format("DD/MM/YYYY HH:mm:ss"),
+          $lte: moment()
+            .subtract(1, "month")
+            .endOf("month")
+            .format("DD/MM/YYYY HH:mm:ss"),
+        },
+      })
+      .sort({ dateOfPost: -1 })
+      .toArray();
+    const monList = [];
+    monthList.forEach((item) => {
+      let obj = item;
+      obj._id = item._id.toString();
+      // obj.name = item.name;
+      monList.push(obj);
+    });
+
+    //For todays post
+    const todayList = await postCollection
+      .find({
+        userThatPosted: {
+          _id: USERID,
+        },
+        dateOfPost: {
+          $gt: moment()
+            .subtract(1, "month")
+            .startOf("month")
+            .format("DD/MM/YYYY HH:mm:ss"),
+          $lte: moment()
+            .subtract(1, "month")
+            .endOf("month")
+            .format("DD/MM/YYYY HH:mm:ss"),
+        },
+      })
+      .sort({ dateOfPost: -1 })
+      .toArray();
+    const todList = [];
+    todayList.forEach((item) => {
+      let obj = item;
+      obj._id = item._id.toString();
+      // obj.name = item.name;
+      todList.push(obj);
+    });
+
+    //for last weeks posts
+    const weekList = await postCollection
+      .find({
+        userThatPosted: {
+          _id: USERID,
+        },
+        dateOfPost: {
+          $gt: moment()
+            .subtract(1, "week")
+            .startOf("week")
+            .format("DD/MM/YYYY HH:mm:ss"),
+          $lte: moment()
+            .subtract(1, "week")
+            .endOf("week")
+            .format("DD/MM/YYYY HH:mm:ss"),
+        },
+      })
+      .sort({ dateOfPost: -1 })
+      .toArray();
+    const wekList = [];
+    weekList.forEach((item) => {
+      let obj = item;
+      obj._id = item._id.toString();
+      // obj.name = item.name;
+      wekList.push(obj);
+    });
+    return [
+      {
+        today: todList,
+        week: wekList,
+        month: monList,
+      },
+    ];
+  },
 };
+
+// console.log(
+//   moment().subtract(1, "week").startOf("week").format("DD/MM/YYYY HH:mm:ss") +
+//     moment().subtract(1, "week").endOf("week").format("DD/MM/YYYY HH:mm:ss")
+// );

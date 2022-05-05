@@ -249,4 +249,24 @@ router.get("/images/:key", (req, res) => {
   readStream.pipe(res);
 });
 
+router.get("/memories/:userid", async (req, res) => {
+  try {
+    let id = req.params.userid;
+    let ID = errorhandle.checkAndGetID(id, "User ID");
+  } catch (e) {
+    res.status(400).json({ error: e });
+    return;
+  }
+  try {
+    let id = req.params.userid;
+    let ID = errorhandle.checkAndGetID(id, "User ID");
+    let post = await postData.memories(id);
+    res.json(post);
+    return;
+  } catch (e) {
+    res.status(404).json({ error: e });
+    return;
+  }
+});
+
 module.exports = router;
