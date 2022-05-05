@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-
+const cors = require('cors');
 
 const session = require('express-session')
 
@@ -13,6 +13,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+app.use(cors({
+  origin:['http://localhost:4000'],
+methods:['GET','POST'],
+credentials: true
+}));
+
+
 app.use(session({
   name: 'AuthCookie',
   secret: 'some secret string!',
@@ -22,6 +29,15 @@ app.use(session({
 }))
 
 
+app.get('/session', async(req,res,next)=>{
+  console.log(req.session.cookie);
+    console.log(req.session.user);
+    if(!req.session.user){
+        res.status(404).json({error:"error"});
+        return;
+    }
+    next();
+})
 
 app.get('/logout', async(req,res,next)=>
 {
@@ -58,6 +74,36 @@ app.post('/signup', async(req,res,next)=>
     if(req.session.user)
     {
       res.status(403).json({user:"User is already logged in"});
+    }
+
+    else{
+      next()
+    }
+
+});
+
+
+app.patch('/updateprofile', async(req,res,next)=>
+{
+
+    if(!req.session.user)
+    {
+      res.status(403).json({user:"User is not logged in"});
+    }
+
+    else{
+      next()
+    }
+
+});
+
+
+app.get('/getUserData', async(req,res,next)=>
+{
+
+    if(!req.session.user)
+    {
+      res.status(403).json({user:"User is not logged in"});
     }
 
     else{

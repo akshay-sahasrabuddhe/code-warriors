@@ -4,13 +4,18 @@ import logoImg from '../images/logo.gif';
 import axios from 'axios';
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import cryptojs from 'crypto-js';
+import {ReactSession} from 'react-client-session';
 const Navigation = (props) => {
-    //console.log(localStorage.getItem("userSession"));
-
+ 
     const navigate = useNavigate();
-
-    let user = localStorage.getItem("user");
-
+    let bytes;
+    let user;
+    //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
+    if(localStorage.getItem("user") && localStorage.getItem('user') !== "undefined"){
+        bytes = cryptojs.AES.decrypt(localStorage.getItem('user'), 'MySecretKey');
+        user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+    }
     const handleLogout = async () => {
 
         const instance = axios.create({
@@ -30,6 +35,7 @@ const Navigation = (props) => {
           if(resp.status === 200){
               console.log("logging out");
               localStorage.clear();
+                
               navigate('/');
           }
         console.log(resp);
