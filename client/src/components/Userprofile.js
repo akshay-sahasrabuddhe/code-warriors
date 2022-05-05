@@ -33,9 +33,10 @@ const Userprofile = (props) => {
     let relationStatus;
     let interests;
 
-    let userProfileData = null;
+    let userProfileData,editProfileData = null;
     console.log(url);
     const [about , setAbout] = useState(undefined);
+    const [aboutedit , setAboutEdit] = useState(undefined);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -65,7 +66,6 @@ const Userprofile = (props) => {
         }
         fetchData();
     },[]);
-
 
     userProfileData = about && about.map((n) => {
         return(
@@ -132,6 +132,7 @@ const Userprofile = (props) => {
         
     })
 
+    
 
     if(loading){
         return(
@@ -222,206 +223,307 @@ const Userprofile = (props) => {
                     </div>
                 </div>
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                    <Form className='signupForm' onSubmit={
-                        (e)=>{
-                            e.preventDefault();
-                        
-                        if(!firstName.value){
-                            alert("Please enter first name");
+                <Form className='signupForm' onSubmit={
+                async (e)=>{
+                    e.preventDefault();
+    
+    
+                   let btn = document.getElementById("sub");
+                  btn.disabled = true;
+                   if(!firstName.value){
+                       alert("Please enter first name");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   let regf = /^([a-zA-Z]{2,})*$/;
+                   if(!regf.test(firstName.value)){
+                        alert("Please enter valid first name");
+                        btn.disabled = false;
+                        return;
+                   }
+    
+                   if(!lastName.value){
+                       alert("Please enter last name");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   let regl = /^([a-zA-Z]{2,})*$/;
+                   if(!regl.test(lastName.value)){
+                        alert("Please enter valid first name");
+                        btn.disabled = false;
+                        return;
+                   }
+    
+    
+                   if(!email.value){
+                       alert("Please enter email");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   //let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+                   let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if(!regE.test(email.value.toLowerCase())){
+                    alert("Please enter a valid email");
+                    btn.disabled = false;
+                    return;
+                }
+    
+                   if(!pswd.value){
+                       alert("Please enter password");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
+                if(!regP.test(pswd.value)){
+                    alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
+                    btn.disabled = false;
+                    return;
+                }
+    
+                   if(!confirmPswd.value){
+                       alert("Please enter confirm password");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   if(pswd.value !== confirmPswd.value){
+                       alert("Passwords don't match");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   if(!dob.value){
+                       alert("Please provide your date of birth");
+                       btn.disabled = false;
+                       return;
+                   }
+    
+                   if(dob.value){
+                       let birth = new Date(dob.value);
+                       var month_diff = Date.now() - birth.getTime();  
+      
+    //convert the calculated difference in date format  
+                        let age_dt = new Date(month_diff);   
+      
+    //extract year from date      
+                        let year = age_dt.getUTCFullYear();  
+      
+    //now calculate the age of the user  
+                        let age = Math.abs(year - 1970);  
+                        console.log(age);
+    
+                        if(!(age > 13 && age < 120)){
+                            alert("Should be between age 13 and 120");
+                            dob.value = "";
+                            btn.disabled = false;
                             return;
                         }
-
-                        if(!lastName.value){
-                            alert("Please enter last name");
+                   }
+                   let dateOfBirth = new Date(dob.value + ' EST' );
+                   console.log(dateOfBirth);
+    
+                   dateOfBirth = String(dateOfBirth.getMonth()+1).padStart(2,'0')+'/'+String(dateOfBirth.getDate()).padStart(2,'0')+'/'+dateOfBirth.getFullYear();
+                  
+                   if(!gender.value){
+                       alert("Please provide gender");
+                       btn.disabled = false;
+                       return;
+                   }
+                   const genders=["male","female","others","nodisclosure"];
+    
+                   if(!genders.includes(gender.value)){
+                    alert("Please provide valid gender");
+                    btn.disabled = false;
+                    return;
+                   }
+                  
+                    const relationship=["married", "single", "inarelation", "nodisclosure"]
+                    console.log(relationStatus.value);
+                    if(relationStatus.value){
+                        console.log(relationStatus.value);
+                        if(!relationship.includes(relationStatus.value)){
+                            alert("Please provide valid relation status");
+                            btn.disabled = false;
                             return;
                         }
-                        if(!email.value){
-                            alert("Please enter email");
-                            return;
-                        }
+                    }
+    
+                    let user = {
+                        firstName: firstName.value,
+                        lastName : lastName.value,
+                        email: email.value,
+                        password: pswd.value,
+                        dateOfBirth:dateOfBirth,
+                        gender: gender.value,
+                        relationshipStatus: relationStatus.value,
+                        interestedIn : interests.value
+                    }
+                   // let temp = JSON.parse(user);
+                   let flag = false;
+                   let url = 'http:/localhost:3000/updateprofile'
+                    console.log(user);
+                    //let msg = await axios.post('http:/localhost:3000/signup', user);
 
-                        //let regE = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
-                        let regE = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                        if(!regE.test(email.value.toLowerCase())){
-                            alert("Please enter a valid email");
-                            return;
-                        }
+                    const instance = axios.create({
+                baseURL: '*',
+                timeout: 20000,
+              withCredentials: true,
+              headers: {
+                  'Content-Type': 'application/json;charset=UTF-8',
+                  "Access-Control-Allow-Origin": "*",
+                },
+              validateStatus: function (status) {
+                  return status < 500; // Resolve only if the status code is less than 500
+                }
+            });
 
-                        if(!pswd.value){
-                            alert("Please enter password");
-                            return;
+            await instance.patch(`http://localhost:3000/updateprofile`, user)
+                      .then(function (response) {
+                        console.log(response);
+                        if(response.status === 200){
+                            alert("User registered");
+                            flag = true;
                         }
-
-                        let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
-                        if(!regP.test(pswd.value)){
-                            alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
-                            return;
-                        }
-
-                        if(!confirmPswd.value){
-                            alert("Please enter confirm password");
-                            return;
-                        }
-
-                        if(pswd.value !== confirmPswd.value){
-                            alert("Passwords don't match");
-                            return;
-                        }
-
-                        if(!dob.value){
-                            alert("Please provide your date of birth");
-                            return;
-                        }
-
-                        if(dob.value){
-                            let birth = new Date(dob.value);
-                            var month_diff = Date.now() - birth.getTime();  
-            
-            //convert the calculated difference in date format  
-                                let age_dt = new Date(month_diff);   
-            
-            //extract year from date      
-                                let year = age_dt.getUTCFullYear();  
-            
-            //now calculate the age of the user  
-                                let age = Math.abs(year - 1970);  
-                                console.log(age);
-
-                                if(!(age > 13 && age < 120)){
-                                    alert("Should be between age 13 and 120");
-                                    dob.value = "";
-                                    return;
-                                }
-                        }
-
-                        if(!gender.value){
-                            alert("Please provide gender");
-                            return;
-                        }
-                        
-                        }
-                    }>
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                        //setSuccess(false);
+                        alert("There was some error please try again");
+                       
+                      });
                     
-                    <Row className="mb-4">
-                    <Form.Group as={Col}>
-                    <FloatingLabel
-                        controlId="firstName"
-                        label="First Name"
-                        className="mb-3"
-                        >
-                            <Form.Control  type="text" placeholder="First Name"
-                                className="textform"
-                                ref={(node)=>{
-                                    firstName = node;
-                                }}
-                            />
-                        </FloatingLabel>
-                        </Form.Group>
-                        <Form.Group as={Col}>
-                            <FloatingLabel
-                                controlId="lastName"
-                                label="Last Name"
-                                className="mb-3"
-                            >
-                            <Form.Control required type="text" placeholder="Last Name"
-                                className="textform"
-                                ref={(node)=>{
-                                    lastName = node;
-                                }}
-                            />
-                            </FloatingLabel>
-                        </Form.Group>
-                        </Row>
-        
-                        <Form.Group>
-                            <FloatingLabel
-                                controlId="email"
-                                label="Email"
-                                className="mb-3"
-                            >
-                            <Form.Control required type="email" placeholder="name@example.com"
-                                className="textform"
-                                ref={(node)=>{
-                                    email = node;
-                                }}
-                            />
-                        </FloatingLabel>
-        
-        
-                        <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-                            <Form.Control required type="password" placeholder="Password" 
-                                className="textform"
-                                ref={(node)=>{
-                                    pswd = node;
-                                }}
-                            />
-                        </FloatingLabel>
-
-                        <FloatingLabel controlId="floatingCPassword" label="Confirm Password" className="mb-3">
-                            <Form.Control required type="password" placeholder="Confirm Password"
-                                className="textform"
-                                ref={(node)=>{
-                                    confirmPswd = node;
-                                }}
-                            />
-                        </FloatingLabel>
-
-                        <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
-                            <Form.Control required type="date" placeholder="Date of Birth" 
-                                className="textform"
-                                ref={(node)=>{
-                                    dob = node;
-                                }}
-                            />
-                        </FloatingLabel>
-
-                        <Form.Label className="select" >
-                        Gender
-                        <Form.Select required aria-label="Gender" size='lg'
+                      e.target.reset();
+                      //btn.disabled = false;
+                       if(flag){
+                        
+                        props.handleClose(false);
+                       }            
+                }
+            }>
+               
+               <Row className="mb-4">
+               <Form.Group as={Col}>
+               <FloatingLabel
+                controlId="firstName"
+                label="First Name"
+                className="mb-3"
+                >
+                    <Form.Control  type="text" placeholder="First Name"
                         className="textform"
                         ref={(node)=>{
-                            gender = node;
-                        }}>
-                            <option></option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="others">Others</option>
-                            <option value="nodisclosure">Prefer not to disclose</option>
-                        </Form.Select>
-                        </Form.Label>
-
-                        <Form.Label  className="select">
-                        Relationship Status
-                        <Form.Select aria-label="relationship status"
-                        className="textform" size='lg'
+                            firstName = node;
+                        }}
+                    />
+                </FloatingLabel>
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <FloatingLabel
+                        controlId="lastName"
+                        label="Last Name"
+                        className="mb-3"
+                    >
+                    <Form.Control required type="text" placeholder="Last Name"
+                        className="textform"
                         ref={(node)=>{
-                            relationStatus = node;
-                        }}>
-                        <option></option>
-                        <option value="married">Married</option>
-                        <option value="single">Single</option>
-                        <option value="inarelation">In a Relationship</option>
-                        <option value="nodisclosure">Prefer not to disclose</option>
-                        </Form.Select>
-                        </Form.Label>
-
-
-                        <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3">
-                            <Form.Control as="textarea" rows={10} placeholder="Interests"
-                            className="textarea"
-                            ref={(node)=>{
-                                interests = node;
-                            }}
-                        />
-                        </FloatingLabel>
-
-                        </Form.Group>
-        
-        
-                        <Button variant="primary" type="submit" className="submit">
-            Submit
-                        </Button>
-                    </Form> 
+                            lastName = node;
+                        }}
+                    />
+                    </FloatingLabel>
+                </Form.Group>
+                </Row>
+    
+                <Form.Group>
+                    <FloatingLabel
+                        controlId="email"
+                        label="Email"
+                        className="mb-3"
+                    >
+                    <Form.Control required type="email" placeholder="name@example.com"
+                        className="textform"
+                        ref={(node)=>{
+                            email = node;
+                        }}
+                    />
+                </FloatingLabel>
+    
+    
+                <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
+                    <Form.Control required type="password" placeholder="Password" 
+                        className="textform"
+                        ref={(node)=>{
+                            pswd = node;
+                        }}
+                    />
+                </FloatingLabel>
+    
+                <FloatingLabel controlId="floatingCPassword" label="Confirm Password" className="mb-3">
+                    <Form.Control required type="password" placeholder="Confirm Password"
+                        className="textform"
+                        ref={(node)=>{
+                            confirmPswd = node;
+                        }}
+                    />
+                </FloatingLabel>
+    
+                <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
+                    <Form.Control required type="date" placeholder="Date of Birth" 
+                        
+                        className="textform"
+                        ref={(node)=>{
+                            dob = node;
+                        }}
+                    />
+                </FloatingLabel>
+    
+                <Form.Label className="select" >
+                Gender
+                <Form.Select required aria-label="Gender" size='lg'
+                 className="textform"
+                 ref={(node)=>{
+                     gender = node;
+                 }}>
+                    <option></option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                    <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>
+                </Form.Label>
+    
+                <Form.Label  className="select">
+                Relationship Status
+                <Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
+                 ref={(node)=>{
+                     relationStatus = node;
+                 }}>
+                <option></option>
+                <option value="married">Married</option>
+                <option value="single">Single</option>
+                <option value="inarelation">In a Relationship</option>
+                <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>
+                </Form.Label>
+    
+    
+                <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3">
+                    <Form.Control as="textarea" rows={10} placeholder="Interests"
+                    className="textarea"
+                    ref={(node)=>{
+                        interests = node;
+                    }}
+                />
+                </FloatingLabel>
+    
+                </Form.Group>
+                <Button id="sub" variant="primary" type="submit" className="submit">
+    Submit
+                </Button>
+            </Form>
                 </div>
             </div>
         </section>
