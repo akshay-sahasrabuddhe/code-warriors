@@ -226,10 +226,11 @@ const Userprofile = (props) => {
                 <Form className='signupForm' onSubmit={
                 async (e)=>{
                     e.preventDefault();
+                   
     
-    
+                    
                    let btn = document.getElementById("sub");
-                  btn.disabled = true;
+                  btn.disabled = false;
                    if(!firstName.value){
                        alert("Please enter first name");
                        btn.disabled = false;
@@ -271,24 +272,24 @@ const Userprofile = (props) => {
                     return;
                 }
     
-                   if(!pswd.value){
-                       alert("Please enter password");
-                       btn.disabled = false;
-                       return;
-                   }
+                //    if(!pswd.value){
+                //        alert("Please enter password");
+                //        btn.disabled = false;
+                //        return;
+                //    }
     
                    let regP = /^([a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]{6,})*$/
-                if(!regP.test(pswd.value)){
+                if((pswd.value != '') && (!regP.test(pswd.value))){
                     alert("Password is invalid - should contain at least one digit,should contain at least one lower case, should contain at least one upper case, should contain at least 8 from the mentioned characters");
                     btn.disabled = false;
                     return;
                 }
     
-                   if(!confirmPswd.value){
-                       alert("Please enter confirm password");
-                       btn.disabled = false;
-                       return;
-                   }
+                //    if(!confirmPswd.value){
+                //        alert("Please enter confirm password");
+                //        btn.disabled = false;
+                //        return;
+                //    }
     
                    if(pswd.value !== confirmPswd.value){
                        alert("Passwords don't match");
@@ -296,37 +297,37 @@ const Userprofile = (props) => {
                        return;
                    }
     
-                   if(!dob.value){
-                       alert("Please provide your date of birth");
-                       btn.disabled = false;
-                       return;
-                   }
+    //                if(!dob.value){
+    //                    alert("Please provide your date of birth");
+    //                    btn.disabled = false;
+    //                    return;
+    //                }
     
-                   if(dob.value){
-                       let birth = new Date(dob.value);
-                       var month_diff = Date.now() - birth.getTime();  
+    //                if(dob.value){
+    //                    let birth = new Date(dob.value);
+    //                    var month_diff = Date.now() - birth.getTime();  
       
-    //convert the calculated difference in date format  
-                        let age_dt = new Date(month_diff);   
+    // //convert the calculated difference in date format  
+    //                     let age_dt = new Date(month_diff);   
       
-    //extract year from date      
-                        let year = age_dt.getUTCFullYear();  
+    // //extract year from date      
+    //                     let year = age_dt.getUTCFullYear();  
       
-    //now calculate the age of the user  
-                        let age = Math.abs(year - 1970);  
-                        console.log(age);
+    // //now calculate the age of the user  
+    //                     let age = Math.abs(year - 1970);  
+    //                     console.log(age);
     
-                        if(!(age > 13 && age < 120)){
-                            alert("Should be between age 13 and 120");
-                            dob.value = "";
-                            btn.disabled = false;
-                            return;
-                        }
-                   }
-                   let dateOfBirth = new Date(dob.value + ' EST' );
-                   console.log(dateOfBirth);
+    //                     if(!(age > 13 && age < 120)){
+    //                         alert("Should be between age 13 and 120");
+    //                         dob.value = "";
+    //                         btn.disabled = false;
+    //                         return;
+    //                     }
+    //                }
+    //                let dateOfBirth = new Date(dob.value + ' EST' );
+    //                console.log(dateOfBirth);
     
-                   dateOfBirth = String(dateOfBirth.getMonth()+1).padStart(2,'0')+'/'+String(dateOfBirth.getDate()).padStart(2,'0')+'/'+dateOfBirth.getFullYear();
+    //                dateOfBirth = String(dateOfBirth.getMonth()+1).padStart(2,'0')+'/'+String(dateOfBirth.getDate()).padStart(2,'0')+'/'+dateOfBirth.getFullYear();
                   
                    if(!gender.value){
                        alert("Please provide gender");
@@ -357,7 +358,7 @@ const Userprofile = (props) => {
                         lastName : lastName.value,
                         email: email.value,
                         password: pswd.value,
-                        dateOfBirth:dateOfBirth,
+                        dateOfBirth:about[0].dateOfBirth,
                         gender: gender.value,
                         relationshipStatus: relationStatus.value,
                         interestedIn : interests.value
@@ -371,7 +372,7 @@ const Userprofile = (props) => {
                     const instance = axios.create({
                 baseURL: '*',
                 timeout: 20000,
-              withCredentials: true,
+                withCredentials: true,
               headers: {
                   'Content-Type': 'application/json;charset=UTF-8',
                   "Access-Control-Allow-Origin": "*",
@@ -380,12 +381,14 @@ const Userprofile = (props) => {
                   return status < 500; // Resolve only if the status code is less than 500
                 }
             });
+            setAbout([user]);
 
             await instance.patch(`http://localhost:3000/updateprofile`, user)
                       .then(function (response) {
                         console.log(response);
+                        
                         if(response.status === 200){
-                            alert("User registered");
+                            alert("Hey "+user.firstName+", Your profile is updated !!!");
                             flag = true;
                         }
                       })
@@ -412,7 +415,7 @@ const Userprofile = (props) => {
                 label="First Name"
                 className="mb-3"
                 >
-                    <Form.Control  type="text" placeholder="First Name"
+                    <Form.Control  type="text" placeholder="First Name" defaultValue={about[0].firstName}
                         className="textform"
                         ref={(node)=>{
                             firstName = node;
@@ -425,8 +428,9 @@ const Userprofile = (props) => {
                         controlId="lastName"
                         label="Last Name"
                         className="mb-3"
+                        
                     >
-                    <Form.Control required type="text" placeholder="Last Name"
+                    <Form.Control  type="text" placeholder="Last Name" defaultValue={about[0].lastName}
                         className="textform"
                         ref={(node)=>{
                             lastName = node;
@@ -441,9 +445,10 @@ const Userprofile = (props) => {
                         controlId="email"
                         label="Email"
                         className="mb-3"
+                       
                     >
-                    <Form.Control required type="email" placeholder="name@example.com"
-                        className="textform"
+                    <Form.Control  type="email" placeholder="name@example.com"
+                        className="textform"  defaultValue={about[0].email}
                         ref={(node)=>{
                             email = node;
                         }}
@@ -452,7 +457,7 @@ const Userprofile = (props) => {
     
     
                 <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-                    <Form.Control required type="password" placeholder="Password" 
+                    <Form.Control  type="password" placeholder="Password" 
                         className="textform"
                         ref={(node)=>{
                             pswd = node;
@@ -461,7 +466,7 @@ const Userprofile = (props) => {
                 </FloatingLabel>
     
                 <FloatingLabel controlId="floatingCPassword" label="Confirm Password" className="mb-3">
-                    <Form.Control required type="password" placeholder="Confirm Password"
+                    <Form.Control  type="password" placeholder="Confirm Password"
                         className="textform"
                         ref={(node)=>{
                             confirmPswd = node;
@@ -469,20 +474,20 @@ const Userprofile = (props) => {
                     />
                 </FloatingLabel>
     
-                <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
-                    <Form.Control required type="date" placeholder="Date of Birth" 
+                {/* <FloatingLabel controlId="date" label="Date of Birth" className="mb-3" >
+                    <Form.Control  type="date" placeholder="Date of Birth" disabled
                         
-                        className="textform"
+                        className="textform" defaultValue={about[0].dateOfBirth} 
                         ref={(node)=>{
                             dob = node;
                         }}
                     />
-                </FloatingLabel>
+                </FloatingLabel> */}
     
                 <Form.Label className="select" >
                 Gender
-                <Form.Select required aria-label="Gender" size='lg'
-                 className="textform"
+                <Form.Select  aria-label="Gender" size='lg'
+                 className="textform" defaultValue={about[0].gender}
                  ref={(node)=>{
                      gender = node;
                  }}>
@@ -494,10 +499,10 @@ const Userprofile = (props) => {
                 </Form.Select>
                 </Form.Label>
     
-                <Form.Label  className="select">
+                <Form.Label  className="select" >
                 Relationship Status
                 <Form.Select aria-label="relationship status"
-                 className="textform" size='lg'
+                 className="textform" size='lg' defaultValue={about[0].relationshipStatus}
                  ref={(node)=>{
                      relationStatus = node;
                  }}>
@@ -510,9 +515,9 @@ const Userprofile = (props) => {
                 </Form.Label>
     
     
-                <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3">
+                <FloatingLabel controlId="floatingtextarea" label="Interests" className="mb-3" >
                     <Form.Control as="textarea" rows={10} placeholder="Interests"
-                    className="textarea"
+                    className="textarea" defaultValue={about[0].interestedIn}
                     ref={(node)=>{
                         interests = node;
                     }}

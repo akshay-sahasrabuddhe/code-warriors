@@ -7,7 +7,7 @@ const cors = require('cors');
 const constructorMethod = (app) => {
   app.use(cors({
     origin:['http://localhost:4000'],
-  methods:['GET','POST'],
+  methods:['GET','POST','PATCH','PUT'],
   credentials: true
   }));
   app.use("/posts", postRoutes);
