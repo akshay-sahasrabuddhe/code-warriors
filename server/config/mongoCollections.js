@@ -20,4 +20,5 @@ module.exports = {
   posts: getCollectionFn("posts"),
   comments: getCollectionFn("comments"),
   users: getCollectionFn("users"),
+  friendrequests: getCollectionFn("friendrequest"),
 };
