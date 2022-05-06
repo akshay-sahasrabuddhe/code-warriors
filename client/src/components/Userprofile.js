@@ -1,162 +1,274 @@
-import React,{useEffect, useState} from "react";
+import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
-import '../App.css';
+import "../App.css";
+import logoImg from "../images/logo.gif";
+import maleUser from "../images/male-user.svg";
+import femaleUser from "../images/female-user.svg";
+import otherUser from "../images/other.svg";
+import $, { event } from "jquery";
+import { Modal } from "bootstrap";
 import axios from "axios";
-import logoImg from '../images/logo.gif';
-import maleUser from '../images/male-user.svg';
-import femaleUser from '../images/female-user.svg';
-import otherUser from '../images/other.svg';
-import $, { event } from 'jquery';
-import { Modal } from 'bootstrap';
-import {Form, FloatingLabel, Button, Row, Col} from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
-
-const url = "http://localhost:3000/getUserData";
+import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import cryptojs from "crypto-js";
 
 const Userprofile = (props) => {
+  let firstName;
+  let lastName;
+  let email;
+  let pswd;
+  let confirmPswd;
+  let dob;
+  let gender;
+  let relationStatus;
+  let interests;
+  let id;
+  let userProfileData,editProfileData = null;
     
-    // const navigate = useNavigate();
-
-    // let userId = localStorage.getItem("userId");
-
-        
-   
-   
-
-    let firstName;
-    let lastName;
-    let email;
-    let pswd;
-    let confirmPswd;
-    let dob;
-    let gender;
-    let relationStatus;
-    let interests;
-
-    let userProfileData,editProfileData = null;
-    console.log(url);
     const [about , setAbout] = useState(undefined);
     const [aboutedit , setAboutEdit] = useState(undefined);
     const [loading, setLoading] = useState(true);
+  //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
+  if (
+    localStorage.getItem("user") &&
+    localStorage.getItem("user") !== "undefined"
+  ) {
+    id = cryptojs.AES.decrypt(
+      localStorage.getItem("userSession"),
+      "MySecretKey"
+    );
 
-    useEffect(() => {
-        async function fetchData(){
-            //const { data } = await axios.get(url);
+    id = JSON.parse(id.toString(cryptojs.enc.Utf8));
+    console.log(id);
+  }
+  let paramId = useParams();
+  const [friend, setAlreadyFriend] = useState(false);
+  const [request, setRequest] = useState(false);
 
-            const instance = axios.create({
-                baseURL: '*',
-                timeout: 20000,
-              withCredentials: true,
-              headers: {
-                  'Content-Type': 'application/json;charset=UTF-8',
-                  "Access-Control-Allow-Origin": "*",
-                },
-              validateStatus: function (status) {
-                  return status < 500; // Resolve only if the status code is less than 500
-                }
-            });
+  const [visitedsent, setVisitedSent] = useState(false);
 
-            //const { data } = await axios.post(`http://localhost:3000/login`[user[instance]]);
-            const { data } = await instance.get(url);  
-            let aboutArr = [];
-            aboutArr.push(data);
-            setAbout([data]);
+  useEffect(() => {
+    async function fetchdata() {
+      const instance = axios.create({
+        baseURL: "*",
+        timeout: 20000,
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+        },
+        validateStatus: function (status) {
+          return status < 500; // Resolve only if the status code is less than 500
+        },
+      });
+
+      const resp = await instance.get(
+        `http://localhost:3000/userprofile/${paramId.id}`
+      );
+      console.log(resp.data.data.d);
+      if (resp.data.data.res) {
+        setAbout([resp.data.data.d]);
             setLoading(false);
-            console.log(aboutArr);
+        let frnds = resp.data.data.d.friends;
+        if (paramId.id != id) {
+          for (let i = 0; i < frnds.length; i++) {
+            if (frnds[i] == paramId.id) {
+              setAlreadyFriend(true);
+              break;
+            }
+          }
         }
-        fetchData();
-    },[]);
+      } else {
+        console.log("user not found");
+        //set state for user profile not found
+      }
+    }
 
-    userProfileData = about && about.map((n) => {
-        return(
-			 <div className="row">
-                        <div className="col-md-5 offset-2 offset-md-1">
-                            <div className="d-flex  pt-4 pb-4">
-                                <div className="d-flex align-self-center">
-                                    <span className="material-icons-outlined about-box-img">email</span>
-                                </div>
-                                <div className="d-flex flex-column m-2">
-                                    <span className="about-heading">{n.email}</span>
-                                    <span className="about-subheading text-secondary">Email</span>
-                                </div>
+    fetchdata();
+    fetchRequestData();
+  }, []);
+  async function fetchRequestData() {
+    console.log(id);
+    await axios
+      .post(`http://localhost:3000/friend/searchrequest`, {
+        loggedIn: id,
+        Visited: paramId.id,
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        let res = response.data.data;
+        if (response.data.requestSent === 200) {
+          if (res != null) {
+            //setRequest(true);
+            if (res.sender == id) {
+              setRequest(true);
+            } else if (res.receiver == id) {
+              setVisitedSent(true);
+            }
+          } else {
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        setRequest(false);
+        alert("There was some error please try again");
+      });
+  }
+  async function sendRequest() {
+    if (paramId.id != id) {
+      await axios
+        .post(`http://localhost:3000/friend/sendRequest`, {
+          sender: id,
+          receiver: paramId.id,
+        })
+        .then(function (response) {
+          console.log(response.data);
+          if (response.data.requestSent === 200) {
+            setRequest(true);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          setRequest(false);
+          alert("There was some error please try again");
+        });
+    }
+  }
+
+  async function cancelRequest() {
+    if (paramId.id != id) {
+      await axios
+        .post(`http://localhost:3000/friend/cancelRequest`, {
+          sender: id,
+          receiver: paramId.id,
+        })
+        .then(function (response) {
+          console.log(response);
+          if (response.data.status) {
+            setRequest(false);
+          } else {
+            alert("Cannot Cancel Request: Error Occurred");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert("Cannot Cancel Request: Error Occurred");
+        });
+    }
+  }
+
+  userProfileData = about && about.map((n) => {
+    return(
+   <div className="row">
+                    <div className="col-md-5 offset-2 offset-md-1">
+                        <div className="d-flex  pt-4 pb-4">
+                            <div className="d-flex align-self-center">
+                                <span className="material-icons-outlined about-box-img">email</span>
                             </div>
-                        </div>
-                        <div className="col-md-5 offset-2 offset-md-1">
-                            <div className="d-flex  pt-4 pb-4">
-                                <div className="d-flex align-self-center">
-                                    <span className="material-icons-outlined about-box-img">cake</span>
-                                </div>
-                                <div className="d-flex flex-column m-2">
-                                    <span className="about-heading">{n.dateOfBirth}</span>
-                                    <span className="about-subheading text-secondary">Birthday</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-5 offset-2 offset-md-1">
-                            <div className="d-flex  pt-4 pb-4">
-                                <div className="d-flex align-self-center">
-                                    <span className="material-icons-outlined about-box-img">boy</span>
-                                    {/* <span className="material-icons-outlined about-box-img">girl</span> */}
-                                    {/* <span className="material-icons-outlined about-box-img">transgender</span> */}
-                                </div>
-                                <div className="d-flex flex-column m-2">
-                                    <span className="about-heading">{n.gender}</span>
-                                    <span className="about-subheading text-secondary">Gender</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-5 offset-2 offset-md-1">
-                            <div className="d-flex  pt-4 pb-4">
-                                <div className="d-flex align-self-center">
-                                    <span className="material-icons-outlined about-box-img">favorite</span>
-                                </div>
-                                <div className="d-flex flex-column m-2">
-                                    <span className="about-heading">{n.relationshipStatus}</span>
-                                    <span className="about-subheading text-secondary">Relationship Status</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-10 offset-2 offset-md-1">
-                            <div className="pt-4 pb-4 d-flex align-self-center">
-                                <div className="d-flex align-self-center">
-                                    <span className="material-icons-outlined about-box-img">interests</span>
-                                </div>
-                                <div className="d-flex flex-column m-2">
-                                    <span className="about-heading">{n.interestedIn}</span>
-                                    <span className="about-subheading text-secondary">Interests</span>
-                                </div>
+                            <div className="d-flex flex-column m-2">
+                                <span className="about-heading">{n.email}</span>
+                                <span className="about-subheading text-secondary">Email</span>
                             </div>
                         </div>
                     </div>
-	   )
-        
-    })
-
+                    <div className="col-md-5 offset-2 offset-md-1">
+                        <div className="d-flex  pt-4 pb-4">
+                            <div className="d-flex align-self-center">
+                                <span className="material-icons-outlined about-box-img">cake</span>
+                            </div>
+                            <div className="d-flex flex-column m-2">
+                                <span className="about-heading">{n.dateOfBirth}</span>
+                                <span className="about-subheading text-secondary">Birthday</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-5 offset-2 offset-md-1">
+                        <div className="d-flex  pt-4 pb-4">
+                            <div className="d-flex align-self-center">
+                                <span className="material-icons-outlined about-box-img">boy</span>
+                                {/* <span className="material-icons-outlined about-box-img">girl</span> */}
+                                {/* <span className="material-icons-outlined about-box-img">transgender</span> */}
+                            </div>
+                            <div className="d-flex flex-column m-2">
+                                <span className="about-heading">{n.gender}</span>
+                                <span className="about-subheading text-secondary">Gender</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-5 offset-2 offset-md-1">
+                        <div className="d-flex  pt-4 pb-4">
+                            <div className="d-flex align-self-center">
+                                <span className="material-icons-outlined about-box-img">favorite</span>
+                            </div>
+                            <div className="d-flex flex-column m-2">
+                                <span className="about-heading">{n.relationshipStatus}</span>
+                                <span className="about-subheading text-secondary">Relationship Status</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-10 offset-2 offset-md-1">
+                        <div className="pt-4 pb-4 d-flex align-self-center">
+                            <div className="d-flex align-self-center">
+                                <span className="material-icons-outlined about-box-img">interests</span>
+                            </div>
+                            <div className="d-flex flex-column m-2">
+                                <span className="about-heading">{n.interestedIn}</span>
+                                <span className="about-subheading text-secondary">Interests</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ )
     
+});
 
-    if(loading){
-        return(
-        <div>
-            <h1>Loading...</h1>
+if(loading){
+  return(
+  <div>
+      <h1>Loading...</h1>
+  </div>
+  );
+}
+else{
+
+  console.log(id);
+  console.log(paramId.id);
+
+  return (
+    <>
+      <Navigation></Navigation>
+      {/* // ---------- Start of User Profile Section ---------- //  */}
+      <section className="user-profile-section">
+        <div className="user-profile-box">
+          <img
+            src={maleUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />
         </div>
-        );
-    }
-    else{
-    return (
-        <> 
-        <Navigation></Navigation>  
-        {/* // ---------- Start of User Profile Section ---------- //  */}
-        <section className="user-profile-section">
-            <div className="user-profile-box">
-                <img src={maleUser} className="user-profile-pic" alt="User Profile Pic" />
-            </div>
-        </section>
-        {/* // ---------- End of User Profile Section ---------- //  */}
+        <div>
+          {id == paramId.id ? null : friend ? (
+            <Button variant="primary">Friends</Button>
+          ) : request ? (
+            <Button variant="primary" onClick={cancelRequest}>
+              Request Sent
+            </Button>
+          ) : visitedsent ? (
+            <Button variant="primary">Request Received</Button>
+          ) : (
+            <Button variant="primary" onClick={sendRequest}>
+              Add Friend
+            </Button>
+          )}
+        </div>
+      </section>
+      {/* // ---------- End of User Profile Section ---------- //  */}
 
-        {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
+      {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
 
-        <section className="user-profiel-tabs-section">
-            <ul className="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+      <section className="user-profiel-tabs-section">
+      <ul className="nav nav-tabs justify-content-center" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
                     <button className="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">About</button>
                 </li>
@@ -382,6 +494,7 @@ const Userprofile = (props) => {
                 }
             });
             setAbout([user]);
+            console.log(user);
 
             await instance.patch(`http://localhost:3000/updateprofile`, user)
                       .then(function (response) {
@@ -531,13 +644,12 @@ const Userprofile = (props) => {
             </Form>
                 </div>
             </div>
-        </section>
+      </section>
 
-        {/* // ---------- End of User profiel Tabs Section ---------- //  */}
-        </>
-        
-    );
-    }
+      {/* // ---------- End of User profiel Tabs Section ---------- //  */}
+    </>
+  );
+}
 };
 
 export default Userprofile;
