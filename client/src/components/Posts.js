@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Form } from "react-bootstrap";
 import Navigation from "./Navigation";
 import '../App.css';
 import logoImg from '../images/logo.gif';
@@ -11,10 +10,19 @@ import axios from 'axios';
 import cryptojs from 'crypto-js';
 import Session from "react-session-api";
 import {ReactSession} from "react-client-session";
+import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
 //const bcrypt = require('bcryptjs');
 //const saltRounds = 16;
 
 const Posts = (props) => {
+    let title;
+    let body;
+    let uploadedImg;
+    let isPublic = true;
+    let postData = null;
+
+    const [about , setAbout] = useState(undefined);
+    const [aboutedit , setAboutEdit] = useState(undefined);
 
     const navigate = useNavigate();
     console.log(localStorage);
@@ -396,6 +404,8 @@ const Posts = (props) => {
 
 
         {/* Modal code */}
+
+
        
 
         <div className="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -406,7 +416,135 @@ const Posts = (props) => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <form>
+
+                    {/*  */}
+
+                    <Form className='signupForm' onSubmit={
+    async (e)=>{
+        e.preventDefault();
+       
+
+        
+       let btn = document.getElementById("sub");
+      btn.disabled = false;
+       if(!title.value){
+           alert("Please enter first name");
+           btn.disabled = false;
+           return;
+       }
+
+       let regf = /^([a-zA-Z]{2,})*$/;
+       if(!regf.test(title.value)){
+            alert("Please enter valid first name");
+            btn.disabled = false;
+            return;
+       }
+
+
+
+
+      
+       // let temp = JSON.parse(user);
+       let flag = false;
+      
+        
+        //let msg = await axios.post('http:/localhost:3000/signup', user);
+
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+            withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            },
+        validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+
+       
+        // const { data1 } = await instance.get(`http://localhost:3000/session`);
+        //         console.log(data1);
+            
+        const userdata1  = await instance.get(`http://localhost:3000/getUserData`);
+        console.log(userdata1.data);
+
+        let user = {
+            title: title.value,
+            body: body.value,
+            userThatPosted: "Akshay", 
+            isPublic: true,
+            uploadedImg : ""
+        }
+        console.log(user);
+
+        setAbout([user]);
+        console.log(user);
+
+        await instance.post(`http://localhost:3000/posts`, user)
+          .then(function (response) {
+            console.log(response);
+
+            if(response.status === 200){
+                alert("Post posted successfully!!!");
+                flag = true;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            //setSuccess(false);
+            alert("There was some error please try again");
+
+          });
+
+          e.target.reset();
+          //btn.disabled = false;
+           if(flag){
+            
+            props.handleClose(false);
+           }            
+    }
+}>
+   
+    <Row className="mb-4">
+        <Form.Group as={Col}>
+            <FloatingLabel
+                controlId="title"
+                label="First Name"
+                className="mb-3"
+                >
+                <Form.Control  type="text" placeholder="First Name" className="textform"
+                    ref={(node)=>{
+                        title = node;
+                    }}
+                />
+            </FloatingLabel>
+        </Form.Group>
+        <Form.Group as={Col}>
+            <FloatingLabel controlId="body" label="Last Name" className="mb-3">
+                <Form.Control  type="text" placeholder="Last Name"
+                    className="textform"
+                    ref={(node)=>{
+                        body = node;
+                    }}
+                />
+            </FloatingLabel>
+        </Form.Group>
+    </Row>
+
+    <Button id="sub" variant="primary" type="submit" className="submit">Submit</Button>
+    </Form>
+
+
+                    {/*  */}
+
+
+                        <form encType="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" aria-describedby="emailHelp" />
+                        </div>
                         <div className="mb-3">
                             <label htmlFor="message-text" className="col-form-label">Message:</label>
                             <textarea className="form-control" id="message-text"></textarea>
