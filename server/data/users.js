@@ -341,84 +341,86 @@ function check_for_spaces(string) {
   }
 }
 
+async function getUser(id)
+    {
+        const userData=await users();
+        const user=await userData.findOne({_id:id});
+        return user;
+    }
+
+
+    async function findUser(email)
+    {
+        const userCollection=await users()
+       
+        const userCollectionArray=await userCollection.find({}).toArray()
+    
+        for(let i=0;i<userCollectionArray.length;i++)
+        {
+            if(email.toLowerCase()==userCollectionArray[i].email.toLowerCase())
+            {
+                return userCollectionArray[i];
+            }
+        }
+    
+        return null;
+    
+    }
+
+
+
+async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,imagePath,coverPath){
+
+    console.log("in signup");
+    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+
+    const userinfo= await findUser(email)
+        if(userinfo!=null)
+        {
+            throw 'email already exists'
+        }
+      
+    
+    const hash = await bcrypt.hash(password, saltRounds); 
+
+
+    let lowerEmail=email.toLowerCase()
+
+
+    let userdata={
+        firstName,
+        lastName,
+        email:lowerEmail,
+        password:hash,
+        dateOfBirth,
+        gender,
+        friends:[],
+        interestedIn,
+        relationshipStatus,
+        profileImage:imagePath.toString(),
+        coverImage:coverPath.toString()
+    }
+
+
+
+    let userCollection=await users()
+    console.log("before insert");
+    let userData=await userCollection.insertOne(userdata)
+
+    let user_id= userData.insertedId
+    console.log("after insert");
+    let user= await getUser(user_id)
+
+    user._id= user._id.toString()
+
+    return user
+}
+
+
+
 function isString(x) {
   //common code for strings
   return Object.prototype.toString.call(x) === "[object String]";
-}
-
-async function getUser(id) {
-  const userData = await users();
-  const user = await userData.findOne({ _id: id });
-  return user;
-}
-
-async function findUser(email) {
-  const userCollection = await users();
-
-  const userCollectionArray = await userCollection.find({}).toArray();
-
-  for (let i = 0; i < userCollectionArray.length; i++) {
-    if (email.toLowerCase() == userCollectionArray[i].email.toLowerCase()) {
-      return userCollectionArray[i];
-    }
-  }
-
-  return null;
-}
-
-async function signUp(
-  firstName,
-  lastName,
-  email,
-  password,
-  dateOfBirth,
-  gender,
-  interestedIn,
-  relationshipStatus
-) {
-  signUpCheck(
-    firstName,
-    lastName,
-    email,
-    password,
-    dateOfBirth,
-    gender,
-    interestedIn,
-    relationshipStatus
-  );
-
-  const userinfo = await findUser(email);
-  if (userinfo != null) {
-    throw "email already exists";
-  }
-
-  const hash = await bcrypt.hash(password, saltRounds);
-
-  let lowerEmail = email.toLowerCase();
-
-  let userdata = {
-    firstName,
-    lastName,
-    email: lowerEmail,
-    password: hash,
-    dateOfBirth,
-    gender,
-    friends: [],
-    interestedIn,
-    relationshipStatus,
-  };
-
-  let userCollection = await users();
-
-  let userData = await userCollection.insertOne(userdata);
-
-  let user_id = userData.insertedId;
-
-  let user = await getUser(user_id);
-
-  user._id = user._id.toString();
-
-  return user;
 }
 
 async function login(email, password) {

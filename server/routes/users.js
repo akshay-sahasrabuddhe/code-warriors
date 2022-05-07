@@ -5,6 +5,12 @@ const Cryptr = require("cryptr");
 const cryptr = new Cryptr("MySecretKey");
 const bcrypt = require("bcryptjs");
 var cryptojs = require("crypto-js");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const { uploadFile, getFileStream } = require("../helpers/s3");
 const saltRounds = 16;
 const usersData = data.users;
 
@@ -328,6 +334,252 @@ function isDate(ExpiryDate) {
   return true;
 }
 
+
+function isString(x)                    //common code for strings
+{
+  return Object.prototype.toString.call(x) === "[object String]"
+}
+
+router.get('/session', async(req,res) => {
+    if(req.session.user){
+        res.status(200).json(req.session.user);
+    }else{
+    res.status(404).json({error:"not logged in"});
+    }
+});
+
+
+router.post("/signup", upload.array('files') ,async(req,res)=>{
+    let imagePath;
+    let coverPath;
+    console.log(req.files);
+let img = [];
+
+req.files.map((f)=>{
+    img.push(f);
+})
+
+try{
+
+    signUpCheck(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus)
+}
+
+catch(e)
+{
+    res.status(400).json({error:e}) 
+    return
+}
+
+try{
+    const result = await uploadFile(img[0]);
+    await unlinkFile(img[0].path);
+    console.log(result);
+    imagePath = `/images/${result.Key}`;
+}catch(e){
+    res.status(500).json({error:"Something wrong with the image"}) ;
+    return;
+}
+
+try{
+    const result = await uploadFile(img[1]);
+    await unlinkFile(img[1].path);
+    console.log(result);
+    coverPath = `/cover/${result.Key}`;
+}catch(e){
+    res.status(500).json({error:"Something wrong with the image"}) ;
+    return;
+}
+
+try{
+   // const result = await uploadFile(req.file);
+    //await unlinkFile(req.file.path);
+    //console.log(result);
+    //imagePath = `/users/images/${result.Key}`;
+    console.log(imagePath);
+    console.log("here");
+    let user= await usersData.signUp(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus,imagePath,coverPath);
+
+    res.json({signup:"Successful"}).status(200)
+
+}
+
+catch(e)
+{
+
+    if(e=='email already exists')
+
+    res.status(400).json({error:e}) 
+
+    else
+    res.status(500).json({error:"Some issue with the server"}) 
+
+}
+
+
+})
+
+
+
+router.get("/images/:key", (req, res) => {
+    console.log(req.params);
+    const key = req.params.key;
+    const readStream = getFileStream(key);
+  
+    readStream.pipe(res);
+  });
+
+  router.get("/cover/:key", (req, res) => {
+    console.log(req.params);
+    const key = req.params.key;
+    const readStream = getFileStream(key);
+  
+    readStream.pipe(res);
+  });
+
+
+
+router.post('/login', async(req,res)=>{
+
+
+    let email=req.body.email;
+    let password=req.body.password;
+        
+    try{
+  
+      loginCheck(email,password)
+    }
+
+      catch(e)
+    {
+      res.status(400).json({error:e}) 
+      return
+  
+    }
+
+
+    try{
+  
+        const login= await usersData.login(req.body.email,req.body.password)
+        console.log("here");
+       
+        let name = login.firstName + " " +login.lastName;
+        let id = login._id;
+        const nameHash = cryptojs.AES.encrypt(JSON.stringify(name), 'MySecretKey').toString();;
+        const idHash =  cryptojs.AES.encrypt(JSON.stringify(id), 'MySecretKey').toString();;
+        req.session.user={name: nameHash , _id : idHash, id:login._id}
+        console.log(nameHash);
+        res.status(200).json({name: nameHash, _id : idHash});
+       
+    }
+  
+        catch(e)
+      {
+          if(e=='Either the username or password is invalid')
+        res.status(403).json({error:e}) 
+        else
+        res.status(500).json({error:"Internal Server Error"})
+    
+      }
+
+  })
+
+
+  router.get('/logout',async(req,res)=>{
+
+    if(req.session.user)
+    {
+    
+    try{
+
+        usersData.logout(req.session.user.id)
+
+        res.clearCookie('AuthCookie').status(200).json({user: "logged out"})
+
+        req.session.destroy()
+
+    }
+
+    catch(e)
+    {
+        res.status(500).json({error:"Internal Server Error"})  
+
+      
+    }
+
+    }
+  
+    })
+  
+
+
+    router.patch('/updateprofile', async(req,res)=>{
+
+
+        const {firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}= req.body
+
+        try{
+
+            updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+        }
+        
+        catch(e)
+        {
+            res.status(400).json({error:e}) 
+            return
+        }
+
+
+        try{
+
+        await usersData.updateProfile(req.session.user.id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+
+        res.json({updateprofile:"Successful"}).status(200)
+
+        }
+
+        catch(e)
+        {
+            if(e=="User already exists with this email")
+            {
+                res.status(400).json({error:e}) 
+
+                return
+            }
+
+            res.status(500).json({error:"Internal Server Error"}) 
+        }
+        
+
+
+
+    })
+
+
+
+    router.get('/getUserData', async(req,res)=>{
+
+        try{
+
+            /* let bytes = cryptojs.AES.decrypt(req.session.user._id, 'MySecretKey');
+
+            let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)) */;
+
+            let userData= await usersData.getUserData(req.session.user.id)
+
+                res.status(200).json(userData)
+
+        }
+
+        catch(e)
+        {
+            res.status(500).json({error:"Internal Server Error"})
+        }
+  
+    
+    })
+///this is the conflict part now..............................
+
+
 function check_for_spaces(string) {
   //common code for strings
   string = string.trim();
@@ -338,186 +590,7 @@ function check_for_spaces(string) {
   }
 }
 
-function isString(x) {
-  //common code for strings
-  return Object.prototype.toString.call(x) === "[object String]";
-}
 
-router.get("/session", async (req, res) => {
-  //console.log(document.cookie);
-  //console.log(req.session.cookie);
-  //console.log(req.session.user);
-  //const nameHash = cryptojs.AES.encrypt(JSON.stringify(req.session.user.name), 'MySecretKey').toString();;
-  //const idHash =  cryptojs.AES.encrypt(JSON.stringify(req.session.user._id), 'MySecretKey').toString();;
-
-  if (req.session.user) {
-    res.status(200).json(req.session.user);
-  } else {
-    res.status(404).json({ error: "not logged in" });
-  }
-});
-
-router.post("/signup", async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    dateOfBirth,
-    gender,
-    interestedIn,
-    relationshipStatus,
-  } = req.body;
-
-  try {
-    signUpCheck(
-      firstName,
-      lastName,
-      email,
-      password,
-      dateOfBirth,
-      gender,
-      interestedIn,
-      relationshipStatus
-    );
-  } catch (e) {
-    res.status(400).json({ error: e });
-    return;
-  }
-
-  try {
-    let user = await usersData.signUp(
-      firstName,
-      lastName,
-      email,
-      password,
-      dateOfBirth,
-      gender,
-      interestedIn,
-      relationshipStatus
-    );
-
-    res.json({ signup: "Successful" }).status(200);
-  } catch (e) {
-    if (e == "email already exists") res.status(400).json({ error: e });
-    else res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.post("/login", async (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
-
-  try {
-    loginCheck(email, password);
-  } catch (e) {
-    res.status(400).json({ error: e });
-    return;
-  }
-
-  try {
-    const login = await usersData.login(req.body.email, req.body.password);
-    console.log("here");
-
-    let name = login.firstName + " " + login.lastName;
-    let id = login._id;
-    const nameHash = cryptojs.AES.encrypt(
-      JSON.stringify(name),
-      "MySecretKey"
-    ).toString();
-    const idHash = cryptojs.AES.encrypt(
-      JSON.stringify(id),
-      "MySecretKey"
-    ).toString();
-    req.session.user = { name: nameHash, _id: idHash, id: login._id };
-    console.log(nameHash);
-    res.status(200).json({ name: nameHash, _id: idHash });
-  } catch (e) {
-    if (e == "Either the username or password is invalid")
-      res.status(403).json({ error: e });
-    else res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.get("/logout", async (req, res) => {
-  if (req.session.user) {
-    try {
-      usersData.logout(req.session.user.id);
-
-      res.clearCookie("AuthCookie").status(200).json({ user: "logged out" });
-
-      req.session.destroy();
-    } catch (e) {
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-});
-
-router.patch("/updateprofile", async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    dateOfBirth,
-    gender,
-    interestedIn,
-    relationshipStatus,
-  } = req.body;
-
-  try {
-    updateProfileCheck(
-      firstName,
-      lastName,
-      email,
-      password,
-      dateOfBirth,
-      gender,
-      interestedIn,
-      relationshipStatus
-    );
-  } catch (e) {
-    res.status(400).json({ error: e });
-    return;
-  }
-
-  try {
-    await usersData.updateProfile(
-      req.session.user.id,
-      firstName,
-      lastName,
-      email,
-      password,
-      dateOfBirth,
-      gender,
-      interestedIn,
-      relationshipStatus
-    );
-
-    res.json({ updateprofile: "Successful" }).status(200);
-  } catch (e) {
-    if (e == "User already exists with this email") {
-      res.status(400).json({ error: e });
-
-      return;
-    }
-
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.get("/getUserData", async (req, res) => {
-  try {
-    /* let bytes = cryptojs.AES.decrypt(req.session.user._id, 'MySecretKey');
-
-            let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)) */ let userData =
-      await usersData.getUserData(req.session.user.id);
-
-    res.status(200).json(userData);
-  } catch (e) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 router.get("/userprofile/:Id", async (req, res) => {
   try {
     console.log("dsds");

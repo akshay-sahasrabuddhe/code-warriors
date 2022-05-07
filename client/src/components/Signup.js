@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 //import { makeStyles, TextField, Button, Radio, RadioGroup } from '@material-ui/core';
 //import { FormControlLabel, FormLabel } from "@material-ui/core";
 import {Form, FloatingLabel, Button, Row, Col}from 'react-bootstrap'
+import FormData from "form-data";
 import '../App.css';
 import axios from 'axios';
 import ReactModal from 'react-modal';
@@ -46,6 +47,7 @@ import ReactModal from 'react-modal';
 const Signup = (props) => {
     //const classes = useStyles();
     const [success, setSuccess] = useState(false);
+    const [file, setFile] = useState([]);
     const [showModal, setShowModal] = useState(props.isOpen);
     let firstName;
     let lastName;
@@ -62,6 +64,20 @@ const Signup = (props) => {
         props.handleClose(false);
     }
 
+    const fileSelected1 = (e) => {
+        const temp = e.target.files[0];
+        console.log(temp);
+       
+        setFile(oldArray => [...oldArray, temp]);
+    }
+
+    const fileSelected2 = (e) => {
+        const temp = e.target.files[0];
+        console.log(temp);
+       
+        setFile(oldArray => [...oldArray, temp]);
+    }
+
     let body = null;
 
     if(props.modal === 'signup'){
@@ -70,8 +86,7 @@ const Signup = (props) => {
         <Form className='signupForm' onSubmit={
             async (e)=>{
                 e.preventDefault();
-
-
+                console.log(file);
                let btn = document.getElementById("sub");
               btn.disabled = true;
                if(!firstName.value){
@@ -204,6 +219,12 @@ const Signup = (props) => {
                     }
                 }
 
+                //let image = JSON.stringify(file);
+               
+
+                console.log(file[0]);
+                console.log(file[1]);
+
                 let user = {
                     firstName: firstName.value,
                     lastName : lastName.value,
@@ -212,14 +233,39 @@ const Signup = (props) => {
                     dateOfBirth:dateOfBirth,
                     gender: gender.value,
                     relationshipStatus: relationStatus.value,
-                    interestedIn : interests.value
+                    interestedIn : interests.value,
+                    
                 }
-               // let temp = JSON.parse(user);
+                let formData = new FormData();
+                formData.append("firstName",firstName.value);
+                formData.append("lastName" , lastName.value);
+                formData.append("email", email.value);
+                formData.append("password", pswd.value);
+                formData.append("dateOfBirth",dateOfBirth);
+                formData.append("gender", gender.value);
+                formData.append("relationshipStatus", relationStatus.value);
+                formData.append("interestedIn" , interests.value);
+                //formData.append("profileImage", file);
+                //console.log(formData.get('profileImage'));
+                
+                //formData.append("user",JSON.stringify(user));
+               // formData.append("files", file);
+               file.forEach(f => {
+                formData.append("files", f)
+            })
+               // let temp = JSON.stringify(user);
+                //formData.append("user",temp);
                let flag = false;
                let url = 'http:/localhost:3000/signup'
-                console.log(user);
+                //console.log(user);
                 //let msg = await axios.post('http:/localhost:3000/signup', user);
-                await axios.post(`http://localhost:3000/signup`, user)
+                await axios.post(`http://localhost:3000/signup`,formData,{
+                    
+                        headers:{
+                            'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
+                        }
+                
+                })
                   .then(function (response) {
                     console.log(response);
                     if(response.status === 200){
@@ -239,10 +285,12 @@ const Signup = (props) => {
                    if(flag){
                     setShowModal(true);
                     props.handleClose(false);
-                   }            
+                   }           
             }
         }>
            
+           <label><input onChange={fileSelected1} name="file" type="file" accept="image/*"></input></label>
+           <label><input onChange={fileSelected2} name="file" type="file" accept="image/*"></input></label>
            <Row className="mb-4">
            <Form.Group as={Col}>
            <FloatingLabel
@@ -314,6 +362,7 @@ const Signup = (props) => {
                     ref={(node)=>{
                         dob = node;
                     }}
+                    
                 />
             </FloatingLabel>
 
