@@ -67,7 +67,7 @@ app.post('/login', async(req,res,next)=>
     }
 
 });
-
+/*
 app.post('/signup', async(req,res,next)=>
 {
 
@@ -80,7 +80,7 @@ app.post('/signup', async(req,res,next)=>
       next()
     }
 
-});
+});*/
 
 
 app.patch('/updateprofile', async(req,res,next)=>

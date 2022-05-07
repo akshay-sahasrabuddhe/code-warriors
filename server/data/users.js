@@ -593,9 +593,9 @@ async function getUser(id)
 
 
 
-async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus){
+async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,imagePath,coverPath){
 
-
+    console.log("in signup");
     signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
 
     const userinfo= await findUser(email)
@@ -603,7 +603,7 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
         {
             throw 'email already exists'
         }
-
+      
     
     const hash = await bcrypt.hash(password, saltRounds); 
 
@@ -612,7 +612,6 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
 
 
     let userdata={
-
         firstName,
         lastName,
         email:lowerEmail,
@@ -621,18 +620,19 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
         gender,
         friends:[],
         interestedIn,
-        relationshipStatus
-        
+        relationshipStatus,
+        profileImage:imagePath.toString(),
+        coverImage:coverPath.toString()
     }
 
 
 
     let userCollection=await users()
-
+    console.log("before insert");
     let userData=await userCollection.insertOne(userdata)
 
     let user_id= userData.insertedId
-
+    console.log("after insert");
     let user= await getUser(user_id)
 
     user._id= user._id.toString()

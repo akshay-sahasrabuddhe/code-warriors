@@ -5,6 +5,12 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MySecretKey');
 const bcrypt = require('bcryptjs');
 var cryptojs = require("crypto-js");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const { uploadFile, getFileStream } = require("../helpers/s3");
 const saltRounds = 16;
 const usersData=data.users;
 
@@ -563,17 +569,26 @@ router.get('/session', async(req,res) => {
     }else{
     res.status(404).json({error:"not logged in"});
     }
+});
+
+
+router.post("/signup", upload.array('files') ,async(req,res)=>{
+    let imagePath;
+    let coverPath;
+//console.log("my life....");
+//console.log(req.body.firstName);
+console.log(req.files);
+//const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}=req.body
+//console.log("Profile image");
+let img = [];
+
+req.files.map((f)=>{
+    img.push(f);
 })
-
-
-router.post("/signup", async(req,res)=>{
-
-
-const{firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}=req.body
 
 try{
 
-    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+    signUpCheck(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus)
 }
 
 catch(e)
@@ -583,8 +598,33 @@ catch(e)
 }
 
 try{
+    const result = await uploadFile(img[0]);
+    await unlinkFile(img[0].path);
+    console.log(result);
+    imagePath = `/images/${result.Key}`;
+}catch(e){
+    res.status(500).json({error:"Something wrong with the image"}) ;
+    return;
+}
 
-    let user= await usersData.signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+try{
+    const result = await uploadFile(img[1]);
+    await unlinkFile(img[1].path);
+    console.log(result);
+    coverPath = `/cover/${result.Key}`;
+}catch(e){
+    res.status(500).json({error:"Something wrong with the image"}) ;
+    return;
+}
+
+try{
+   // const result = await uploadFile(req.file);
+    //await unlinkFile(req.file.path);
+    //console.log(result);
+    //imagePath = `/users/images/${result.Key}`;
+    console.log(imagePath);
+    console.log("here");
+    let user= await usersData.signUp(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus,imagePath,coverPath);
 
     res.json({signup:"Successful"}).status(200)
 
@@ -598,7 +638,7 @@ catch(e)
     res.status(400).json({error:e}) 
 
     else
-    res.status(500).json({error:"Internal Server Error"}) 
+    res.status(500).json({error:"Some issue with the server"}) 
 
 }
 
@@ -607,8 +647,21 @@ catch(e)
 
 
 
+router.get("/images/:key", (req, res) => {
+    console.log(req.params);
+    const key = req.params.key;
+    const readStream = getFileStream(key);
+  
+    readStream.pipe(res);
+  });
 
-
+  router.get("/cover/:key", (req, res) => {
+    console.log(req.params);
+    const key = req.params.key;
+    const readStream = getFileStream(key);
+  
+    readStream.pipe(res);
+  });
 
 
 
