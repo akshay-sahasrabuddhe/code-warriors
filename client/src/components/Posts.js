@@ -11,15 +11,29 @@ import cryptojs from 'crypto-js';
 import Session from "react-session-api";
 import {ReactSession} from "react-client-session";
 import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
+
+import FormData from "form-data";
 //const bcrypt = require('bcryptjs');
 //const saltRounds = 16;
 
 const Posts = (props) => {
+
+    const [file, setFile] = useState([]);
+
     let title;
     let body;
     let uploadedImg;
     let isPublic = true;
     let postData = null;
+   
+
+    const fileSelected1 = (e) => {
+        const temp = e.target.files[0];
+        console.log(temp);
+       
+        setFile(temp);
+    }
+   
 
     const [about , setAbout] = useState(undefined);
     const [aboutedit , setAboutEdit] = useState(undefined);
@@ -419,7 +433,7 @@ const Posts = (props) => {
 
                     {/*  */}
 
-                    <Form className='signupForm' onSubmit={
+                    <form className='signupForm' onSubmit={
     async (e)=>{
         e.preventDefault();
        
@@ -462,10 +476,11 @@ const Posts = (props) => {
             return status < 500; // Resolve only if the status code is less than 500
             }
         });
+        
 
        
-        // const { data1 } = await instance.get(`http://localhost:3000/session`);
-        //         console.log(data1);
+        const data1  = await instance.get(`http://localhost:3000/session`);
+                console.log(data1.data);
             
         const userdata1  = await instance.get(`http://localhost:3000/getUserData`);
         console.log(userdata1.data);
@@ -477,21 +492,32 @@ const Posts = (props) => {
             isPublic: true,
             uploadedImg : ""
         }
-        console.log(user);
+        let sampleonj = {firstName:userdata1.data.firstName,_id:data1.data.id};
+        
+        let formData = new FormData();
+                formData.append("title",title.value);
+                formData.append("body" , body.value);
+                formData.append("userThatPosted",JSON.stringify(sampleonj));
+                formData.append("isPublic", true);
+                formData.append("image", file);
+                
+        console.log(formData.get('userThatPosted'));
 
         setAbout([user]);
         console.log(user);
 
-        await instance.post(`http://localhost:3000/posts`, user)
-          .then(function (response) {
+        await axios.post(`http://localhost:3000/posts`,formData,{
+                        headers:{
+                            'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
+                        }
+                }).then(function (response) {
             console.log(response);
 
             if(response.status === 200){
                 alert("Post posted successfully!!!");
                 flag = true;
             }
-          })
-          .catch(function (error) {
+          }).catch(function (error) {
             console.log(error);
             //setSuccess(false);
             alert("There was some error please try again");
@@ -507,61 +533,37 @@ const Posts = (props) => {
     }
 }>
    
-    <Row className="mb-4">
-        <Form.Group as={Col}>
-            <FloatingLabel
-                controlId="title"
-                label="First Name"
-                className="mb-3"
-                >
-                <Form.Control  type="text" placeholder="First Name" className="textform"
-                    ref={(node)=>{
-                        title = node;
-                    }}
-                />
-            </FloatingLabel>
-        </Form.Group>
-        <Form.Group as={Col}>
-            <FloatingLabel controlId="body" label="Last Name" className="mb-3">
-                <Form.Control  type="text" placeholder="Last Name"
-                    className="textform"
-                    ref={(node)=>{
-                        body = node;
-                    }}
-                />
-            </FloatingLabel>
-        </Form.Group>
-    </Row>
-
-    <Button id="sub" variant="primary" type="submit" className="submit">Submit</Button>
-    </Form>
 
 
-                    {/*  */}
-
-
-                        <form encType="multipart/form-data">
+                        
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" aria-describedby="emailHelp" />
+                            <input type="text" class="form-control" id="title" aria-describedby="emailHelp" ref={(node)=>{
+                            title = node;
+                        }} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="message-text" className="col-form-label">Message:</label>
-                            <textarea className="form-control" id="message-text"></textarea>
+                            <label htmlFor="body" className="col-form-label">Message:</label>
+                            <textarea className="form-control" id="body" ref={(node)=>{
+                            body = node;
+                        }} ></textarea>
                         </div>
                         <div className="input-group mb-3">
                             {/* <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label> */}
-                            <input type="file" className="form-control" id="inputGroupFile01" />
+                            {/* <input type="file" className="form-control" id="inputGroupFile01" /> */}
+                            <label><input onChange={fileSelected1} name="file" type="file" accept="image/*"></input></label>
+                        </div>
+                        <div className="mb-3">
+                            <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" className="btn btn-primary" id="sub">Send message</button>
                         </div>
                         </form>
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary">Send message</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>
+        
         
 
         {/*  */}

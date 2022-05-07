@@ -45,11 +45,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
-  console.log(req.body.formdata);
-  let postInfo = JSON.parse(req.body.formdata);
-  // let postInfo = req.body.formdata;
+  console.log(req.body.title);
+  let postInfo = req.body;
+  //let postInfo = req.body.formdata;
   console.log(postInfo);
-  // postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
+  postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
   postInfo.isPublic = postInfo.isPublic.toLowerCase() === "true";
   console.log(postInfo);
   console.log(req.file);
@@ -57,6 +57,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   try {
     errorhandle.checkProperString(postInfo.title, "Title");
     errorhandle.checkProperString(postInfo.body, "Body");
+    console.log(postInfo.userThatPosted);
     errorhandle.checkProperObject(postInfo.userThatPosted);
     errorhandle.checkProperBoolean(postInfo.isPublic, "isPublic");
     errorhandle.checkProperString(
