@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
   origin:['http://localhost:4000'],
-methods:['GET','POST'],
+methods:['GET','POST','PATCH','PUT'],
 credentials: true
 }));
 
@@ -54,6 +54,21 @@ app.get('/logout', async(req,res,next)=>
 });
 
 
+app.patch('/updateprofile', async(req,res,next)=>
+{
+    console.log(req.session.user);
+    if(!req.session.user)
+    {
+      res.status(403).json({user:"User is not logged in"});
+    }
+
+    else{
+      next()
+    }
+
+});
+
+
 app.post('/login', async(req,res,next)=>
 {
 
@@ -67,7 +82,7 @@ app.post('/login', async(req,res,next)=>
     }
 
 });
-/*
+
 app.post('/signup', async(req,res,next)=>
 {
 
@@ -80,22 +95,9 @@ app.post('/signup', async(req,res,next)=>
       next()
     }
 
-});*/
-
-
-app.patch('/updateprofile', async(req,res,next)=>
-{
-
-    if(!req.session.user)
-    {
-      res.status(403).json({user:"User is not logged in"});
-    }
-
-    else{
-      next()
-    }
-
 });
+
+
 
 
 app.get('/getUserData', async(req,res,next)=>
