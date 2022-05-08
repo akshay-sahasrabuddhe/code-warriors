@@ -25,6 +25,10 @@ const Posts = (props) => {
     let uploadedImg;
     let isPublic = true;
     let postData = null;
+    let postcontainer = null;
+
+    
+    const [Seepost , setSeepost] = useState(undefined);
    
 
     const fileSelected1 = (e) => {
@@ -111,8 +115,121 @@ const Posts = (props) => {
             setLoading(false);
             setSession(false);
         }
+
+        async function fetchdata() {
+            const instance = axios.create({
+              baseURL: "*",
+              timeout: 20000,
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                "Access-Control-Allow-Origin": "*",
+              },
+              validateStatus: function (status) {
+                return status < 500; // Resolve only if the status code is less than 500
+              },
+            });
+      
+            const seepostdata = await instance.get(
+              `http://localhost:3000/posts`
+            );
+            console.log(seepostdata.data);
+            setSeepost(seepostdata.data);
+            setLoading(false);
+            }
+            fetchdata();    
     
     },[]);
+
+    postcontainer = Seepost && Seepost.map((n) => {
+        let imgstr = "";
+        if(n.imagePath){
+            imgstr ="http://localhost:3000"+n.imagePath;
+        }
+        console.log(n.imagePath+":"+n.imagePath == null );
+        return(
+            <div className="card post-card align-self-center mb-3">
+            <div className="post-row">
+                <div className="left-header-box">
+                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                        <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                    </div>
+                </div>
+                <div className="right-header-box d-flex align-items-center">
+                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <strong>
+                            <p className="post-heading mobile-text-center">{n.userThatPosted.firstName}</p>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <hr className="m-0 mb-2"></hr>
+            <div className="post-row flex-column">
+                <p className="post-heading ps-4 pe-4"><strong>{n.title}</strong></p>
+                <p className="post-heading ps-4 pe-4">{n.body}</p>
+                {imgstr.includes(null) ? <img className="img-fluid" src={imgstr} alt="post image" style={{display:"none"}} /> : <img className="img-fluid" src={imgstr} alt="post image" type="file" accept="image/*" />}
+            </div>
+            <hr className="m-0 mb-2"></hr>
+            <div className="post-row flex-row justify-content-between me-3 ms-3">
+                <div className="d-flex flex-row">
+                    <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
+                    <p className="text-secondary">100</p>
+                </div>
+                <div className="d-flex flex-row">
+                    <p className="text-secondary me-2">1</p>
+                    <p className="text-secondary">comments</p>
+                </div>
+            </div>
+            <hr className="m-0 mt-2 mb-0"></hr>
+            <div className="post-row flex-row">
+                <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center">
+                    <span className="material-icons-outlined me-2">thumb_up</span>
+                    <span>Like</span>
+                </button>
+                <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center" onClick={(e) => openComments(1)(e)}>
+                    <span className="material-icons-outlined me-2">chat_bubble_outline</span>
+                    <span>Comment</span>
+                </button>
+            </div>
+            <div className="comments-box">
+            <hr className="m-0"></hr>
+                <div className="post-row">
+                    <div className="left-header-box">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                        </div>
+                    </div>
+                    <div className="right-header-box flex-grow-1">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
+                            <div className="input-group mb-3">
+                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="post-row">
+                    <div className="left-header-box align-self-center">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                        </div>
+                    </div>
+                    <div className="right-header-box flex-grow-1">
+                        <div className="p-2 p-lg-3 ps-lg-0 w-100">
+                        <div className="card facebook-light-gray-color p-3 border-25">
+                        <p className="card-title"><strong>Eiusmod magna</strong></p>
+                        <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>  
+       
+     )
+        
+    });
+
+
     if(localStorage.getItem("user") && localStorage.getItem('user') !== "undefined"){
         //console.log(localStorage.getItem("user"));
     let bytes = cryptojs.AES.decrypt(localStorage.getItem('user'), 'MySecretKey');
@@ -180,81 +297,7 @@ const Posts = (props) => {
                             </div>
                         </div>
                         <div className="read-post-section">
-                            <div className="card post-card align-self-center mb-3">
-                                <div className="post-row">
-                                    <div className="left-header-box">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                        </div>
-                                    </div>
-                                    <div className="right-header-box d-flex align-items-center">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                                            <strong>
-                                                <p className="post-heading mobile-text-center">{user}</p>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-column">
-                                    <p className="post-heading ps-4 pe-4">Nostrud nulla voluptate et qui veniam eiusmod cillum cupidatat. Voluptate proident tempor in enim consequat ut cillum duis irure duis deserunt sunt reprehenderit. Sunt ad ut ullamco fugiat ullamco cillum voluptate deserunt laborum adipisicing laborum labore. In labore commodo amet duis laboris nostrud sunt quis ex excepteur dolore non in tempor.</p>
-                                    <img className="img-fluid" src={logoImg} alt="post image" />
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-row justify-content-between me-3 ms-3">
-                                    <div className="d-flex flex-row">
-                                        <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
-                                        <p className="text-secondary">100</p>
-                                    </div>
-                                    <div className="d-flex flex-row">
-                                        <p className="text-secondary me-2">1</p>
-                                        <p className="text-secondary">comments</p>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mt-2 mb-0"></hr>
-                                <div className="post-row flex-row">
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center">
-                                        <span className="material-icons-outlined me-2">thumb_up</span>
-                                        <span>Like</span>
-                                    </button>
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center" onClick={(e) => openComments(1)(e)}>
-                                        <span className="material-icons-outlined me-2">chat_bubble_outline</span>
-                                        <span>Comment</span>
-                                    </button>
-                                </div>
-                                <div className="comments-box">
-                                <hr className="m-0"></hr>
-                                    <div className="post-row">
-                                        <div className="left-header-box">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
-                                                <div className="input-group mb-3">
-                                                    <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="post-row">
-                                        <div className="left-header-box align-self-center">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                                            <div className="card facebook-light-gray-color p-3 border-25">
-                                            <p className="card-title"><strong>Eiusmod magna</strong></p>
-                                            <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>    
-                            </div>
+                            {postcontainer}
                         </div>
                         <div className="read-post-section">
                             <div className="card post-card align-self-center mb-3">
@@ -433,7 +476,7 @@ const Posts = (props) => {
 
                     {/*  */}
 
-                    <form className='signupForm' onSubmit={
+                    <form onSubmit={
     async (e)=>{
         e.preventDefault();
        
@@ -442,14 +485,36 @@ const Posts = (props) => {
        let btn = document.getElementById("sub");
       btn.disabled = false;
        if(!title.value){
-           alert("Please enter first name");
+           alert("Please enter post title");
            btn.disabled = false;
            return;
        }
+       if(title.value.trim().length == 0){
+        alert("Only white spaces are not allowed.");
+        btn.disabled = false;
+           return;
+       }
 
-       let regf = /^([a-zA-Z]{2,})*$/;
+       let regf = /^[ A-Za-z0-9_@./#&+-]*$/
        if(!regf.test(title.value)){
-            alert("Please enter valid first name");
+            alert("Please enter valid post title");
+            btn.disabled = false;
+            return;
+       }
+
+       if(!body.value){
+           alert("Please enter first post description");
+           btn.disabled = false;
+           return;
+       }
+       if(body.value.trim().length == 0){
+        alert("Only white spaces are not allowed.");
+        btn.disabled = false;
+           return;
+       }
+
+       if(!regf.test(body.value)){
+            alert("Please enter valid post description");
             btn.disabled = false;
             return;
        }
