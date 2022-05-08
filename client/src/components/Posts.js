@@ -138,7 +138,7 @@ const Posts = (props) => {
             setLoading(false);
             }
             fetchdata();    
-    
+        
     },[]);
 
     postcontainer = Seepost && Seepost.map((n) => {
@@ -147,21 +147,127 @@ const Posts = (props) => {
             imgstr ="http://localhost:3000"+n.imagePath;
         }
         console.log(n.imagePath+":"+n.imagePath == null );
+       
+        async function opendeltemodal(){
+           
+            const instance = axios.create({
+                baseURL: '*',
+                timeout: 20000,
+                withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                },
+            validateStatus: function (status) {
+                return status < 500; // Resolve only if the status code is less than 500
+                }
+            });
+            const userdata1  = await instance.get(`http://localhost:3000/session`);
+            console.log(n.userThatPosted._id);
+            console.log(userdata1.data.id);
+            if(userdata1.data.id === n.userThatPosted._id){
+            let myDeleteModal = new Modal(document.getElementById('deleteModal'));
+            myDeleteModal.show();
+            }else{
+                alert("You cannot delete this post.");
+            }
+        }
+        
+
+
+            // 
+
+
+            async function deletepost(){
+
+            const instance = axios.create({
+                baseURL: "*",
+                timeout: 20000,
+                
+                headers: {
+                  "Content-Type": "application/json;charset=UTF-8",
+                  "Access-Control-Allow-Origin": "*",
+                },
+                validateStatus: function (status) {
+                  return status < 500; // Resolve only if the status code is less than 500
+                },
+              });
+        
+              let postid = n._id;
+              const newseepostdata = await instance.delete(
+                `http://localhost:3000/posts/${postid}`,{
+                    headers:{
+                        'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
+                    }
+            }).then(function (response) {
+        console.log(response.data);
+
+        if(response.status === 200){
+            let myDeleteModal = new Modal(document.getElementById('deleteModal'));
+            myDeleteModal.hide();
+            window.location.reload();
+        }
+      }).catch(function (error) {
+        console.log(error);
+        //setSuccess(false);
+        alert("There was some error please try again");
+
+      });
+       
+
+
+
+              const seepostdata = await instance.get(
+                `http://localhost:3000/posts`
+              );
+              console.log(seepostdata.data);
+              setSeepost(seepostdata.data);
+              setLoading(false);
+
+        }
         return(
+            <div>
+                <div className="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Modal title</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <p>Are you sure to delete this post ?</p>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-danger" onClick={deletepost}>Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+           
             <div className="card post-card align-self-center mb-3">
-            <div className="post-row">
-                <div className="left-header-box">
-                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                        <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+            <div className="post-row justify-content-between">
+                <div className="d-flex justify-content-between">
+                    <div className="left-header-box">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                        </div>
+                    </div>
+                    <div className="right-header-box d-flex align-items-center">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                            <strong>
+                                <p className="post-heading mobile-text-center">{n.userThatPosted.firstName}</p>
+                            </strong>
+                        </div>
                     </div>
                 </div>
-                <div className="right-header-box d-flex align-items-center">
-                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                        <strong>
-                            <p className="post-heading mobile-text-center">{n.userThatPosted.firstName}</p>
-                        </strong>
+                <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={opendeltemodal}>
+                            <span className="material-icons">
+                                delete
+                            </span>
+                        </button>
                     </div>
-                </div>
             </div>
             <hr className="m-0 mb-2"></hr>
             <div className="post-row flex-column">
@@ -224,6 +330,7 @@ const Posts = (props) => {
                 </div>
             </div>    
         </div>  
+        </div>
        
      )
         
@@ -270,6 +377,8 @@ const Posts = (props) => {
         }
         else{
 
+            
+
     return (
         // ---------- Start of Posts ---------- // 
         <> 
@@ -299,7 +408,7 @@ const Posts = (props) => {
                         <div className="read-post-section">
                             {postcontainer}
                         </div>
-                        <div className="read-post-section">
+                        {/* <div className="read-post-section">
                             <div className="card post-card align-self-center mb-3">
                                 <div className="post-row">
                                     <div className="left-header-box">
@@ -452,7 +561,7 @@ const Posts = (props) => {
                                     </div>
                                 </div>    
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -581,6 +690,7 @@ const Posts = (props) => {
             if(response.status === 200){
                 alert("Post posted successfully!!!");
                 flag = true;
+                window.location.reload();
             }
           }).catch(function (error) {
             console.log(error);
@@ -601,9 +711,9 @@ const Posts = (props) => {
 
 
                         
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" aria-describedby="emailHelp" ref={(node)=>{
+                        <div className="mb-3">
+                            <label for="title" className="form-label">Title</label>
+                            <input type="text" className="form-control" id="title" aria-describedby="emailHelp" ref={(node)=>{
                             title = node;
                         }} />
                         </div>
@@ -620,7 +730,7 @@ const Posts = (props) => {
                         </div>
                         <div className="mb-3">
                             <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" className="btn btn-primary" id="sub">Send message</button>
+                            <button type="submit" className="btn btn-primary" id="sub">Publish</button>
                         </div>
                         </form>
                     </div>
