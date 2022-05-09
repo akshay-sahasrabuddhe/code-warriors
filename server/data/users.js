@@ -19,7 +19,8 @@ function signUpCheck(
   dateOfBirth,
   gender,
   interestedIn,
-  relationshipStatus
+  relationshipStatus,
+  imagePath
 ) {
   const genders = ["male", "female", "others", "nodisclosure"];
 
@@ -134,6 +135,15 @@ function signUpCheck(
     } else if (!relationship.includes(relationshipStatus)) {
       throw "Please enter a valid gender married, single, inarelation, nodisclosure";
     }
+  }
+
+  if(imagePath.length !== 0){
+      if(!isString(imagePath)){
+        throw "not a valid image path";  
+      }
+      else if (check_for_spaces(imagePath)) {
+        throw "not a valid imagepath";
+      }
   }
 }
 
@@ -369,11 +379,11 @@ async function getUser(id)
 
 
 
-async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,imagePath,coverPath){
+async function signUp(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,imagePath){
 
     console.log("in signup");
-    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
-
+    signUpCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus,imagePath)
+   
     const userinfo= await findUser(email)
         if(userinfo!=null)
         {
@@ -397,8 +407,7 @@ async function signUp(firstName,lastName,email,password,dateOfBirth,gender,inter
         friends:[],
         interestedIn,
         relationshipStatus,
-        profileImage:imagePath.toString(),
-        coverImage:coverPath.toString()
+        profileImage:imagePath.toString()
     }
 
 

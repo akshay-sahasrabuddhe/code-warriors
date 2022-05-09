@@ -48,6 +48,8 @@ const Signup = (props) => {
     //const classes = useStyles();
     const [success, setSuccess] = useState(false);
     const [file, setFile] = useState([]);
+    //const [profile,setProfile] = useState(undefined);
+    //const [cover, setCover] = useState(undefined);
     const [showModal, setShowModal] = useState(props.isOpen);
     let firstName;
     let lastName;
@@ -66,17 +68,19 @@ const Signup = (props) => {
 
     const fileSelected1 = (e) => {
         const temp = e.target.files[0];
-        console.log(temp);
-       
-        setFile(oldArray => [...oldArray, temp]);
+     
+        //setFile(oldArray => [...oldArray,temp]);
+        setFile(temp);
+       //setProfile(temp);
     }
 
-    const fileSelected2 = (e) => {
+   /* const fileSelected2 = (e) => {
         const temp = e.target.files[0];
-        console.log(temp);
-       
-        setFile(oldArray => [...oldArray, temp]);
-    }
+        let cover = JSON.parse(JSON.stringify(temp));
+        cover.name = "cover";
+        setFile(oldArray => [...oldArray,cover]);
+        //setCover(temp);
+    }*/
 
     let body = null;
 
@@ -222,8 +226,8 @@ const Signup = (props) => {
                 //let image = JSON.stringify(file);
                
 
-                console.log(file[0]);
-                console.log(file[1]);
+               // console.log(file[0]);
+                //console.log(file[1]);
 
                 let user = {
                     firstName: firstName.value,
@@ -249,10 +253,14 @@ const Signup = (props) => {
                 //console.log(formData.get('profileImage'));
                 
                 //formData.append("user",JSON.stringify(user));
-               // formData.append("files", file);
-               file.forEach(f => {
-                formData.append("files", f)
-            })
+               formData.append("file", file);
+              /*  console.log(file);
+               console.log("Printing object");
+               file.forEach((f) => {
+                   console.log(f);
+                   formData.append("files", f)
+            })*/
+  
                // let temp = JSON.stringify(user);
                 //formData.append("user",temp);
                let flag = false;
@@ -290,7 +298,7 @@ const Signup = (props) => {
         }>
            
            <label><input onChange={fileSelected1} name="file" type="file" accept="image/*"></input></label>
-           <label><input onChange={fileSelected2} name="file" type="file" accept="image/*"></input></label>
+           
            <Row className="mb-4">
            <Form.Group as={Col}>
            <FloatingLabel
