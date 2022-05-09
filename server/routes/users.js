@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const data = require("../data");
+const errorhandle = data.errorhandlers;
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr("MySecretKey");
 const bcrypt = require("bcryptjs");
@@ -349,15 +350,17 @@ router.get('/session', async(req,res) => {
 });
 
 
-router.post("/signup", upload.array('files') ,async(req,res)=>{
-    let imagePath;
+router.post("/signup", upload.single('file') ,async(req,res)=>{
+    let imagePath="";
     let coverPath;
-    console.log(req.files);
+    let profile;
+    let cover;
+   
 let img = [];
-
-req.files.map((f)=>{
-    img.push(f);
-})
+//console.log(req.file);
+/*req.files.map((f)=>{
+    console.log(f);
+})*/
 
 try{
 
@@ -371,15 +374,17 @@ catch(e)
 }
 
 try{
-    const result = await uploadFile(img[0]);
-    await unlinkFile(img[0].path);
-    console.log(result);
+  if (errorhandle.checkImage(req.file)) {
+    errorhandle.checkProperImage(req.file);
+    const result = await uploadFile(req.file);
+    await unlinkFile(req.file.path);
     imagePath = `/images/${result.Key}`;
+  }
 }catch(e){
     res.status(500).json({error:"Something wrong with the image"}) ;
     return;
 }
-
+/*
 try{
     const result = await uploadFile(img[1]);
     await unlinkFile(img[1].path);
@@ -389,16 +394,16 @@ try{
     res.status(500).json({error:"Something wrong with the image"}) ;
     return;
 }
-
+*/
 try{
    // const result = await uploadFile(req.file);
     //await unlinkFile(req.file.path);
     //console.log(result);
     //imagePath = `/users/images/${result.Key}`;
-    console.log(imagePath);
-    console.log("here");
-    let user= await usersData.signUp(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus,imagePath,coverPath);
-
+    //console.log(imagePath);
+    //console.log("here");
+    let user= await usersData.signUp(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus,imagePath);
+    
     res.json({signup:"Successful"}).status(200)
 
 }
