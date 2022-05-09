@@ -247,7 +247,7 @@ const Posts = (props) => {
            
             <div className="card post-card align-self-center mb-3">
             <div className="post-row justify-content-between">
-                <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between">
                     <div className="left-header-box">
                         <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
                             <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
@@ -261,13 +261,22 @@ const Posts = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={opendeltemodal}>
+                <div className="d-flex justify-content-between">
+                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-primary delete-post-btn d-flex">
+                            <span className="material-icons">
+                                edit
+                            </span>
+                        </button>
+                    </div>
+                    <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex">
                             <span className="material-icons">
                                 delete
                             </span>
                         </button>
                     </div>
+                </div>
             </div>
             <hr className="m-0 mb-2"></hr>
             <div className="post-row flex-column">
