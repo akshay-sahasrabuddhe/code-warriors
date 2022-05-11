@@ -219,6 +219,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.post("/like/:id", async (req, res) => {
+  console.log("this is"+req.body.userID)
   const updatedData = req.body;
   try {
     let id = req.params.id;
