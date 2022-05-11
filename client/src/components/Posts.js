@@ -11,6 +11,8 @@ import cryptojs from 'crypto-js';
 import Session from "react-session-api";
 import {ReactSession} from "react-client-session";
 import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
+import EditPost from "./EditPost";
+import Like from "./Like";
 
 import FormData from "form-data";
 //const bcrypt = require('bcryptjs');
@@ -41,6 +43,12 @@ const Posts = (props) => {
 
     const [about , setAbout] = useState(undefined);
     const [aboutedit , setAboutEdit] = useState(undefined);
+    const [editdataid , seteditdataid] = useState(undefined);
+    let [editdata , seteditdata] = useState(undefined);
+    const [finaleditid , setfinaleditid] = useState("");
+    
+    const [likenum , setlikenum] = useState("");
+    let a ;
 
     const navigate = useNavigate();
     console.log(localStorage);
@@ -141,6 +149,54 @@ const Posts = (props) => {
         
     },[]);
 
+   
+    
+    useEffect(() => {
+
+        async function openeditmodal(){
+       
+            const instance = axios.create({
+                baseURL: '*',
+                timeout: 20000,
+                withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                },
+            validateStatus: function (status) {
+                return status < 500; // Resolve only if the status code is less than 500
+                }
+            });
+            const userdata1  = await instance.get(`http://localhost:3000/session`);
+            let postid = finaleditid;
+
+            const clickedpost = await instance.get(`http://localhost:3000/posts/${postid}`);
+            console.log(clickedpost.data);
+            if(clickedpost.data){
+           
+            console.log(postid);
+            //editdata = clickedpost.data;
+            a = clickedpost.data;
+            seteditdata(a);
+            console.log(a);
+            }
+            
+            console.log(editdata);
+            console.log(userdata1.data.id);
+            // if(userdata1.data.id === n.userThatPosted._id){
+                
+            
+            // }else{
+            //     alert("You cannot edit this post.");
+            // }
+        }
+        openeditmodal();
+
+    },[finaleditid]);
+
+
+   
+
     postcontainer = Seepost && Seepost.map((n) => {
         let imgstr = "";
         if(n.imagePath){
@@ -148,8 +204,10 @@ const Posts = (props) => {
         }
         console.log(n.imagePath+":"+n.imagePath == null );
        
-        async function opendeltemodal(){
-           
+       
+        async function opendeltemodal(idd){
+    
+            
             const instance = axios.create({
                 baseURL: '*',
                 timeout: 20000,
@@ -166,20 +224,17 @@ const Posts = (props) => {
             console.log(n.userThatPosted._id);
             console.log(userdata1.data.id);
             if(userdata1.data.id === n.userThatPosted._id){
+                seteditdataid(idd);
             let myDeleteModal = new Modal(document.getElementById('deleteModal'));
             myDeleteModal.show();
             }else{
                 alert("You cannot delete this post.");
             }
         }
-        
 
-
-            // 
-
-
-            async function deletepost(){
-
+            async function deletepost(delid){
+                delid = editdataid
+                console.log(delid)
             const instance = axios.create({
                 baseURL: "*",
                 timeout: 20000,
@@ -193,11 +248,15 @@ const Posts = (props) => {
                 },
               });
         
-              let postid = n._id;
+             
+              let postid = delid;
+              console.log(postid);
+              console.log(delid);
               const newseepostdata = await instance.delete(
                 `http://localhost:3000/posts/${postid}`,{
                     headers:{
-                        'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
+                        "Content-Type": "application/json;charset=UTF-8",
+                        "Access-Control-Allow-Origin": "*",
                     }
             }).then(function (response) {
         console.log(response.data);
@@ -225,6 +284,15 @@ const Posts = (props) => {
               setLoading(false);
 
         }
+
+       
+        async function editclicked(edid){
+            let myEditModal = new Modal(document.getElementById('editModal'));
+                myEditModal.show();
+            setfinaleditid(edid);
+        }    
+
+
         return(
             <div>
                 <div className="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -243,7 +311,152 @@ const Posts = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
+                </div>
+                <div className="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Modal title</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                            <EditPost n={a}></EditPost>
+                            {/* <form onSubmit={
+    async (e)=>{
+        e.preventDefault();
+       let btn = document.getElementById("sub1");
+      btn.disabled = false;
+    //    if(!title.value){
+    //        console.log(title.value);
+    //        alert("Please enter post title");
+    //        btn.disabled = false;
+    //        return;
+    //    }
+    //    if(title.value.trim().length == 0){
+    //     alert("Only white spaces are not allowed.");
+    //     btn.disabled = false;
+    //        return;
+    //    }
+
+    //    let regf = /^[ A-Za-z0-9_@./#&+-]*$/
+    //    if(!regf.test(title.value)){
+    //         alert("Please enter valid post title");
+    //         btn.disabled = false;
+    //         return;
+    //    }
+
+    //    if(!body.value){
+    //        alert("Please enter first post description");
+    //        btn.disabled = false;
+    //        return;
+    //    }
+    //    if(body.value.trim().length == 0){
+    //     alert("Only white spaces are not allowed.");
+    //     btn.disabled = false;
+    //        return;
+    //    }
+
+    //    if(!regf.test(body.value)){
+    //         alert("Please enter valid post description");
+    //         btn.disabled = false;
+    //         return;
+    //    }
+      
+       // let temp = JSON.parse(user);
+       let flag = false;
+        //let msg = await axios.post('http:/localhost:3000/signup', user);
+
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+            withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            },
+        validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+        
+        
+
+        let postid = n._id;
+
+        const clickedpost = await instance.get(`http://localhost:3000/posts/${postid}`);
+        
+    
+               
+        n.title = clickedpost.data.title;
+        n.body = clickedpost.data.body;
+
+       
+        const data1  = await instance.get(`http://localhost:3000/session`);
+                console.log(data1.data);
+            
+        const userdata1  = await instance.get(`http://localhost:3000/getUserData`);
+        console.log(userdata1.data);
+
+        
+        let user = {
+                        id: postid,
+                        title : document.getElementById('title').value,
+                        body:  document.getElementById('body').value,
+                        isPublic: true,
+                    }
+                    console.log(user);
+
+        await axios.patch(`http://localhost:3000/posts/${postid}`,user,{
+            headers: {
+                  'Content-Type': 'application/json;charset=UTF-8',
+                  "Access-Control-Allow-Origin": "*",
+                }
+                }).then(function (response) {
+            console.log(response.data);
+
+            if(response.status === 200){
+                alert("Post posted successfully!!!");
+                flag = true;
+                window.location.reload();
+            }
+          }).catch(function (error) {
+            console.log(error);
+            //setSuccess(false);
+            alert("There was some error please try again");
+
+          });
+
+          e.target.reset();
+          //btn.disabled = false;
+           if(flag){
+            
+            props.handleClose(false);
+           }            
+    }
+}>
+
+                        <div className="mb-3">
+                            <label htmlFor="title" className="form-label">Title</label>
+                            <input type="text" className="form-control" id="title" aria-describedby="emailHelp" ref={(node)=>{
+                            title = node;
+                        }} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="body" className="col-form-label">Message:</label>
+                            <textarea className="form-control" id="body" defaultValue={n.body} ref={(node)=>{
+                            body = node;
+                        }} ></textarea>
+                        </div>
+                        <div className="mb-3">
+                            <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" className="btn btn-primary" id="sub1">Publish</button>
+                        </div>
+                        </form> */}
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
            
             <div className="card post-card align-self-center mb-3">
             <div className="post-row justify-content-between">
@@ -261,12 +474,21 @@ const Posts = (props) => {
                         </div>
                     </div>
                 </div>
+                <div className="d-flex justify-content-between">
                 <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={opendeltemodal}>
+                        <button type="button" className="btn btn-outline-primary delete-post-btn d-flex" onClick={async () => await editclicked(n._id)} disabled>
+                            <span className="material-icons">
+                                edit
+                            </span>
+                        </button>
+                    </div>
+                <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={() => opendeltemodal(n._id)}>
                             <span className="material-icons">
                                 delete
                             </span>
                         </button>
+                    </div>
                     </div>
             </div>
             <hr className="m-0 mb-2"></hr>
@@ -276,64 +498,10 @@ const Posts = (props) => {
                 {imgstr.includes(null) ? <img className="img-fluid" src={imgstr} alt="post image" style={{display:"none"}} /> : <img className="img-fluid" src={imgstr} alt="post image" type="file" accept="image/*" />}
             </div>
             <hr className="m-0 mb-2"></hr>
-            <div className="post-row flex-row justify-content-between me-3 ms-3">
-                <div className="d-flex flex-row">
-                    <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
-                    <p className="text-secondary">100</p>
-                </div>
-                <div className="d-flex flex-row">
-                    <p className="text-secondary me-2">1</p>
-                    <p className="text-secondary">comments</p>
-                </div>
-            </div>
-            <hr className="m-0 mt-2 mb-0"></hr>
-            <div className="post-row flex-row">
-                <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center">
-                    <span className="material-icons-outlined me-2">thumb_up</span>
-                    <span>Like</span>
-                </button>
-                <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center" onClick={(e) => openComments(1)(e)}>
-                    <span className="material-icons-outlined me-2">chat_bubble_outline</span>
-                    <span>Comment</span>
-                </button>
-            </div>
-            <div className="comments-box">
-            <hr className="m-0"></hr>
-                <div className="post-row">
-                    <div className="left-header-box">
-                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                        </div>
-                    </div>
-                    <div className="right-header-box flex-grow-1">
-                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
-                            <div className="input-group mb-3">
-                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="post-row">
-                    <div className="left-header-box align-self-center">
-                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                        </div>
-                    </div>
-                    <div className="right-header-box flex-grow-1">
-                        <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                        <div className="card facebook-light-gray-color p-3 border-25">
-                        <p className="card-title"><strong>Eiusmod magna</strong></p>
-                        <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>    
+            <Like mainid={n._id} numlikes={n.likes.length}></Like>   
         </div>  
         </div>
-       
      )
-        
     });
 
 
@@ -348,19 +516,7 @@ const Posts = (props) => {
         myModal.show();
     }
 
-    const openComments = param => event => {
-        let a = "";
-           if(event.target.tagName == "BUTTON"){
-                a = event.target.parentNode.nextElementSibling;
-           }else{
-                a = event.target.parentNode.parentNode.nextElementSibling;
-           }
-            a.style.display = 'block';
-            window.setTimeout(function(){
-                a.style.opacity = 1;
-                a.style.transform = 'scale(1)';
-            },0);
-      };
+    
 
       if(loading){
         return(
