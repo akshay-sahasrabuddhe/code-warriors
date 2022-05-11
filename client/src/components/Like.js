@@ -15,9 +15,12 @@ const Like = (props) => {
 console.log(props);
 
 const[likedata,setlikedata] = useState(props.numlikes);
+
+const[commentsdata,setcommentsdata] = useState(props.numcomments);
 // setlikedata(props.n);
 let likecontainer = null;
 let finallikes = 0;
+let body;
     
 async function likefunk(likeid){
     const instance = axios.create({
@@ -83,7 +86,7 @@ const openComments = param => event => {
                     <p className="text-secondary">{likedata}</p>
                 </div>
                 <div className="d-flex flex-row">
-                    <p className="text-secondary me-2">1</p>
+                    <p className="text-secondary me-2">{commentsdata}</p>
                     <p className="text-secondary">comments</p>
                 </div>
             </div>
@@ -108,9 +111,95 @@ const openComments = param => event => {
                     </div>
                     <div className="right-header-box flex-grow-1">
                         <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
+                        <form onSubmit={
+    async (e)=>{
+        e.preventDefault();
+       
+       
+
+        
+       let btn = document.getElementById("sendComment");
+      btn.disabled = false;
+       // let temp = JSON.parse(user);
+       let flag = false;
+      
+        
+        //let msg = await axios.post('http:/localhost:3000/signup', user);
+
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+            withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            },
+        validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+        
+
+       
+        const data1  = await instance.get(`http://localhost:3000/session`);
+                console.log(data1.data);
+            
+        const userdata1  = await instance.get(`http://localhost:3000/getUserData`);
+        console.log(userdata1.data);
+
+        let sampleonj = {firstName:userdata1.data.firstName,_id:data1.data.id};
+        
+        let formData = new FormData();
+                formData.append("comment" , body.value);
+                formData.append("userThatPostedComment",JSON.stringify(sampleonj));
+                let user ={
+                    comment: body.value,
+                    userThatPostedComment: sampleonj
+                }
+                
+        //console.log(formData.get('userThatPosted'));
+
+        let postid = props.mainid;
+        await axios.post(`http://localhost:3000/comments/${postid}`,user,{
+                        headers:{
+                            'Content-Type': 'application/json;charset=UTF-8',
+                            "Access-Control-Allow-Origin": "*",
+                        }
+                }).then(function (response) {
+            console.log(response.data);
+
+            if(response.status === 200){
+                async function finalcom(){
+                const numcomm  = await instance.get(`http://localhost:3000/posts/${postid}`);
+                
+                console.log(numcomm)
+                setcommentsdata(numcomm.data.comments.length)
+                // alert("Post posted successfully!!!");
+                flag = true;
+                // window.location.reload();
+                }finalcom();
+            }
+          }).catch(function (error) {
+            console.log(error);
+            //setSuccess(false);
+            alert("There was some error please try again");
+
+          });
+
+          e.target.reset();
+          //btn.disabled = false;
+                  
+    }
+}>
+                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." id="body" ref={(node)=>{
+                            body = node;
+                        }} />
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
                             </div>
+                            <div className="input-group mb-3">
+                                <button type="submit" class="btn btn-primary rounded-pill" id="sendComment">Send</button>
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -123,7 +212,14 @@ const openComments = param => event => {
                     <div className="right-header-box flex-grow-1">
                         <div className="p-2 p-lg-3 ps-lg-0 w-100">
                         <div className="card facebook-light-gray-color p-3 border-25">
+                        <div className="d-flex justify-content-between">
                         <p className="card-title"><strong>Eiusmod magna</strong></p>
+                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex">
+                        <span className="material-icons">
+                                delete
+                            </span>
+                        </button>
+                        </div>
                         <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
                         </div>
                         </div>
