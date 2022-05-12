@@ -24,8 +24,13 @@ const [editdataid , seteditdataid] = useState(undefined);
 let likecontainer,commentscontainer = null;
 let finallikes = 0;
 let body;
+
+
     
 async function likefunk(likeid){
+    
+   
+    
     const instance = axios.create({
         baseURL: '*',
         timeout: 20000,
@@ -56,7 +61,16 @@ async function likefunk(likeid){
     console.log(response.data.likes.length);
 
     if(response.status === 200){
+        console.log()
+        console.log()
        setlikedata(response.data.likes.length)
+       if(response.data.likes.includes(data1.data.id)){
+        document.getElementById(`${likeid}`).classList.remove("material-icons-outlined");
+        document.getElementById(`${likeid}`).classList.add("material-icons");
+       }else{
+        document.getElementById(`${likeid}`).classList.remove("material-icons");
+        document.getElementById(`${likeid}`).classList.add("material-icons-outlined");
+       }
     }
     }).catch(function (error) {
     console.log(error);
@@ -217,7 +231,7 @@ const openComments = param => event => {
                     </div>
                 </div>
             </div> */}
-          
+
             <div className="post-row">
 
            
@@ -256,7 +270,7 @@ const openComments = param => event => {
         return(<>
             <div className="post-row flex-row justify-content-between me-3 ms-3">
                 <div className="d-flex flex-row">
-                    <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
+                    <span className="material-icons-outlined messanger-dark-color me-2 unlike-show-btn" id={props.mainid}>thumb_up</span>
                     <p className="text-secondary">{likedata}</p>
                 </div>
                 <div className="d-flex flex-row">
@@ -372,7 +386,7 @@ const openComments = param => event => {
                             <div className="input-group mb-3">
                             </div>
                             <div className="input-group mb-3">
-                                <button type="submit" class="btn btn-primary rounded-pill" id="sendComment">Send</button>
+                                <button type="submit" className="btn btn-primary rounded-pill" id="sendComment">Send</button>
                             </div>
                             </form>
                         </div>
