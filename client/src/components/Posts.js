@@ -498,7 +498,7 @@ const Posts = (props) => {
                 {imgstr.includes(null) ? <img className="img-fluid" src={imgstr} alt="post image" style={{display:"none"}} /> : <img className="img-fluid" src={imgstr} alt="post image" type="file" accept="image/*" />}
             </div>
             <hr className="m-0 mb-2"></hr>
-            <Like mainid={n._id} numlikes={n.likes.length} numcomments={n.comments.length}></Like>   
+            <Like mainid={n._id} numlikes={n.likes.length} numcomments={n.comments.length} commentsdata={Seepost}></Like>   
         </div>  
         </div>
      )

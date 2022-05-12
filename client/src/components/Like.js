@@ -17,8 +17,11 @@ console.log(props);
 const[likedata,setlikedata] = useState(props.numlikes);
 
 const[commentsdata,setcommentsdata] = useState(props.numcomments);
+
+const[getcommentsdata,setgetcommentsdata] = useState([]);
+const [editdataid , seteditdataid] = useState(undefined);
 // setlikedata(props.n);
-let likecontainer = null;
+let likecontainer,commentscontainer = null;
 let finallikes = 0;
 let body;
     
@@ -77,6 +80,177 @@ const openComments = param => event => {
             a.style.transform = 'scale(1)';
         },0);
   };
+
+  useEffect(() => {
+      async function getallcomments(){
+        const instance = axios.create({
+            baseURL: "*",
+            timeout: 20000,
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+              "Access-Control-Allow-Origin": "*",
+            },
+            validateStatus: function (status) {
+              return status < 500; // Resolve only if the status code is less than 500
+            },
+          });
+    
+          const seecomdata = await instance.get(
+            `http://localhost:3000/comments/${props.mainid}`
+          );
+          console.log(seecomdata);
+          setgetcommentsdata(seecomdata.data);
+      }
+      getallcomments();
+   },[]);
+
+  commentscontainer = getcommentsdata && getcommentsdata.map((n) => {
+
+    async function opencommentdeltemodal(idd){
+    
+            
+        const instance = axios.create({
+            baseURL: '*',
+            timeout: 20000,
+            withCredentials: true,
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+            },
+        validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+            }
+        });
+        const userdata1  = await instance.get(`http://localhost:3000/session`);
+        console.log(n.userThatPostedComment._id);
+        console.log(userdata1.data.id);
+        console.log(idd);
+        if(userdata1.data.id === n.userThatPostedComment._id){
+            seteditdataid(idd);
+        let myDeleteModal1 = new Modal(document.getElementById('commentdeleteModal'));
+        myDeleteModal1.show();
+        }else{
+            alert("You cannot delete this post.");
+        }
+    }
+
+        async function deletecomment(delid){
+            //delid = editdataid
+            console.log(delid)
+            const instance = axios.create({
+            baseURL: "*",
+            timeout: 20000,
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+              "Access-Control-Allow-Origin": "*",
+            },
+            validateStatus: function (status) {
+              return status < 500; // Resolve only if the status code is less than 500
+            },
+          });
+    
+         
+          let postid = delid;
+          console.log(postid);
+          console.log(delid);
+          const userdata1  = await instance.get(`http://localhost:3000/session`);
+          const userdata2  = await instance.get(`http://localhost:3000/comments/comment/${postid}`);
+
+          if(userdata1.data.id === userdata2.data.userThatPostedComment._id){
+            
+         
+          const newseepostdata = await instance.delete(
+            `http://localhost:3000/comments/${postid}`,{
+                headers:{
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                }
+        }).then(function (response) {
+    console.log(response.data);
+
+    if(response.status === 200){
+        // let myDeleteModal1 = new Modal(document.getElementById('commentdeleteModal'));
+        // myDeleteModal1.hide();
+        window.location.reload();
+    }
+  }).catch(function (error) {
+    console.log(error);
+    //setSuccess(false);
+    alert("There was some error please try again");
+
+  });}else{
+      alert("You cannot delete this comment.")
+  }
+   
+
+
+
+        //   const seepostdata = await instance.get(
+        //     `http://localhost:3000/posts`
+        //   );
+        //   console.log(seepostdata.data);
+        //   setSeepost(seepostdata.data);
+        //   setLoading(false);
+
+    }
+
+
+
+      return(
+          <div>
+               {/* <div className="modal fade" id="commentdeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Modal title</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Are you sure to delete this comment ?</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-danger" onClick={deletecomment}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div> */}
+          
+            <div className="post-row">
+
+           
+
+            <div className="left-header-box align-self-center">
+                <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                    <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                </div>
+            </div>
+            <div className="right-header-box flex-grow-1">
+                <div className="p-2 p-lg-3 ps-lg-0 w-100">
+                <div className="card facebook-light-gray-color p-3 border-25">
+                <div className="d-flex justify-content-between">
+                <p className="card-title"><strong>{n.userThatPostedComment.firstName}</strong></p>
+                <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={() => deletecomment(n._id)}>
+                <span className="material-icons">
+                        delete
+                    </span>
+                </button>
+                </div>
+                <p className="card-subtitle">{n.comment}</p>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+
+
+)
+
+    });
 
 
         return(<>
@@ -174,6 +348,7 @@ const openComments = param => event => {
                 
                 console.log(numcomm)
                 setcommentsdata(numcomm.data.comments.length)
+                setgetcommentsdata(numcomm.data.comments)
                 // alert("Post posted successfully!!!");
                 flag = true;
                 // window.location.reload();
@@ -203,28 +378,7 @@ const openComments = param => event => {
                         </div>
                     </div>
                 </div>
-                <div className="post-row">
-                    <div className="left-header-box align-self-center">
-                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                        </div>
-                    </div>
-                    <div className="right-header-box flex-grow-1">
-                        <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                        <div className="card facebook-light-gray-color p-3 border-25">
-                        <div className="d-flex justify-content-between">
-                        <p className="card-title"><strong>Eiusmod magna</strong></p>
-                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex">
-                        <span className="material-icons">
-                                delete
-                            </span>
-                        </button>
-                        </div>
-                        <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                {commentscontainer}
             </div> 
         </>)
   
