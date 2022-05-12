@@ -45,6 +45,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/:id", async (req, res) => {
   let commentInfo = req.body;
+  console.log(req.body);
   try {
     let postID = errorhandle.checkAndGetID(req.params.id, "postId");
     errorhandle.checkProperString(commentInfo.comment, "Comment Body");
