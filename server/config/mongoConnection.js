@@ -1,7 +1,8 @@
 const MongoClient = require("mongodb").MongoClient;
 const settings = {
   mongoConfig: {
-    serverUrl: "mongodb://localhost:27017/",
+    serverUrl:
+      "mongodb+srv://CW-1:test@cluster0.nvwgh.mongodb.net/code-warriors?retryWrites=true&w=majority",
     database: "code-warriors",
   },
 };
