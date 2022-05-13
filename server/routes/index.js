@@ -7,7 +7,7 @@ const friendRoutes = require("./friends");
 
 const constructorMethod = (app) => {
   app.use(cors({
-    origin:['http://localhost:4000'],
+    origin:['http://localhost:3000','http://localhost:4000'],
   methods:['GET','POST','PATCH','PUT','DELETE'],
   credentials: true
   }));
