@@ -87,7 +87,7 @@ const Navigation = (props) => {
     // ---------- Start of Navigation ---------- //
     <section className="nav-section fixed-top facebook-light-gray-color">
       <nav className="navbar navbar-expand-lg horizontal-navigation navbar-light facebook-light-gray-color">
-        <a className="navbar-brand logo-link me-3 ms-3" href="#">
+        <a className="navbar-brand logo-link me-3 ms-3" href="/posts">
           <img className="responsive-img logo-img" src={logoImg} alt="img" />
         </a>
         <button
@@ -117,7 +117,9 @@ const Navigation = (props) => {
             <div>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 text-center">
                 <li className="nav-item">
+                  <a href="/posts">
                   <span className="material-icons home-icon">home</span>
+                  </a>
                 </li>
                 <li className="nav-item">
                   <a
@@ -125,7 +127,7 @@ const Navigation = (props) => {
                     aria-current="page"
                     href={`/userprofile/" + ${id}`}
                   >
-                    Akshay
+                    {user}
                   </a>
                 </li>
                 {/* <li className="nav-item">

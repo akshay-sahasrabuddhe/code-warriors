@@ -749,40 +749,40 @@ const Posts = (props) => {
         
        let btn = document.getElementById("sub");
       btn.disabled = false;
-       if(!title.value){
+       if((!title.value) || (title.value == null)){
            alert("Please enter post title");
            btn.disabled = false;
            return;
        }
        if(title.value.trim().length == 0){
-        alert("Only white spaces are not allowed.");
+        alert("Empty post title is not allowed.");
         btn.disabled = false;
            return;
        }
 
-       let regf = /^[ A-Za-z0-9_@./#&+-]*$/
-       if(!regf.test(title.value)){
-            alert("Please enter valid post title");
-            btn.disabled = false;
-            return;
-       }
+    //    let regf = /^[ A-Za-z0-9_@./#&+-]*$/
+    //    if(!regf.test(title.value)){
+    //         alert("Please enter valid post title");
+    //         btn.disabled = false;
+    //         return;
+    //    }
 
-       if(!body.value){
-           alert("Please enter first post description");
+       if((!body.value) || (body.value == null)){
+           alert("Please enter post message");
            btn.disabled = false;
            return;
        }
        if(body.value.trim().length == 0){
-        alert("Only white spaces are not allowed.");
+        alert("White spaces are not allowed.");
         btn.disabled = false;
            return;
        }
 
-       if(!regf.test(body.value)){
-            alert("Please enter valid post description");
-            btn.disabled = false;
-            return;
-       }
+    //    if(!regf.test(body.value)){
+    //         alert("Please enter valid post description");
+    //         btn.disabled = false;
+    //         return;
+    //    }
 
 
 
