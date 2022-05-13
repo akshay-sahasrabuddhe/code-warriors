@@ -92,8 +92,8 @@ const Login = (props) => {
                   timeout: 20000,
                 withCredentials: true,
                 headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    "Access-Control-Allow-Origin": "*",
+                    'Content-Type': 'application/json',
+                //;charset=UTF-8
                   },
                 validateStatus: function (status) {
                     return status < 500; // Resolve only if the status code is less than 500
@@ -118,6 +118,7 @@ const Login = (props) => {
                }
                
                e.target.reset();
+               btn.disabled = false;
                       /*.then(function (response) {
                         console.log(response);
                       })

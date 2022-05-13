@@ -267,14 +267,16 @@ const Signup = (props) => {
                let url = 'http:/localhost:3000/signup'
                 //console.log(user);
                 //let msg = await axios.post('http:/localhost:3000/signup', user);
-                await axios.post(`http://localhost:3000/signup`,formData,{
-                    
-                        headers:{
+                const {data} = await axios.post(`http://localhost:3000/signup`,formData,{
+                    validateStatus: function (status) {
+                        return status < 500; // Resolve only if the status code is less than 500
+                      },
+                    headers:{
                             'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
                         }
                 
                 })
-                  .then(function (response) {
+                 /* .then(function (response) {
                     console.log(response);
                     if(response.status === 200){
                         alert("User registered");
@@ -286,10 +288,18 @@ const Signup = (props) => {
                     //setSuccess(false);
                     alert("There was some error please try again");
                    
-                  });
-                
+                  });*/
+                  console.log(data.error);
+                  if(!('error' in data)){
+                    alert("User registered");
+                    flag = true;
+                  }
+                  else{
+                    btn.disabled = false;
+                    alert(data.error);
+                  }
                   e.target.reset();
-                  //btn.disabled = false;
+                  btn.disabled = false;
                    if(flag){
                     setShowModal(true);
                     props.handleClose(false);
