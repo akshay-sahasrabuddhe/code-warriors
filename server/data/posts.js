@@ -275,7 +275,12 @@ module.exports = {
       obj.dateOfPost = moment(obj.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
       todList.push(obj);
     });
-
+    console.log("In data");
+    console.log({
+      today: todList,
+      week: wekList,
+      month: monList,
+    });
     return [
       {
         today: todList,
