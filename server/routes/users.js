@@ -619,4 +619,18 @@ router.post("/userprofile/sendRequest", async (req, res) => {
 });
 
 
+
+router.post("/getallusers", async (req, res) => {
+  try {
+    console.log("reached in routes");
+    let search = req.body;
+    console.log(search);
+    let serdata = await usersData.searchData(search);
+    res.status(200).json({ status: true, data: serdata });
+  } catch (error) {
+    res.status(500).json({ status: false });
+  }
+});
+
+
 module.exports = router;
