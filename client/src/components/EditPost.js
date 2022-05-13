@@ -11,55 +11,56 @@ import axios from "axios";
 import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import cryptojs from "crypto-js";
+import ReactModal from 'react-modal';
 const EditPost = (props) => {
     console.log(props);
+    //const loading
+    const [showModal, setShowModal] = useState(props.isOpen);
     const [about , setAbout] = useState(undefined);
     let title,body = null;
+    let temp = null;
 
+    const handleCloseModal = () => {
+        $(".editmodal").on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
+        });
+        
+        setShowModal(true);
+        props.handleClose(false);
+    }
 
-    if(props.n){
-    return(
+    if(props.modal === 'editpost'){
+    temp = <div>
 <form onSubmit={
     async (e)=>{
         e.preventDefault();
+       
        let btn = document.getElementById("sub1");
       btn.disabled = false;
-      let title,body = null;
-    //    if(!title.value){
-    //        console.log(title.value);
-    //        alert("Please enter post title");
-    //        btn.disabled = false;
-    //        return;
-    //    }
-    //    if(title.value.trim().length == 0){
-    //     alert("Only white spaces are not allowed.");
-    //     btn.disabled = false;
-    //        return;
-    //    }
+      
+      if(!title.value){
+             console.log(title.value);
+              alert("Please enter post title");
+             btn.disabled = false;
+              return;
+        }
 
-    //    let regf = /^[ A-Za-z0-9_@./#&+-]*$/
-    //    if(!regf.test(title.value)){
-    //         alert("Please enter valid post title");
-    //         btn.disabled = false;
-    //         return;
-    //    }
+       if(title.value.trim().length == 0){
+        alert("Only white spaces are not allowed.");
+          btn.disabled = false;
+          return;
+        }
 
-    //    if(!body.value){
-    //        alert("Please enter first post description");
-    //        btn.disabled = false;
-    //        return;
-    //    }
-    //    if(body.value.trim().length == 0){
-    //     alert("Only white spaces are not allowed.");
-    //     btn.disabled = false;
-    //        return;
-    //    }
-
-    //    if(!regf.test(body.value)){
-    //         alert("Please enter valid post description");
-    //         btn.disabled = false;
-    //         return;
-    //    }
+        if(!body.value){
+                alert("Please enter first post description");
+                btn.disabled = false;
+                 return;
+            }
+               if(body.value.trim().length == 0){
+                alert("Only white spaces are not allowed.");
+              btn.disabled = false;
+                    return;
+               }
       
        // let temp = JSON.parse(user);
        let flag = false;
@@ -96,11 +97,11 @@ const EditPost = (props) => {
         const userdata1  = await instance.get(`http://localhost:3000/getUserData`);
         console.log(userdata1.data);
 
-        
+        console.log(document.getElementById('title').value);
         let user = {
                         id: postid,
-                        title : document.getElementById('title').value,
-                        body:  document.getElementById('body').value,
+                        title : title.value,
+                        body:  body.value,
                         isPublic: true,
                     }
                     console.log(user);
@@ -158,14 +159,61 @@ const EditPost = (props) => {
                         }} ></textarea>
                         </div>
                         <div className="mb-3">
-                            <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal" onClick={handleCloseModal}>Close</button>
+            
                             <button type="submit" className="btn btn-primary" id="sub1">Publish</button>
                         </div>
                         </form>
-    );
-                    }else{
-                        return(<h1>hiiiii</h1>)
+                        </div>
                     }
+
+    return(
+        <div className="App-body pt-5 mt-5">
+            <ReactModal 
+            class="editmodal"
+            name='editPost'
+            isOpen={showModal}
+            contentLabel='Edit Post'
+            style={{
+                overlay: {
+                    marginTop:'50px',
+                    marginLeft:'50px',
+                  position:'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)'
+                },
+                content: {
+                    marginLeft:'400px',
+                    width:'500px',
+                    height:'410px',
+                  position: 'relative',
+                  top: '30px',
+                  left: '30px',
+                  right: '30px',
+                  bottom: '30px',
+                  border: '1px solid #ccc',
+                  background: '#fff',
+                  overflow: 'auto',
+                  WebkitOverflowScrolling: 'auto',
+                  borderRadius: '10px',
+                  padding: '20px',
+                  
+                }
+              }}
+            >
+                <h4></h4>
+                {temp}
+          
+            
+            </ReactModal>
+        </div>
+    );
+  
+       
+    
 
 }
 
