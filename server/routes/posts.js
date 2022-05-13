@@ -12,6 +12,7 @@ const unlinkFile = util.promisify(fs.unlink);
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const { uploadFile, getFileStream } = require("../helpers/s3");
+const { posts } = require("../data");
 
 router.get("/:id", async (req, res) => {
   try {
@@ -262,6 +263,8 @@ router.get("/memories/:userid", async (req, res) => {
     let id = req.params.userid;
     let ID = errorhandle.checkAndGetID(id, "User ID");
     let post = await postData.memories(id);
+    console.log("In routes");
+    console.log(post);
     res.json(post);
     return;
   } catch (e) {
