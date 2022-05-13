@@ -70,6 +70,7 @@ async function likefunk(likeid){
        }else{
         document.getElementById(`${likeid}`).classList.remove("material-icons");
         document.getElementById(`${likeid}`).classList.add("material-icons-outlined");
+        
        }
     }
     }).catch(function (error) {
@@ -139,7 +140,9 @@ const openComments = param => event => {
         const userdata1  = await instance.get(`http://localhost:3000/session`);
         console.log(n.userThatPostedComment._id);
         console.log(userdata1.data.id);
-        console.log(idd);
+        console.log(
+            
+        );
         if(userdata1.data.id === n.userThatPostedComment._id){
             seteditdataid(idd);
         let myDeleteModal1 = new Modal(document.getElementById('commentdeleteModal'));
@@ -243,7 +246,7 @@ const openComments = param => event => {
             </div>
             <div className="right-header-box flex-grow-1">
                 <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                <div className="card facebook-light-gray-color p-3 border-25">
+                <div className="card facebook-light-gray-color p-3 border-25 user-comments-card">
                 <div className="d-flex justify-content-between">
                 <p className="card-title"><strong>{n.userThatPostedComment.firstName}</strong></p>
                 <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={() => deletecomment(n._id)}>
@@ -303,10 +306,19 @@ const openComments = param => event => {
     async (e)=>{
         e.preventDefault();
        
-       
+        if((!body.value) || (body.value == null)){
+           alert("Please enter the comment");
+           btn.disabled = false;
+           return;
+       }
+       if(body.value.trim().length == 0){
+        alert("White spaces are not allowed.");
+        btn.disabled = false;
+           return;
+       }
 
         
-       let btn = document.getElementById("sendComment");
+       let btn = document.querySelector(".sendComment");
       btn.disabled = false;
        // let temp = JSON.parse(user);
        let flag = false;
@@ -380,18 +392,17 @@ const openComments = param => event => {
                   
     }
 }>
-                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." id="body" ref={(node)=>{
+                                <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." ref={(node)=>{
                             body = node;
                         }} />
-                            <div className="input-group mb-3">
-                            </div>
-                            <div className="input-group mb-3">
-                                <button type="submit" className="btn btn-primary rounded-pill" id="sendComment">Send</button>
+                            <div className="input-group mb-3 mt-3">
+                                <button type="submit" className="btn btn-primary rounded-pill sendComment">Send</button>
                             </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                
                 {commentscontainer}
             </div> 
         </>)

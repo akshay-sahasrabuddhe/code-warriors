@@ -10,6 +10,7 @@ import Posts from "./components/Posts";
 import Memories from "./components/Memories";
 import Userprofile from "./components/Userprofile";
 import Main from "./components/Main";
+import Search from "./components/Search";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Videos from "./components/Videos";
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/videos" element={<Videos />} />
                     <Route path="/memories" element={<Memories />} />
                     <Route path="/userprofile/:id" element={<Userprofile />} />
+                    <Route path="/search" element={<Search />} />
                   </Routes>
                 </div>
               </div>

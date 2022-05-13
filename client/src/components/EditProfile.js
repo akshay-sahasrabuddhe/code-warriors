@@ -104,6 +104,12 @@ return(
                     btn.disabled = false;
                     return;
                    }
+
+                   if(!relationStatus.value){
+                       alert("Please provide relationship status");
+                       btn.disabled = false;
+                       return;
+                   }
                   
                     const relationship=["married", "single", "inarelation", "nodisclosure"]
                     console.log(relationStatus.value);
@@ -115,6 +121,12 @@ return(
                             return;
                         }
                     }
+
+                    if(!interests.value){
+                       alert("Please provide your");
+                       btn.disabled = false;
+                       return;
+                   }
     
                     let user = {
                         firstName: firstName.value,
@@ -154,6 +166,7 @@ return(
                         if(response.status === 200){
                             alert("Hey "+user.firstName+", Your profile is updated !!!");
                             flag = true;
+                            window.location.reload();
                         }
                       })
                       .catch(function (error) {

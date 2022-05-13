@@ -493,6 +493,11 @@ h4{
   padding: 0.25rem;
 }
 
+.user-comments-card{
+  overflow-wrap: anywhere;
+}
+
+
 /*  Start of Media Queries */
 
 @media(min-width:768px){

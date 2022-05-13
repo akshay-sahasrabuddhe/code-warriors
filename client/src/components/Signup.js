@@ -364,7 +364,7 @@ const Signup = (props) => {
             </FloatingLabel>
 
             <FloatingLabel controlId="date" label="Date of Birth" className="mb-3">
-                <Form.Control required type="date" placeholder="Date of Birth" 
+                <Form.Control required type="date" placeholder="Date of Birth"  
                     
                     className="textform"
                     ref={(node)=>{
