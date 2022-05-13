@@ -10,6 +10,7 @@ import Posts from "./components/Posts";
 import Memories from "./components/Memories";
 import Userprofile from "./components/Userprofile";
 import Main from "./components/Main";
+import Search from "./components/Search";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Videos from "./components/Videos";
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/userprofile/:id" element={<Userprofile />} />
                     <Route path="/viewrequests" element={<ViewRequests />} />
                     <Route path="/messenger" element={<Messenger />} />
+                    <Route path="/search" element={<Search />} />
                   </Routes>
                 </div>
               </div>
