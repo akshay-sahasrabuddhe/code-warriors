@@ -13,7 +13,8 @@ import Main from "./components/Main";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Videos from "./components/Videos";
-
+import ViewRequests from "./components/ViewRequests";
+import Messenger from "./components/messenger/Messenger";
 function App() {
   return (
     <div className="App">
@@ -27,9 +28,9 @@ function App() {
       <div className="App-body">
         <div className="container">
           <div className="row">
-            <div className="col-sm-12 col-lg-6 offset-lg-3">
+            <div className="col-sm-12 col-lg-9 offset-lg-3">
               <div className="row">
-                <div className="col-sm-12">
+                <div className="col-sm-9">
                   <Routes>
                     <Route index path="/" element={<Main />} />
                     <Route path="/posts" element={<Posts />} />
@@ -38,6 +39,8 @@ function App() {
                     <Route path="/videos" element={<Videos />} />
                     <Route path="/memories" element={<Memories />} />
                     <Route path="/userprofile/:id" element={<Userprofile />} />
+                    <Route path="/viewrequests" element={<ViewRequests />} />
+                    <Route path="/messenger" element={<Messenger />} />
                   </Routes>
                 </div>
               </div>

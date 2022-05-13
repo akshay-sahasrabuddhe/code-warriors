@@ -118,4 +118,43 @@ router.get("/findFriend/:Id", async (req, res) => {
     res.status(500).json({ status: false });
   }
 });
+
+router.post("/addfriend", async (req, res) => {
+  let userId = req.body.userId;
+  let senderId = req.body.senderId;
+  console.log(userId);
+  try {
+    if (!userId) {
+      throw "Id missing";
+    }
+    if (!senderId) {
+      throw "Id missing";
+    }
+  } catch (e) {
+    res.status(400).json({ error: "error" });
+    return;
+  }
+  senderId = senderId.trim();
+  userId = userId.trim();
+
+  try {
+    const addReq = await friendData.addFriend(userId, senderId);
+
+    if (addReq.status) {
+      console.log("hi");
+      res.status(200).json({ status: true });
+    } else {
+      throw "400";
+    }
+  } catch (e) {
+    console.log(e);
+    if (e == "400") {
+      res.status(400).json({ error: e });
+      return;
+    } else {
+      res.status(500).json({ error: e });
+      return;
+    }
+  }
+});
 module.exports = router;

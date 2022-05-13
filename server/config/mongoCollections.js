@@ -21,4 +21,6 @@ module.exports = {
   comments: getCollectionFn("comments"),
   users: getCollectionFn("users"),
   friendrequests: getCollectionFn("friendrequest"),
+  conversations: getCollectionFn("conversation"),
+  messages: getCollectionFn("messasge"),
 };
