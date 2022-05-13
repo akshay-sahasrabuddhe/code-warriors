@@ -645,6 +645,11 @@ async function getUserById(id) {
   }
 }
 
+async function searchData(term){
+  console.log("reached in searchData Function")
+  return term;
+}
+
 module.exports = {
   signUp,
   login,
@@ -652,4 +657,5 @@ module.exports = {
   updateProfile,
   getUserData,
   getUserById,
+  searchData,
 };
