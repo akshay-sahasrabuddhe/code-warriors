@@ -225,7 +225,6 @@ export default function Messenger() {
           <div className="messenger">
             <div className="chatMenu">
               <div className="chatMenuWrapper">
-                <button className="chatMenuInput">View Online Friends</button>
                 {convoData.length > 0 ? (
                   convoData.map((d) => {
                     return (

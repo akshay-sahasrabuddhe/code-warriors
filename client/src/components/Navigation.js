@@ -11,6 +11,8 @@ const Navigation = (props) => {
   let bytes;
   let user;
   let id;
+
+  const [searchTerm, setSearchTerm] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
     localStorage.getItem("user") &&
@@ -50,6 +52,18 @@ const Navigation = (props) => {
     console.log(resp);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let term = searchTerm;
+    console.log(term);
+    // await axios
+    //   .post(`http://localhost:3000//addmessage`, { search: searchTerm })
+    //   .then(function (response) {})
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+  };
+
   return (
     // ---------- Start of Navigation ---------- //
     <section className="nav-section fixed-top facebook-light-gray-color">
@@ -77,15 +91,23 @@ const Navigation = (props) => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
                 />
-                {/* <button className="btn btn-outline-primary" type="submit">Search</button> */}
+                <button
+                  className="btn btn-outline-primary"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Search
+                </button>
               </form>
             </div>
             <div>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 text-center">
                 <li className="nav-item">
                   <a href="/posts">
-                  <span className="material-icons home-icon">home</span>
+                    <span className="material-icons home-icon">home</span>
                   </a>
                 </li>
                 <li className="nav-item">
