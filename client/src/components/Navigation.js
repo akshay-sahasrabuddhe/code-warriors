@@ -11,6 +11,8 @@ const Navigation = (props) => {
   let bytes;
   let user;
   let id;
+
+  const [searchTerm, setSearchTerm] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
     localStorage.getItem("user") &&
@@ -24,40 +26,7 @@ const Navigation = (props) => {
 
     user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
     id = JSON.parse(id.toString(cryptojs.enc.Utf8));
-    console.log(id);
   }
-
-  useEffect(() => {
-    async function fetchFriendReq() {
-      const instance = axios.create({
-        baseURL: "*",
-        timeout: 20000,
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Access-Control-Allow-Origin": "*",
-        },
-        validateStatus: function (status) {
-          return status < 500; // Resolve only if the status code is less than 500
-        },
-      });
-
-      const resp = await instance.get(
-        `http://localhost:3000/friend/findFriend/${id}`
-      );
-      console.log(resp.data.data);
-      if (resp.status === 200) {
-        if (resp.data.status) {
-          // set the state variable for mapping all the friend requests
-        } else {
-          // no requests found for the user
-        }
-      } else {
-        //show no friend found becoz error has occurred
-      }
-    }
-    fetchFriendReq();
-  }, []);
 
   const handleLogout = async () => {
     const instance = axios.create({
@@ -81,6 +50,18 @@ const Navigation = (props) => {
       navigate("/");
     }
     console.log(resp);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let term = searchTerm;
+    console.log(term);
+    // await axios
+    //   .post(`http://localhost:3000//addmessage`, { search: searchTerm })
+    //   .then(function (response) {})
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   };
 
   return (
@@ -110,7 +91,17 @@ const Navigation = (props) => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
                 />
+                <button
+                  className="btn btn-outline-primary"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Search
+                </button>
+              </form>
                 <button className="btn btn-outline-primary" type="submit">Search</button>
               </form> */}
             </div>
@@ -118,7 +109,7 @@ const Navigation = (props) => {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 text-center">
                 <li className="nav-item">
                   <a href="/posts">
-                  <span className="material-icons home-icon">home</span>
+                    <span className="material-icons home-icon">home</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -173,9 +164,9 @@ const Navigation = (props) => {
                   <a
                     className="nav-link mobile-nav-link"
                     aria-current="page"
-                    href="/search"
+                    href="/viewrequests"
                   >
-                    Search
+                    Friend Request
                   </a>
                 </li>
               </ul>
@@ -213,6 +204,14 @@ const Navigation = (props) => {
         <a className="nav-link" href="/weather">
           <aside className="material-icons nav-icons">wb_sunny</aside>
           <span>Weather</span>
+        </a>
+        <a className="nav-link" href="/viewrequests">
+          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <span>Friend Request</span>
+        </a>
+        <a className="nav-link" href="/messenger">
+          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <span>Chat Messenger</span>
         </a>
         <a className="nav-link" href="/search">
           <aside className="material-icons nav-icons">search</aside>

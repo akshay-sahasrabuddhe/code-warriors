@@ -268,7 +268,9 @@ else{
               Request Sent
             </Button>
           ) : visitedsent ? (
-            <Button variant="primary">Request Received</Button>
+            <Button variant="primary" disabled>
+              Request Received
+            </Button>
           ) : (
             <Button variant="primary" onClick={sendRequest}>
               Add Friend
