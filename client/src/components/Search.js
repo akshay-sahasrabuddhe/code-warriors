@@ -119,7 +119,7 @@ return(
                         
                         if(response.status === 200){
                             if(response.data.data.length == 0){
-                                alert("No user found with that name")
+                                alert("404 : No user found with that name")
                             }else{
                             setSearchResults(response.data.data);
                             flag = true;}
@@ -162,7 +162,7 @@ return(
                 </Form>
                 <div>
                     <div className="row">
-                        {SearchResultsContainer.length > 0 ? SearchResultsContainer: <Error></Error>}
+                        {SearchResultsContainer}
                     </div>
                 </div>
     </div>

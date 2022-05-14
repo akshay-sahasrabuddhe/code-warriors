@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-// const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const session = require("express-session");
@@ -19,7 +18,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
 app.use(
   session({
     name: "AuthCookie",
@@ -89,7 +87,7 @@ app.get("/getImage", async (req, res, next) => {
   }
 });
 
-app.get("/posts", async (req, res, next) => {
+app.use("/posts", async (req, res, next) => {
   if (!req.session.user) {
     res.status(403).json({ user: "User is not logged in" });
   } else {
@@ -97,13 +95,42 @@ app.get("/posts", async (req, res, next) => {
   }
 });
 
-app.get("/comments", async (req, res, next) => {
+app.use("/comments", async (req, res, next) => {
   if (!req.session.user) {
     res.status(403).json({ user: "User is not logged in" });
   } else {
     next();
   }
 });
+
+app.use("/conversation", async (req,res,next) => {
+  if (!req.session.user) {
+    res.status(403).json({ user: "User is not logged in" });
+  } else {
+    next();
+  }
+});
+
+app.use("/friend", async (req,res,next) =>{
+  if (!req.session.user) {
+    res.status(403).json({ user: "User is not logged in" });
+  } else {
+    next();
+  }
+});
+
+
+
+app.use("/message", async (req,res,next) =>{
+  if (!req.session.user) {
+    res.status(403).json({ user: "User is not logged in" });
+  } else {
+    next();
+  }
+});
+
+
+
 configRoutes(app);
 
 app.listen(3000, () => {

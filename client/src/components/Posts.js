@@ -496,10 +496,14 @@ const Posts = (props) => {
      )
     });*/
 
+   
+
   postcontainer =
     Seepost &&
     Seepost.map((n) => {
       console.log(n);
+
+      
 
       async function opendeltemodal(idd) {
         console.log(idd);
@@ -516,6 +520,7 @@ const Posts = (props) => {
           },
         });
         const userdata1 = await instance.get(`http://localhost:3000/session`);
+
         console.log(n.userThatPosted._id);
         console.log(userdata1.data.id);
         if (userdata1.data.id === n.userThatPosted._id) {
@@ -530,29 +535,36 @@ const Posts = (props) => {
       async function deletepost(delid) {
         delid = editdataid;
         console.log(delid);
-        const instance = axios.create({
+        // const instance = axios.create({
+        //   baseURL: "*",
+        //   timeout: 20000,
+
+        //   headers: {
+        //     "Content-Type": "application/json;charset=UTF-8",
+        //     "Access-Control-Allow-Origin": "*",
+        //   },
+        //   validateStatus: function (status) {
+        //     return status < 500; // Resolve only if the status code is less than 500
+        //   },
+        // });
+
+        let postid = delid;
+        console.log(postid);
+        console.log(delid);
+        const instance2 = axios.create({
           baseURL: "*",
           timeout: 20000,
-
+          withCredentials: true,
           headers: {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "multipart/form-data; boundary=${form._boundary}",
+            //;charset=UTF-8
           },
           validateStatus: function (status) {
             return status < 500; // Resolve only if the status code is less than 500
           },
         });
-
-        let postid = delid;
-        console.log(postid);
-        console.log(delid);
-        const newseepostdata = await instance
-          .delete(`http://localhost:3000/posts/${postid}`, {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Origin": "*",
-            },
-          })
+        const newseepostdata = await instance2
+          .delete(`http://localhost:3000/posts/${postid}`)
           .then(function (response) {
             console.log(response.data);
 
@@ -570,6 +582,9 @@ const Posts = (props) => {
             alert("There was some error please try again");
           });
       }
+
+
+
       let imgstr = "";
       if (n.imagePath) {
         imgstr = "http://localhost:3000" + n.imagePath;
@@ -623,6 +638,7 @@ const Posts = (props) => {
               <div className="d-flex justify-content-between">
                 <div className="left-header-box">
                   <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                   
                     <aside className="material-icons messanger-dark-color post-icon">
                       account_circle
                     </aside>

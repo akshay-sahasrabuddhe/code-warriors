@@ -161,7 +161,22 @@ const Userprofile = (props) => {
   }, [session]);
   async function fetchRequestData() {
     console.log(id);
-    await axios
+
+    const instance = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
+
+
+    await instance
       .post(`http://localhost:3000/friend/searchrequest`, {
         loggedIn: id,
         Visited: paramId.id,

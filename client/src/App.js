@@ -20,8 +20,14 @@ import Messenger from "./components/messenger/Messenger";
 function App() {
   return (
     <div className="App">
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+        crossorigin="anonymous"
+      />
       <header className="App-header">
-        <h1>Welcome to DuckBook</h1>
+        <h1 className="text-center">Welcome to DuckBook</h1>
 
         {/* <Link className='App-link' to='signup'>Signup</Link>
           <Link className='App-link' to='login'>Login</Link> */}
@@ -35,15 +41,16 @@ function App() {
                 <div className="col-sm-12">
                   <Routes>
                     <Route index path="/" element={<Main />} />
-                    <Route path="/posts" element={<Posts />} />
-                    <Route path="/news" element={<News />} />
-                    <Route path="/weather" element={<Weather />} />
-                    <Route path="/videos" element={<Videos />} />
-                    <Route path="/memories" element={<Memories />} />
-                    <Route path="/userprofile/:id" element={<Userprofile />} />
-                    <Route path="/viewrequests" element={<ViewRequests />} />
-                    <Route path="/messenger" element={<Messenger />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route exact path="/posts" element={<Posts />} />
+                    <Route exact path="/news" element={<News />} />
+                    <Route exact path="/weather" element={<Weather />} />
+                    <Route exact path="/videos" element={<Videos />} />
+                    <Route exact path="/memories" element={<Memories />} />
+                    <Route exact path="/userprofile/:id" element={<Userprofile />} />
+                    <Route exact path="/viewrequests" element={<ViewRequests />} />
+                    <Route exact path="/messenger" element={<Messenger />} />
+                    <Route exact path="/search" element={<Search />} />
+                    <Route path="*" element={<Error />}/>
                   </Routes>
                 </div>
               </div>

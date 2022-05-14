@@ -268,6 +268,24 @@ const Navigation = (props) => {
                     Friend Request
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link mobile-nav-link"
+                    aria-current="page"
+                    href="/messenger"
+                  >
+                    Chat Messanger
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link mobile-nav-link"
+                    aria-current="page"
+                    href="/search"
+                  >
+                    Search People
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -305,11 +323,11 @@ const Navigation = (props) => {
           <span>Weather</span>
         </a>
         <a className="nav-link" href="/viewrequests">
-          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <aside className="material-icons nav-icons">group_add</aside>
           <span>Friend Request</span>
         </a>
         <a className="nav-link" href="/messenger">
-          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <aside className="material-icons nav-icons">chat_bubble</aside>
           <span>Chat Messenger</span>
         </a>
         <a className="nav-link" href="/search">

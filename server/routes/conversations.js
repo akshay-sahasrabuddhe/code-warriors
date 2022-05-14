@@ -6,7 +6,10 @@ const { convos } = require("../data");
 
 router.get("/getconvo/:userId", async (req, res) => {
   let id = req.params.userId;
-
+  if (req.session.user.id !== id.trim().toString()) {
+    res.status(403).json("You cannot update this post");
+    return;
+  }
   let parsedId;
   try {
     if (!id.trim()) {
