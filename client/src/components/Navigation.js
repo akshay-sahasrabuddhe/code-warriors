@@ -139,6 +139,7 @@ const Navigation = (props) => {
 
       navigate("/");
     } else {
+      navigate("/");
     }
     console.log(resp);
   };

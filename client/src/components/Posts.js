@@ -77,7 +77,7 @@ const Posts = (props) => {
         console.log(data);
         if ("error" in data) {
           setSession(false);
-          setLoading(false);
+          //setLoading(false);
           // return;
         } else {
           let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
@@ -113,7 +113,7 @@ const Posts = (props) => {
     } else {
       console.log("here in the outer if");
       //setLoading(false);
-      setSession(false);
+      //setSession(false);
     }
 
     async function fetchdata() {
