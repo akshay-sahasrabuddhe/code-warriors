@@ -262,31 +262,31 @@ const Userprofile = (props) => {
               {about.profileImage ? (
                 <img
                   src={`http://localhost:3000${about.profileImage}`}
-                  className="user-profile-pic"
+                  className="user-profile-pic rounded-circle"
                   alt="User Profile Pic"
                 />
               ) : about.gender == "male" ? (
                 <img
                   src={maleUser}
-                  className="user-profile-pic"
+                  className="user-profile-pic rounded-circle"
                   alt="User Profile Pic"
                 />
               ) : about.gender == "female" ? (
                 <img
                   src={femaleUser}
-                  className="user-profile-pic"
+                  className="user-profile-pic rounded-circle"
                   alt="User Profile Pic"
                 />
               ) : about.gender == "other" ? (
                 <img
                   src={otherUser}
-                  className="user-profile-pic"
+                  className="user-profile-pic rounded-circle"
                   alt="User Profile Pic"
                 />
               ) : (
                 <img
                   src={otherUser}
-                  className="user-profile-pic"
+                  className="user-profile-pic rounded-circle"
                   alt="User Profile Pic"
                 />
               )}

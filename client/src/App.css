@@ -471,6 +471,7 @@ h4{
   position: absolute;
   transform: translateY(175px);
   width: 175px;
+  height: 175px;
 }
 
 .user-profiel-tabs-section{
@@ -508,6 +509,15 @@ h4{
 .search-card{
   text-decoration: none;
 }
+
+.scale-in-center{-webkit-animation:scale-in-center .5s cubic-bezier(.25,.46,.45,.94) both;animation:scale-in-center .5s cubic-bezier(.25,.46,.45,.94) both}
+
+ @-webkit-keyframes scale-in-center{0%{-webkit-transform:scale(0);transform:scale(0);opacity:1}100%{-webkit-transform:scale(1);transform:scale(1);opacity:1}}@keyframes scale-in-center{0%{-webkit-transform:scale(0);transform:scale(0);opacity:1}100%{-webkit-transform:scale(1);transform:scale(1);opacity:1}}
+
+ .img-fluid.user-posted-img{
+   width: 30px;
+   height: 30px;
+ }
 
 /*  Start of Media Queries */
 

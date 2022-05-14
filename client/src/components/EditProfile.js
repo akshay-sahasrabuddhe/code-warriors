@@ -16,12 +16,12 @@ const EditProfile = (props) => {
     let firstName;
   let lastName;
   let email;
-  let pswd;
+  let pswd,password;
   let confirmPswd;
   let dob;
   let gender;
   let relationStatus;
-  let interests;
+  let interests,interestedIn;
   
 
 return(
@@ -124,6 +124,28 @@ return(
 
                     if(interests.value.trim().length == 0){
                         interests.value = "Prefer not to disclose";
+                    }
+
+                    if(firstName.value == props.about.firstName){
+                        firstName.value = "";
+                    }
+                    if(lastName.value == props.about.lastName){
+                        lastName.value = "";
+                    }
+                    if(email.value == props.about.email){
+                        email.value = "";
+                    }
+                    if(password.value == props.about.password){
+                        password.value = "";
+                    }
+                    if(gender.value == props.about.gender){
+                        gender.value = "";
+                    }
+                    if(relationStatus.value == props.about.relationStatus){
+                        relationStatus.value = "";
+                    }
+                    if(interestedIn.value == props.about.interestedIn){
+                        interestedIn.value = "";
                     }
 
     

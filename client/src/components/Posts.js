@@ -634,7 +634,7 @@ const Posts = (props) => {
               </div>
             </div>
           </div>
-          <div className="card post-card align-self-center mb-3">
+          <div className="card post-card align-self-center mb-3 scale-in-center">
             <div className="post-row justify-content-between">
               <div className="d-flex justify-content-between">
                 <div className="left-header-box">
@@ -781,7 +781,7 @@ const Posts = (props) => {
               <div className="row">
                 <div className="col-sm-12">
                   <div className="write-post-section mb-3">
-                    <div className="card post-card align-self-center text-center">
+                    <div className="card post-card align-self-center text-center scale-in-center">
                       <div className="row">
                         <div className="col-lg-2">
                           <div className="p-3 pe-lg-0">
