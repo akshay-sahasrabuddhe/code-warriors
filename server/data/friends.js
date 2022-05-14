@@ -1,5 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const requests = mongoCollections.friendrequests;
+const users = mongoCollections.users;
+const conversa = mongoCollections.conversations;
 let { ObjectId } = require("mongodb");
 const e = require("express");
 
@@ -103,9 +105,44 @@ async function getfriendReqById(userId) {
     return { status: true, d: searchdata1 };
   }
 }
+async function addFriend(userId, senderId) {
+  console.log(userId);
+  if (!userId.trim()) {
+    throw "400";
+  }
+  if (!senderId.trim()) {
+    throw "400";
+  }
+  let parsedId;
+  try {
+    parsedId = ObjectId(userId);
+  } catch (e) {
+    throw "400";
+  }
+  const userData = await users();
+  const conversationData = await conversa();
+  let addfriend = await userData.updateOne(
+    { _id: parsedId },
+    { $push: { friends: { $each: [senderId] } } }
+  );
+  if (addfriend.modifiedCount === 0) {
+    throw "500";
+  } else {
+    canReq(senderId, userId);
+    let addconvo = await conversationData.insertOne({
+      members: [userId, senderId],
+    });
+    if (addconvo.insertedCount === 0) {
+      throw "500";
+    } else {
+      return { status: true };
+    }
+  }
+}
 module.exports = {
   sendReq,
   searchReq,
   canReq,
   getfriendReqById,
+  addFriend,
 };
