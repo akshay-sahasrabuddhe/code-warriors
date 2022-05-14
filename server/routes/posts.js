@@ -36,6 +36,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
+    console.log(req.session);
     let postList = await postData.getAll();
     res.json(postList);
     return;
@@ -46,10 +47,12 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
-  console.log(req.body.title);
+  console.log("In Post Route");
+  console.log(req.session.user);
+  // console.log(req.body.title);
   let postInfo = req.body;
   //let postInfo = req.body.formdata;
-  console.log(postInfo);
+  // console.log(postInfo);
   postInfo.userThatPosted = JSON.parse(postInfo.userThatPosted);
   postInfo.isPublic = postInfo.isPublic.toLowerCase() === "true";
   console.log(postInfo);
@@ -72,7 +75,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       console.log(file);
       const result = await uploadFile(file);
       await unlinkFile(file.path);
-      console.log(result);
+      // console.log(result);
       imagePath = `/posts/images/${result.Key}`;
       // res.send({ imagePath: `/images/${result.Key}` });
       // store {imagePath: `/images/${result.Key}`} in posts data
