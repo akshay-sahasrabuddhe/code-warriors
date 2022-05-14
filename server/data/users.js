@@ -646,8 +646,18 @@ async function getUserById(id) {
 }
 
 async function searchData(term){
-  console.log("reached in searchData Function")
-  return term;
+  console.log(term)
+  const userCollection = await users();
+  const findresult = await userCollection
+    .find({
+      firstName: { $regex: term , $options: "$i" },
+    })
+    .toArray();
+  if (findresult.length == 0) {
+    return findresult;
+  } else {
+    return findresult;
+  }
 }
 
 module.exports = {
