@@ -325,6 +325,12 @@ function isDate(ExpiryDate) {
     return false;
   }
 
+  let currentYear = new Date().getFullYear();
+  if(year>currentYear)
+  {
+    throw "Invalid year"
+  }
+
   mSeconds = new Date(year, month, day).getTime();
   objDate = new Date();
   objDate.setTime(mSeconds);

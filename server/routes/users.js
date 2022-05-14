@@ -318,6 +318,12 @@ function isDate(ExpiryDate) {
   if (year < 1000 || year > 3000) {
     return false;
   }
+  
+  let currentYear = new Date().getFullYear();
+  if(year>currentYear)
+  {
+    throw "Invalid year"
+  }
 
   mSeconds = new Date(year, month, day).getTime();
   objDate = new Date();
