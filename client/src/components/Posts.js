@@ -15,6 +15,7 @@ import EditPost from "./EditPost";
 import Like from "./Like";
 
 import FormData from "form-data";
+import UserImage from "./UserImage";
 //const bcrypt = require('bcryptjs');
 //const saltRounds = 16;
 
@@ -93,10 +94,10 @@ const Posts = (props) => {
             console.log("here");
             console.log("works");
             setSession(true);
-            setLoading(false);
+            //setLoading(false);
           } else {
             setSession(false);
-            setLoading(false);
+            //setLoading(false);
           }
           // return;
         }
@@ -111,7 +112,7 @@ const Posts = (props) => {
       //return;
     } else {
       console.log("here in the outer if");
-      setLoading(false);
+      //setLoading(false);
       setSession(false);
     }
 
@@ -638,10 +639,8 @@ const Posts = (props) => {
               <div className="d-flex justify-content-between">
                 <div className="left-header-box">
                   <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                   
-                    <aside className="material-icons messanger-dark-color post-icon">
-                      account_circle
-                    </aside>
+                    <UserImage id={n.userThatPosted._id}></UserImage>
+                    
                   </div>
                 </div>
                 <div className="right-header-box d-flex align-items-center">
