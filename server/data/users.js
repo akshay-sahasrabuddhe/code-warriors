@@ -648,7 +648,7 @@ async function getUserById(id) {
 }
 
 async function searchData(term) {
-  console.log("reached in searchData Function");
+  console.log(term);
   const userCollection = await users();
   const findresult = await userCollection
     .find({
@@ -660,7 +660,6 @@ async function searchData(term) {
   } else {
     return findresult;
   }
-  //return term;
 }
 
 module.exports = {

@@ -522,7 +522,13 @@ router.post('/login', async(req,res)=>{
 
         const {firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}= req.body
 
+
         try{
+
+          if(Object.keys(req.body).length==0)
+          {
+            throw 'Please enter data to be changed'
+          }
 
             updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
         }
@@ -620,10 +626,10 @@ router.post("/userprofile/sendRequest", async (req, res) => {
 
 
 
-router.post("/getallusers", async (req, res) => {
+router.get("/getallusers/:search", async (req, res) => {
   try {
     console.log("reached in routes");
-    let search = req.body;
+    let search = req.params.search;
     console.log(search);
     let serdata = await usersData.searchData(search);
     res.status(200).json({ status: true, data: serdata });
@@ -631,6 +637,29 @@ router.post("/getallusers", async (req, res) => {
     res.status(500).json({ status: false });
   }
 });
+
+
+
+router.get("/getImage", async(req, res)=>{
+
+let user= await usersData.getUserById(req.session.user.id)
+
+
+if(user.d.profileImage!='')
+{
+
+  res.status(200).json({profileImage: user.d.profileImage})
+}
+else
+{
+
+  res.status(404).json({error: "NoImage"})
+}
+
+
+
+
+})
 
 
 module.exports = router;

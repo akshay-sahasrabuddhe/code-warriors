@@ -26,7 +26,7 @@ const Posts = (props) => {
     let body;
     let uploadedImg;
     let isPublic = true;
-    let postData = null;
+   // let postData = null;
     let postcontainer = null;
 
     
@@ -39,12 +39,12 @@ const Posts = (props) => {
        
         setFile(temp);
     }
-   
-
+    const [postData , setPostData] = useState(undefined);
+    const [showModal , setShowModal] = useState(false);
     const [about , setAbout] = useState(undefined);
     const [aboutedit , setAboutEdit] = useState(undefined);
     const [editdataid , seteditdataid] = useState(undefined);
-    let [editdata , seteditdata] = useState(undefined);
+    const [editdata , seteditdata] = useState(undefined);
     const [finaleditid , setfinaleditid] = useState("");
     
     const [likenum , setlikenum] = useState("");
@@ -149,10 +149,18 @@ const Posts = (props) => {
         
     },[]);
 
-   
-    
-    useEffect(() => {
+    function handleOpenModal(n)  {
+        console.log(n); 
+        //setShowModal(true);
+    }
 
+    const handleCloseModal = () => {
+        setShowModal(false);
+    }
+
+    
+    //useEffect(() => {
+/*
         async function openeditmodal(){
        
             const instance = axios.create({
@@ -191,13 +199,13 @@ const Posts = (props) => {
             // }
         }
         openeditmodal();
-
-    },[finaleditid]);
+*/
+   // },[finaleditid]);
 
 
    
 
-    postcontainer = Seepost && Seepost.map((n) => {
+   /* postcontainer = Seepost && Seepost.map((n) => {
         let imgstr = "";
         if(n.imagePath){
             imgstr ="http://localhost:3000"+n.imagePath;
@@ -451,7 +459,7 @@ const Posts = (props) => {
                             <button type="button" className="btn btn-secondary me-3" data-bs-dismiss="modal">Close</button>
                             <button type="submit" className="btn btn-primary" id="sub1">Publish</button>
                         </div>
-                        </form> */}
+                        </form> }
                             </div>
                            
                         </div>
@@ -502,8 +510,180 @@ const Posts = (props) => {
         </div>  
         </div>
      )
-    });
+    });*/
 
+
+    postcontainer = Seepost && Seepost.map((n)=>{
+        console.log(n);
+        
+        async function opendeltemodal(idd){
+    
+            console.log(idd);
+            const instance = axios.create({
+                baseURL: '*',
+                timeout: 20000,
+                withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "*",
+                },
+            validateStatus: function (status) {
+                return status < 500; // Resolve only if the status code is less than 500
+                }
+            });
+            const userdata1  = await instance.get(`http://localhost:3000/session`);
+            console.log(n.userThatPosted._id);
+            console.log(userdata1.data.id);
+            if(userdata1.data.id === n.userThatPosted._id){
+                seteditdataid(idd);
+            let myDeleteModal = new Modal(document.getElementById('deleteModal'));
+            myDeleteModal.show();
+            }else{
+                alert("You cannot delete this post.");
+            }
+        }
+
+        async function deletepost(delid){
+            delid = editdataid
+            console.log(delid)
+        const instance = axios.create({
+            baseURL: "*",
+            timeout: 20000,
+            
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+              "Access-Control-Allow-Origin": "*",
+            },
+            validateStatus: function (status) {
+              return status < 500; // Resolve only if the status code is less than 500
+            },
+          });
+    
+         
+          let postid = delid;
+          console.log(postid);
+          console.log(delid);
+          const newseepostdata = await instance.delete(
+            `http://localhost:3000/posts/${postid}`,{
+                headers:{
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Access-Control-Allow-Origin": "*",
+                }
+        }).then(function (response) {
+    console.log(response.data);
+
+    if(response.status === 200){
+        let myDeleteModal = new Modal(document.getElementById('deleteModal'));
+        myDeleteModal.hide();
+        window.location.reload();
+    }
+  }).catch(function (error) {
+    console.log(error);
+
+    alert("There was some error please try again");
+
+  });}
+        let imgstr = "";
+        if(n.imagePath){
+            imgstr ="http://localhost:3000"+n.imagePath;
+        }
+        return (<div>
+            <div className="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Modal title</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <p>Are you sure to delete this post ?</p>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-danger" onClick={deletepost}>Delete</button>
+                    </div>
+                </div>
+            </div>
+                </div>
+<div className="card post-card align-self-center mb-3">
+            <div className="post-row justify-content-between">
+                <div className="d-flex justify-content-between">
+                    <div className="left-header-box">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
+                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
+                        </div>
+                    </div>
+                    <div className="right-header-box d-flex align-items-center">
+                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                            <strong>
+                                <p className="post-heading mobile-text-center">{n.userThatPosted.firstName}</p>
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+                <div className="d-flex justify-content-between">
+                <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-primary delete-post-btn d-flex" onClick={
+                          async  (e)=>{
+                                console.log(n);
+                                
+                                const instance = axios.create({
+                                    baseURL: '*',
+                                    timeout: 20000,
+                                    withCredentials: true,
+                                headers: {
+                                    'Content-Type': 'application/json;charset=UTF-8',
+                                    "Access-Control-Allow-Origin": "*",
+                                    },
+                                validateStatus: function (status) {
+                                    return status < 500; // Resolve only if the status code is less than 500
+                                    }
+                                });
+                                const userdata1  = await instance.get(`http://localhost:3000/session`);
+                                console.log(n.userThatPosted._id);
+                                console.log(userdata1.data.id);
+                                if(userdata1.data.id === n.userThatPosted._id){
+                                    //seteditdataid(idd);
+                                //let myDeleteModal = new Modal(document.getElementById('deleteModal'));
+                                setPostData(n);
+                                setShowModal(true);
+                                }else{
+                                    alert("You cannot edit this post.");
+                                }
+                                
+                            }
+                        } >
+                            <span className="material-icons">
+                                edit
+                            </span>
+                        </button>
+                        {showModal && showModal && (<EditPost
+            isOpen={showModal}
+            handleClose={handleCloseModal}
+            modal='editpost'
+            n = {postData}
+          />)}
+                    </div>
+                <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
+                        <button type="button" className="btn btn-outline-danger delete-post-btn d-flex" onClick={() => opendeltemodal(n._id)}>
+                            <span className="material-icons">
+                                delete
+                            </span>
+                        </button>
+                    </div>
+                    </div>
+            </div>
+            <hr className="m-0 mb-2"></hr>
+            <div className="post-row flex-column">
+                <p className="post-heading ps-4 pe-4"><strong>{n.title}</strong></p>
+                <p className="post-heading ps-4 pe-4">{n.body}</p>
+                {imgstr.includes(null) ? <img className="img-fluid" src={imgstr} alt="post image" style={{display:"none"}} /> : <img className="img-fluid" src={imgstr} alt="post image" type="file" accept="image/*" />}
+            </div>
+            <hr className="m-0 mb-2"></hr>
+            <Like mainid={n._id} numlikes={n.likes.length} numcomments={n.comments.length} commentsdata={Seepost}></Like>   
+        </div> </div> );
+      
+    });
 
     if(localStorage.getItem("user") && localStorage.getItem('user') !== "undefined"){
         //console.log(localStorage.getItem("user"));
@@ -564,172 +744,10 @@ const Posts = (props) => {
                         <div className="read-post-section">
                             {postcontainer}
                         </div>
-                        {/* <div className="read-post-section">
-                            <div className="card post-card align-self-center mb-3">
-                                <div className="post-row">
-                                    <div className="left-header-box">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                        </div>
-                                    </div>
-                                    <div className="right-header-box d-flex align-items-center">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                                            <strong>
-                                                <p className="post-heading mobile-text-center">Akshay Sahasrabuddhe</p>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-column">
-                                    <p className="post-heading ps-4 pe-4">Nostrud nulla voluptate et qui veniam eiusmod cillum cupidatat. Voluptate proident tempor in enim consequat ut cillum duis irure duis deserunt sunt reprehenderit. Sunt ad ut ullamco fugiat ullamco cillum voluptate deserunt laborum adipisicing laborum labore. In labore commodo amet duis laboris nostrud sunt quis ex excepteur dolore non in tempor.</p>
-                                    <img className="img-fluid" src={logoImg} alt="post image" />
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-row justify-content-between me-3 ms-3">
-                                    <div className="d-flex flex-row">
-                                        <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
-                                        <p className="text-secondary">100</p>
-                                    </div>
-                                    <div className="d-flex flex-row">
-                                        <p className="text-secondary me-2">1</p>
-                                        <p className="text-secondary">comments</p>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mt-2 mb-0"></hr>
-                                <div className="post-row flex-row">
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center">
-                                        <span className="material-icons-outlined me-2">thumb_up</span>
-                                        <span>Like</span>
-                                    </button>
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center" onClick={(e) => openComments(1)(e)}>
-                                        <span className="material-icons-outlined me-2">chat_bubble_outline</span>
-                                        <span>Comment</span>
-                                    </button>
-                                </div>
-                                <div className="comments-box">
-                                <hr className="m-0"></hr>
-                                    <div className="post-row">
-                                        <div className="left-header-box">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
-                                                <div className="input-group mb-3">
-                                                    <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="post-row">
-                                        <div className="left-header-box align-self-center">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                                            <div className="card facebook-light-gray-color p-3 border-25">
-                                            <p className="card-title"><strong>Eiusmod magna</strong></p>
-                                            <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>    
-                            </div>
-                        </div>
-                        <div className="read-post-section">
-                            <div className="card post-card align-self-center mb-3">
-                                <div className="post-row">
-                                    <div className="left-header-box">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                            <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                        </div>
-                                    </div>
-                                    <div className="right-header-box d-flex align-items-center">
-                                        <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0">
-                                            <strong>
-                                                <p className="post-heading mobile-text-center">Akshay Sahasrabuddhe</p>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-column">
-                                    <p className="post-heading ps-4 pe-4">Nostrud nulla voluptate et qui veniam eiusmod cillum cupidatat. Voluptate proident tempor in enim consequat ut cillum duis irure duis deserunt sunt reprehenderit. Sunt ad ut ullamco fugiat ullamco cillum voluptate deserunt laborum adipisicing laborum labore. In labore commodo amet duis laboris nostrud sunt quis ex excepteur dolore non in tempor.</p>
-                                    <img className="img-fluid" src={logoImg} alt="post image" />
-                                </div>
-                                <hr className="m-0 mb-2"></hr>
-                                <div className="post-row flex-row justify-content-between me-3 ms-3">
-                                    <div className="d-flex flex-row">
-                                        <span className="material-icons-outlined messanger-dark-color me-2">thumb_up</span>
-                                        <p className="text-secondary">100</p>
-                                    </div>
-                                    <div className="d-flex flex-row">
-                                        <p className="text-secondary me-2">1</p>
-                                        <p className="text-secondary">comments</p>
-                                    </div>
-                                </div>
-                                <hr className="m-0 mt-2 mb-0"></hr>
-                                <div className="post-row flex-row">
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center">
-                                        <span className="material-icons-outlined me-2">thumb_up</span>
-                                        <span>Like</span>
-                                    </button>
-                                    <button type="button" className="btn btn-outline-primary d-flex flex-row align-self-center post-buttons border-0 justify-content-center" onClick={(e) => openComments(1)(e)}>
-                                        <span className="material-icons-outlined me-2">chat_bubble_outline</span>
-                                        <span>Comment</span>
-                                    </button>
-                                </div>
-                                <div className="comments-box">
-                                <hr className="m-0"></hr>
-                                    <div className="post-row">
-                                        <div className="left-header-box">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 ps-lg-0 w-100">
-                                                <div className="input-group mb-3">
-                                                    <input type="text" className="form-control rounded-pill facebook-light-gray-color" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Write Something ..." />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="post-row">
-                                        <div className="left-header-box align-self-center">
-                                            <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                                                <aside className="material-icons messanger-dark-color post-icon">account_circle</aside>
-                                            </div>
-                                        </div>
-                                        <div className="right-header-box flex-grow-1">
-                                            <div className="p-2 p-lg-3 ps-lg-0 w-100">
-                                            <div className="card facebook-light-gray-color p-3 border-25">
-                                            <p className="card-title"><strong>Eiusmod magna</strong></p>
-                                            <p className="card-subtitle">excepteur laboris ea in officia anim elit officia reprehenderit aute</p>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>    
-                            </div>
-                        </div> */}
-                    </div>
-                </div>
+                   </div>     
+               </div>
             </div>
         </section>
-
-
-
-        {/* Modal code */}
-
-
-       
-
         <div className="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div className="modal-content">
@@ -864,9 +882,6 @@ const Posts = (props) => {
     }
 }>
    
-
-
-                        
                         <div className="mb-3">
                             <label for="title" className="form-label">Title</label>
                             <input type="text" className="form-control" id="title" aria-describedby="emailHelp" ref={(node)=>{
@@ -900,6 +915,7 @@ const Posts = (props) => {
         {/*  */}
         </>
         
+
     );
         }
     }
