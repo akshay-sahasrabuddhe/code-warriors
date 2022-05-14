@@ -122,11 +122,10 @@ return(
                         }
                     }
 
-                    if(!interests.value){
-                       alert("Please provide your");
-                       btn.disabled = false;
-                       return;
-                   }
+                    if(interests.value.trim().length == 0){
+                        interests.value = "Prefer not to disclose";
+                    }
+
     
                     let user = {
                         firstName: firstName.value,
@@ -261,34 +260,121 @@ return(
                     />
                 </FloatingLabel> */}
     
+    
                 <Form.Label className="select" >
                 Gender
-                <Form.Select  aria-label="Gender" size='lg'
-                 className="textform" defaultValue={props.about.gender}
+                {props.about.gender && props.about.gender == "male" ?
+                (<Form.Select  aria-label="Gender" size='lg'
+                 className="textform"
                  ref={(node)=>{
                      gender = node;
                  }}>
-                    <option></option>
-                    <option value="male">Male</option>
+
+            {/* {props.about.gender && props.about.gender == "male" ?  (<option value="male" selected>Male</option>) : props.about.gender == "female" ? (<option value="female" selected>Female</option>) : props.about.gender == "others" ? (<option value="others" selected>Others</option>) : (<option value="nodisclosure" selected>Prefer not to disclose</option>) } */}
+                    
+                    <option value="male" selected>Male</option>
                     <option value="female">Female</option>
                     <option value="others">Others</option>
                     <option value="nodisclosure">Prefer not to disclose</option>
-                </Form.Select>
+                </Form.Select>):
+                props.about.gender == "female" ?
+                (<Form.Select  aria-label="Gender" size='lg'
+                 className="textform"
+                 ref={(node)=>{
+                     gender = node;
+                 }}>
+
+            {/* {props.about.gender && props.about.gender == "male" ?  (<option value="male" selected>Male</option>) : props.about.gender == "female" ? (<option value="female" selected>Female</option>) : props.about.gender == "others" ? (<option value="others" selected>Others</option>) : (<option value="nodisclosure" selected>Prefer not to disclose</option>) } */}
+                    
+                    <option value="male">Male</option>
+                    <option value="female" selected>Female</option>
+                    <option value="others">Others</option>
+                    <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>):
+                props.about.gender == "others" ?
+                (<Form.Select  aria-label="Gender" size='lg'
+                 className="textform"
+                 ref={(node)=>{
+                     gender = node;
+                 }}>
+
+            {/* {props.about.gender && props.about.gender == "male" ?  (<option value="male" selected>Male</option>) : props.about.gender == "female" ? (<option value="female" selected>Female</option>) : props.about.gender == "others" ? (<option value="others" selected>Others</option>) : (<option value="nodisclosure" selected>Prefer not to disclose</option>) } */}
+                    
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others" selected>Others</option>
+                    <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>):
+                (<Form.Select  aria-label="Gender" size='lg'
+                 className="textform"
+                 ref={(node)=>{
+                     gender = node;
+                 }}>
+
+            {/* {props.about.gender && props.about.gender == "male" ?  (<option value="male" selected>Male</option>) : props.about.gender == "female" ? (<option value="female" selected>Female</option>) : props.about.gender == "others" ? (<option value="others" selected>Others</option>) : (<option value="nodisclosure" selected>Prefer not to disclose</option>) } */}
+                    
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                    <option value="nodisclosure" selected>Prefer not to disclose</option>
+                </Form.Select>)
+                }
                 </Form.Label>
     
                 <Form.Label  className="select" >
                 Relationship Status
-                <Form.Select aria-label="relationship status"
-                 className="textform" size='lg' defaultValue={props.about.relationshipStatus}
+
+                {props.about.relationshipStatus && props.about.relationshipStatus == "married" ? 
+                (<Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
                  ref={(node)=>{
                      relationStatus = node;
                  }}>
-                <option></option>
-                <option value="married">Married</option>
+                
+                <option value="married" selected>Married</option>
                 <option value="single">Single</option>
                 <option value="inarelation">In a Relationship</option>
                 <option value="nodisclosure">Prefer not to disclose</option>
-                </Form.Select>
+                </Form.Select>):
+
+                props.about.relationshipStatus == "single" ? 
+                (<Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
+                 ref={(node)=>{
+                     relationStatus = node;
+                 }}>
+                
+                <option value="married">Married</option>
+                <option value="single" selected>Single</option>
+                <option value="inarelation">In a Relationship</option>
+                <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>):
+
+                props.about.relationshipStatus == "inarelation" ? 
+                (<Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
+                 ref={(node)=>{
+                     relationStatus = node;
+                 }}>
+                
+                <option value="married">Married</option>
+                <option value="single">Single</option>
+                <option value="inarelation" selected>In a Relationship</option>
+                <option value="nodisclosure">Prefer not to disclose</option>
+                </Form.Select>):
+
+                (<Form.Select aria-label="relationship status"
+                 className="textform" size='lg'
+                 ref={(node)=>{
+                     relationStatus = node;
+                 }}>
+                
+                <option value="married">Married</option>
+                <option value="single">Single</option>
+                <option value="inarelation">In a Relationship</option>
+                <option value="nodisclosure" selected>Prefer not to disclose</option>
+                </Form.Select>)}
+
                 </Form.Label>
     
     
