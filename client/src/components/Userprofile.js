@@ -254,11 +254,28 @@ else{
       {/* // ---------- Start of User Profile Section ---------- //  */}
       <section className="user-profile-section">
         <div className="user-profile-box">
+        {about.profileImage ? (
           <img
             src={`http://localhost:3000${about.profileImage}`}
             className="user-profile-pic"
             alt="User Profile Pic"
-          />
+          />):(about.gender == "male")?(<img
+            src={maleUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):(about.gender == "female")? (<img
+            src={femaleUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):(about.gender == "other") ? (<img
+            src={otherUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):  (<img
+            src={otherUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />) }
         </div>
         <div>
           {id && id == paramId.id ? null : friend ? (
