@@ -9,10 +9,14 @@ import { ReactSession } from "react-client-session";
 const Navigation = (props) => {
   const navigate = useNavigate();
   let bytes;
-  let user;
+  //let user = "";
   let id;
-  let eid;
+  let decid;
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
     localStorage.getItem("user") &&
@@ -24,9 +28,94 @@ const Navigation = (props) => {
       "MySecretKey"
     );
 
-    user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+    // user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
     id = JSON.parse(id.toString(cryptojs.enc.Utf8));
   }
+
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const instance = axios.create({
+          baseURL: "*",
+          timeout: 20000,
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+          validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+          },
+        });
+
+        const { data } = await instance.get(`http://localhost:3000/session`);
+        console.log(data);
+        if ("error" in data) {
+          setSession(false);
+          setLoading(false);
+          // return;
+        } else {
+          let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
+          console.log(bytes1);
+          let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
+
+          let id = localStorage.getItem("userSession");
+          let bytes = cryptojs.AES.decrypt(id, "MySecretKey");
+          // console.log(bytes);
+          // let decid = JSON.parse(temp);
+          decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+
+          if (tempid === decid.toString()) {
+            console.log("here");
+            console.log("works");
+            setUserId(decid);
+            setSession(true);
+            setLoading(false);
+          } else {
+            setSession(false);
+            setLoading(false);
+          }
+          // return;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    async function fetchData() {
+      const instance = axios.create({
+        baseURL: "*",
+        timeout: 20000,
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+        },
+        validateStatus: function (status) {
+          return status < 500; // Resolve only if the status code is less than 500
+        },
+      });
+      console.log(userId);
+      const resp = await instance.get(
+        `http://localhost:3000/userprofile/${userId}`
+      );
+      if (resp.status === 200) {
+        //user = resp.data.data.d.firstName+" "+resp.data.data.d.lastName;
+        setUser(resp.data.data.d.firstName + " " + resp.data.data.d.lastName);
+      }
+    }
+
+    if (localStorage.length !== 0) {
+      console.log("here");
+      checkSession();
+      fetchData();
+      //return;
+    } else {
+      console.log("here in the outer if");
+      setLoading(false);
+      setSession(false);
+    }
+  }, [session]);
 
   const handleLogout = async () => {
     const instance = axios.create({
@@ -43,11 +132,13 @@ const Navigation = (props) => {
     });
 
     const resp = await instance.get(`http://localhost:3000/logout`);
+    //console.log(resp);
     if (resp.status === 200) {
       console.log("logging out");
       localStorage.clear();
 
       navigate("/");
+    } else {
     }
     console.log(resp);
   };
@@ -157,6 +248,24 @@ const Navigation = (props) => {
                     Friend Request
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link mobile-nav-link"
+                    aria-current="page"
+                    href="/messenger"
+                  >
+                    Chat Messanger
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link mobile-nav-link"
+                    aria-current="page"
+                    href="/search"
+                  >
+                    Search People
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -194,11 +303,11 @@ const Navigation = (props) => {
           <span>Weather</span>
         </a>
         <a className="nav-link" href="/viewrequests">
-          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <aside className="material-icons nav-icons">group_add</aside>
           <span>Friend Request</span>
         </a>
         <a className="nav-link" href="/messenger">
-          <aside className="material-icons nav-icons">wb_sunny</aside>
+          <aside className="material-icons nav-icons">chat_bubble</aside>
           <span>Chat Messenger</span>
         </a>
         <a className="nav-link" href="/search">

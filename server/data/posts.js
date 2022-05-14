@@ -51,6 +51,19 @@ module.exports = {
     post.dateOfPost = moment(post.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
     return post;
   },
+  async ISODATEget(id) {
+    let ID = errorhandle.checkAndGetID(id, "Post ID");
+
+    const postCollection = await posts();
+
+    const post = await postCollection.findOne({ _id: ID });
+    if (post === null) {
+      throw "Error: No post with that id";
+    }
+    post._id = post._id.toString();
+    // post.dateOfPost = moment(post.dateOfPost).format("DD/MM/YYYY HH:mm:ss");
+    return post;
+  },
 
   async getAll() {
     const postCollection = await posts();
@@ -99,7 +112,7 @@ module.exports = {
     errorhandle.checkProperString(body, "Body");
     errorhandle.checkProperBoolean(isPublic, "isPublic");
 
-    const post = await this.get(id);
+    const post = await this.ISODATEget(id);
 
     let updatedPost = {
       title: title,

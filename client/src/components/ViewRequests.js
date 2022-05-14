@@ -142,7 +142,7 @@ export default function ViewRequests() {
                   );
                 })
               ) : (
-                <h3>No request Received</h3>
+                <h3 className="text-center mt-5">No request Received</h3>
               )}
             </div>
           </div>

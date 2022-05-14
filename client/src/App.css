@@ -323,7 +323,7 @@ h4{
   width: fit-content;
   height: fit-content;
 }
-.vertical-navigation{
+.nav.vertical-navigation{
   display: none;
   position: absolute;
 }
@@ -493,8 +493,16 @@ h4{
   padding: 0.25rem;
 }
 
-.user-comments-card{
+.card.user-comments-card{
   overflow-wrap: anywhere;
+}
+
+.card.user-comments-card.border-25 {
+  border-radius: 25px;
+}
+
+.card.user-comments-card.facebook-light-gray-color {
+  background-color: #F0F2F5;
 }
 
 .search-card{
@@ -528,7 +536,7 @@ h4{
 
 @media(min-width:1024px){
   
-  .vertical-navigation{
+  .nav.vertical-navigation{
     display: flex;
     width: 20%;
   }

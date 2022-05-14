@@ -111,7 +111,7 @@ const Videos = (props) => {
     });
 
     if(!session){
-        alert("You should login first");
+        //alert("You should login first");
         return (
         <Navigate to="/" replace />
         );
