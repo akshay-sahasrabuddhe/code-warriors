@@ -189,14 +189,23 @@ const Weather = (props) => {
 
     console.log(weather);
     console.log(region);
-
+if(loading){
+    return(
+        <div>
+            <Navigation></Navigation>
+            <span>Loading...</span>
+        </div>
+       );
+}
+else{
     if(!session){
-        alert("You should login first");
+       // alert("You should login first");
         return (
         <Navigate to="/" replace />
         );
     }
-
+}
+  
    if(weather){
       let day; 
    result = weather;
@@ -243,11 +252,7 @@ const Weather = (props) => {
         </div>
        );
    }
-   return(
-       <div>
-           <h1>Hello</h1>
-       </div>
-   )
+    
 };
 
 export default (Weather);
