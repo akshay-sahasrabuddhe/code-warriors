@@ -638,7 +638,7 @@ async function getUserById(id) {
 
   const userData = await users();
   let user = await userData.findOne({ _id: parsedId });
-
+  console.log()
   if (user === null) {
     console.log("nnnnnnnnnnnnnnnoooooooooooo");
     return { res: false };
