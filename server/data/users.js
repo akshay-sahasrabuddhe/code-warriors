@@ -325,6 +325,12 @@ function isDate(ExpiryDate) {
     return false;
   }
 
+  let currentYear = new Date().getFullYear();
+  if(year>currentYear)
+  {
+    throw "Invalid year"
+  }
+
   mSeconds = new Date(year, month, day).getTime();
   objDate = new Date();
   objDate.setTime(mSeconds);
@@ -510,7 +516,6 @@ async function updateProfile(
     lastName,
     email,
     password,
-    dateOfBirth,
     gender,
     interestedIn,
     relationshipStatus
@@ -561,7 +566,6 @@ async function updateData(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -621,13 +625,13 @@ async function updateData(
     }
   }
 
-  if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
+  /* if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
     updateData.dateOfBirth = dateOfBirth;
   }
   else if (dateOfBirth && dateOfBirth == object.dateOfBirth)
   {
     throw "Please enter different date of birth"
-  }
+  } */
   if (gender && gender != object.gender) {
     updateData.gender = gender;
   }

@@ -181,7 +181,6 @@ function updateProfileCheck(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -237,7 +236,7 @@ function updateProfileCheck(
     }
   }
 
-  if (dateOfBirth) {
+  /* if (dateOfBirth) {
     if (!isString(dateOfBirth)) {
       throw "Enter dateOfBirth as string";
     } else if (check_for_spaces(dateOfBirth)) {
@@ -251,7 +250,7 @@ function updateProfileCheck(
     if (!(age > 13 && age < 120)) {
       throw "Sorry your age is not appropriate";
     }
-  }
+  } */
 
   if (gender) {
     if (!isString(gender)) {
@@ -318,6 +317,12 @@ function isDate(ExpiryDate) {
 
   if (year < 1000 || year > 3000) {
     return false;
+  }
+  
+  let currentYear = new Date().getFullYear();
+  if(year>currentYear)
+  {
+    throw "Invalid year"
   }
 
   mSeconds = new Date(year, month, day).getTime();
@@ -520,7 +525,7 @@ router.post('/login', async(req,res)=>{
     router.patch('/updateprofile', async(req,res)=>{
 
 
-        const {firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}= req.body
+        const {firstName,lastName,email,password,gender,interestedIn,relationshipStatus}= req.body
 
 
         try{
@@ -530,7 +535,7 @@ router.post('/login', async(req,res)=>{
             throw 'Please enter data to be changed'
           }
 
-            updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+            updateProfileCheck(firstName,lastName,email,password,gender,interestedIn,relationshipStatus)
         }
         
         catch(e)
@@ -542,7 +547,7 @@ router.post('/login', async(req,res)=>{
 
         try{
 
-        await usersData.updateProfile(req.session.user.id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
+        await usersData.updateProfile(req.session.user.id,firstName,lastName,email,password,gender,interestedIn,relationshipStatus)
 
         res.json({updateprofile:"Successful"}).status(200)
 
@@ -550,7 +555,7 @@ router.post('/login', async(req,res)=>{
 
         catch(e)
         {
-            if(e=="User already exists with this email")
+            if(e)
             {
                 res.status(400).json({error:e}) 
 
