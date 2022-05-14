@@ -78,7 +78,7 @@ export default function FriendCard(props) {
       <div className="col-lg-6" key={props.receiverId}>
         <div className="card align-items-center">
           <img
-            src={info.profileImage}
+            src={`http://localhost:3000${info.profileImage}`}
             className="friend-list-card-img"
             alt="User Profile Pic"
           />

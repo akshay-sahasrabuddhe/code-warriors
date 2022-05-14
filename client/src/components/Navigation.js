@@ -14,8 +14,8 @@ const Navigation = (props) => {
   let decid;
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [session,setSession] = useState(false);
-  const [userId , setUserId] = useState("");
+  const [session, setSession] = useState(false);
+  const [userId, setUserId] = useState("");
   const [user, setUser] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
@@ -28,66 +28,61 @@ const Navigation = (props) => {
       "MySecretKey"
     );
 
-   // user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+    // user = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
     id = JSON.parse(id.toString(cryptojs.enc.Utf8));
   }
 
-  useEffect(()=>{
-    async function checkSession(){
-      try{
-          const instance = axios.create({
-              baseURL: '*',
-              timeout: 20000,
-            withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*",
-              },
-            validateStatus: function (status) {
-                return status < 500; // Resolve only if the status code is less than 500
-              }
-          });
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const instance = axios.create({
+          baseURL: "*",
+          timeout: 20000,
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+          validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+          },
+        });
 
-          const { data } = await instance.get(`http://localhost:3000/session`);
-          console.log(data);
-          if('error' in data){
-              setSession(false);
-              setLoading(false);
-             // return;
+        const { data } = await instance.get(`http://localhost:3000/session`);
+        console.log(data);
+        if ("error" in data) {
+          setSession(false);
+          setLoading(false);
+          // return;
+        } else {
+          let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
+          console.log(bytes1);
+          let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
+
+          let id = localStorage.getItem("userSession");
+          let bytes = cryptojs.AES.decrypt(id, "MySecretKey");
+          // console.log(bytes);
+          // let decid = JSON.parse(temp);
+          decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+
+          if (tempid === decid.toString()) {
+            console.log("here");
+            console.log("works");
+            setUserId(decid);
+            setSession(true);
+            setLoading(false);
+          } else {
+            setSession(false);
+            setLoading(false);
           }
-          else{
-              let bytes1 = cryptojs.AES.decrypt(data._id, 'MySecretKey');
-              console.log(bytes1);
-              let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
-              
-              let id = localStorage.getItem("userSession");
-              let bytes = cryptojs.AES.decrypt(id, 'MySecretKey');
-             // console.log(bytes);
-             // let decid = JSON.parse(temp);
-             decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)); 
-             
-             
-             if(tempid === decid.toString()){
-              
-              console.log("here");
-                 console.log("works");
-                 setUserId(decid);
-                 setSession(true);
-                  setLoading(false);
-             }
-             else{
-              setSession(false);
-              setLoading(false); 
-             }
-                 // return;
-          }
-      }
-      catch(e){
-          console.log(e);
+          // return;
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
 
-    async function fetchData(){
+    async function fetchData() {
       const instance = axios.create({
         baseURL: "*",
         timeout: 20000,
@@ -101,27 +96,26 @@ const Navigation = (props) => {
         },
       });
       console.log(userId);
-      const resp  = await instance.get(
+      const resp = await instance.get(
         `http://localhost:3000/userprofile/${userId}`
       );
-        if(resp.status === 200){
-          //user = resp.data.data.d.firstName+" "+resp.data.data.d.lastName;  
-          setUser(resp.data.data.d.firstName+" "+resp.data.data.d.lastName);
-        }
+      if (resp.status === 200) {
+        //user = resp.data.data.d.firstName+" "+resp.data.data.d.lastName;
+        setUser(resp.data.data.d.firstName + " " + resp.data.data.d.lastName);
+      }
     }
 
-    if(localStorage.length !== 0){
+    if (localStorage.length !== 0) {
       console.log("here");
       checkSession();
       fetchData();
       //return;
-  }
-  else{
+    } else {
       console.log("here in the outer if");
       setLoading(false);
       setSession(false);
-  }
-  },[session]);
+    }
+  }, [session]);
 
   const handleLogout = async () => {
     const instance = axios.create({
@@ -144,23 +138,9 @@ const Navigation = (props) => {
       localStorage.clear();
 
       navigate("/");
-    }
-    else{
-
+    } else {
     }
     console.log(resp);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let term = searchTerm;
-    console.log(term);
-    // await axios
-    //   .post(`http://localhost:3000//addmessage`, { search: searchTerm })
-    //   .then(function (response) {})
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
   };
 
   return (
@@ -338,7 +318,6 @@ const Navigation = (props) => {
     </section>
     // ---------- End of Navigation ---------- //
   );
-
 };
 
 export default Navigation;
