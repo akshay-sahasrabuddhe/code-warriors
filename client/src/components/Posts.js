@@ -530,29 +530,36 @@ const Posts = (props) => {
       async function deletepost(delid) {
         delid = editdataid;
         console.log(delid);
-        const instance = axios.create({
+        // const instance = axios.create({
+        //   baseURL: "*",
+        //   timeout: 20000,
+
+        //   headers: {
+        //     "Content-Type": "application/json;charset=UTF-8",
+        //     "Access-Control-Allow-Origin": "*",
+        //   },
+        //   validateStatus: function (status) {
+        //     return status < 500; // Resolve only if the status code is less than 500
+        //   },
+        // });
+
+        let postid = delid;
+        console.log(postid);
+        console.log(delid);
+        const instance2 = axios.create({
           baseURL: "*",
           timeout: 20000,
-
+          withCredentials: true,
           headers: {
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "multipart/form-data; boundary=${form._boundary}",
+            //;charset=UTF-8
           },
           validateStatus: function (status) {
             return status < 500; // Resolve only if the status code is less than 500
           },
         });
-
-        let postid = delid;
-        console.log(postid);
-        console.log(delid);
-        const newseepostdata = await instance
-          .delete(`http://localhost:3000/posts/${postid}`, {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Origin": "*",
-            },
-          })
+        const newseepostdata = await instance2
+          .delete(`http://localhost:3000/posts/${postid}`)
           .then(function (response) {
             console.log(response.data);
 
