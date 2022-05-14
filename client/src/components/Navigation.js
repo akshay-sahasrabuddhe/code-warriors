@@ -104,15 +104,15 @@ const Navigation = (props) => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <div className="d-flex justify-content-between w-100 navigation-box">
             <div>
-              <form className="d-flex">
+              {/* <form className="d-flex">
                 <input
                   className="form-control search-textbox"
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
                 />
-                {/* <button className="btn btn-outline-primary" type="submit">Search</button> */}
-              </form>
+                <button className="btn btn-outline-primary" type="submit">Search</button>
+              </form> */}
             </div>
             <div>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0 text-center">
@@ -169,6 +169,15 @@ const Navigation = (props) => {
                     Weather
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link mobile-nav-link"
+                    aria-current="page"
+                    href="/search"
+                  >
+                    Search
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -204,6 +213,10 @@ const Navigation = (props) => {
         <a className="nav-link" href="/weather">
           <aside className="material-icons nav-icons">wb_sunny</aside>
           <span>Weather</span>
+        </a>
+        <a className="nav-link" href="/search">
+          <aside className="material-icons nav-icons">search</aside>
+          <span>Search People</span>
         </a>
       </nav>
     </section>

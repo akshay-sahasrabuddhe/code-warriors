@@ -626,10 +626,10 @@ router.post("/userprofile/sendRequest", async (req, res) => {
 
 
 
-router.post("/getallusers", async (req, res) => {
+router.get("/getallusers/:search", async (req, res) => {
   try {
     console.log("reached in routes");
-    let search = req.body;
+    let search = req.params.search;
     console.log(search);
     let serdata = await usersData.searchData(search);
     res.status(200).json({ status: true, data: serdata });
