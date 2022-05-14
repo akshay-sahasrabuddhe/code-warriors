@@ -174,7 +174,16 @@ const Signup = (props) => {
   
 //extract year from date      
                     let year = age_dt.getUTCFullYear();  
-  
+                    let y = birth.getFullYear();
+                    let currentYear = new Date().getFullYear();
+                    //console.log(year);
+                    //console.log(currentYear);
+                    if(y > currentYear){
+                        alert("Invalid Year");
+                        dob.value = "";
+                        btn.disabled = false;
+                        return;
+                    }
 //now calculate the age of the user  
                     let age = Math.abs(year - 1970);  
                     console.log(age);
