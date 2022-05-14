@@ -11,9 +11,10 @@ import axios from "axios";
 import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import cryptojs from "crypto-js";
+import Error from "./Error";
 const Search = (props) => {
     const [SearchResults , setSearchResults] = useState([]);
-    let SearchResultsContainer = null;
+    let SearchResultsContainer, Errorpage = null;
     let firstName;
 
     SearchResultsContainer = SearchResults && SearchResults.map((n) => {
@@ -28,6 +29,8 @@ const Search = (props) => {
         }else{
             finalstr = otherUser;
         }
+
+
 
         let finalurl = "";
 
@@ -113,9 +116,13 @@ return(
                       .then(function (response) {
                         console.log(response.data.data);
                         
+                        
                         if(response.status === 200){
+                            if(response.data.data.length == 0){
+                                alert("No user found with that name")
+                            }else{
                             setSearchResults(response.data.data);
-                            flag = true;
+                            flag = true;}
     
                         }
                       })
@@ -155,7 +162,7 @@ return(
                 </Form>
                 <div>
                     <div className="row">
-                        {SearchResultsContainer}
+                        {SearchResultsContainer.length > 0 ? SearchResultsContainer: <Error></Error>}
                     </div>
                 </div>
     </div>

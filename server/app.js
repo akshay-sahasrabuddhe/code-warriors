@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const session = require("express-session");
@@ -19,7 +19,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(
   session({
     name: "AuthCookie",
