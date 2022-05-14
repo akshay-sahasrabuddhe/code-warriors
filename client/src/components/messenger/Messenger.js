@@ -26,6 +26,7 @@ export default function Messenger() {
   const [id, setId] = useState("");
   const [session, setSession] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [fnd, setFnd] = useState([]);
   const [offline, setOffline] = useState(false);
 
   const scrollRef = useRef();
@@ -184,6 +185,7 @@ export default function Messenger() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     let newMessage = {
       sender: id,
       conversationId: currrentChat,
@@ -256,7 +258,13 @@ export default function Messenger() {
                     <div className="chatBoxTop">
                       {messages.map((m) => (
                         <div ref={scrollRef}>
-                          <Message message={m} own={m.senderId == id} />
+                          <Message
+                            message={m}
+                            own={m.senderId == id}
+                            id1={currrentChat1.members[0]}
+                            id2={currrentChat1.members[1]}
+                            userid={id}
+                          />
                         </div>
                       ))}
                     </div>

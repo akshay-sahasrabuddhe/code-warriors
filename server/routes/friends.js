@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const friendData = data.friends;
+let { ObjectId } = require("mongodb");
 
 router.post("/sendRequest", async (req, res) => {
   console.log("hfggh");
@@ -97,6 +98,46 @@ router.post("/cancelrequest", async (req, res) => {
     console.log(e);
     res.status(500).json({ error: e });
     return;
+  }
+});
+
+router.post("/removefriend", async (req, res) => {
+  let id = req.headers.keys;
+  let userId = req.body.userId;
+  let fid = req.body.fId;
+  let parsedId;
+  try {
+    parsedId = ObjectId(userId);
+  } catch (e) {
+    throw e;
+  }
+  let parsedId1;
+  try {
+    parsedId1 = ObjectId(fid);
+  } catch (e) {
+    throw e;
+  }
+  try {
+    if (id == userId) {
+      if (!userId.trim()) {
+        throw "400";
+      }
+      if (!fid.trim()) {
+        throw "400";
+      }
+
+      console.log("1");
+      let datas = await friendData.removefriend(userId, fid);
+      if (datas.status) {
+        res.status(200).json({ status: true });
+      }
+    }
+  } catch (error) {
+    if (error == 400) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: error });
+    }
   }
 });
 

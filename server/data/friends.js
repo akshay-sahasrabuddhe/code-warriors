@@ -106,7 +106,7 @@ async function getfriendReqById(userId) {
   }
 }
 async function addFriend(userId, senderId) {
-  console.log(userId);
+  console.log(userId + "   userh");
   if (!userId.trim()) {
     throw "400";
   }
@@ -119,6 +119,13 @@ async function addFriend(userId, senderId) {
   } catch (e) {
     throw "400";
   }
+  let parsedId1;
+  try {
+    parsedId1 = ObjectId(senderId);
+  } catch (e) {
+    throw "400";
+  }
+  let addconvo;
   const userData = await users();
   const conversationData = await conversa();
   let addfriend = await userData.updateOne(
@@ -128,11 +135,70 @@ async function addFriend(userId, senderId) {
   if (addfriend.modifiedCount === 0) {
     throw "500";
   } else {
+    console.log("sec");
+    let addfriend1 = await userData.updateOne(
+      { _id: parsedId1 },
+      { $push: { friends: { $each: [userId] } } }
+    );
+
+    if (addfriend1.modifiedCount === 0) {
+      throw "500";
+    }
     canReq(senderId, userId);
-    let addconvo = await conversationData.insertOne({
-      members: [userId, senderId],
-    });
-    if (addconvo.insertedCount === 0) {
+
+    let data = await conversationData
+      .find({ members: { $in: [userId, senderId] } })
+      .toArray();
+    if (data.length == 0) {
+      addconvo = await conversationData.insertOne({
+        members: [userId, senderId],
+      });
+
+      if (addconvo.insertedCount === 0) {
+        throw "500";
+      } else {
+        return { status: true };
+      }
+    } else {
+      return { status: true };
+    }
+  }
+}
+
+async function removefriend(userId, fid) {
+  if (!userId.trim()) {
+    throw "400";
+  }
+  if (!fid.trim()) {
+    throw "400";
+  }
+  let parsedId;
+  try {
+    parsedId = ObjectId(userId);
+  } catch (e) {
+    throw e;
+  }
+  let parsedId1;
+  try {
+    parsedId1 = ObjectId(fid);
+  } catch (e) {
+    throw e;
+  }
+  console.log("2");
+  const userData = await users();
+  let remfriend = await userData.updateOne(
+    { _id: parsedId },
+    { $pull: { friends: { $in: [fid] } } }
+  );
+  console.log("3");
+  if (remfriend.modifiedCount === 0) {
+    throw "500";
+  } else {
+    let remfriend1 = await userData.updateOne(
+      { _id: parsedId1 },
+      { $pull: { friends: { $in: [userId] } } }
+    );
+    if (remfriend1.modifiedCount === 0) {
       throw "500";
     } else {
       return { status: true };
@@ -145,4 +211,5 @@ module.exports = {
   canReq,
   getfriendReqById,
   addFriend,
+  removefriend,
 };

@@ -26,11 +26,13 @@ const Userprofile = (props) => {
   let relationStatus;
   let interests;
   //let id;
-  let userProfileData,editProfileData = null;
-    
-    const [about , setAbout] = useState({});
-    const [aboutedit , setAboutEdit] = useState(undefined);
-    const [loading, setLoading] = useState(true);
+  let userProfileData,
+    editProfileData = null;
+
+  const [about, setAbout] = useState({});
+  const [fndData, setFndData] = useState([]);
+  const [aboutedit, setAboutEdit] = useState(undefined);
+  const [loading, setLoading] = useState(true);
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   /*if (
     localStorage.getItem("user") &&
@@ -45,120 +47,113 @@ const Userprofile = (props) => {
     console.log(id);
   }*/
   let paramId = useParams();
+
   const [friend, setAlreadyFriend] = useState(false);
   const [request, setRequest] = useState(false);
-  const [id , setId] = useState('');
+  const [id, setId] = useState("");
   const [visitedsent, setVisitedSent] = useState(false);
-  const [session , setSession] = useState(false);
+  const [session, setSession] = useState(false);
   useEffect(() => {
-    async function checkSession(){
-      try{
-          const instance = axios.create({
-              baseURL: '*',
-              timeout: 20000,
-            withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*",
-              },
-            validateStatus: function (status) {
-                return status < 500; // Resolve only if the status code is less than 500
-              }
-          });
+    async function checkSession() {
+      try {
+        const instance = axios.create({
+          baseURL: "*",
+          timeout: 20000,
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+          validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+          },
+        });
 
-          const { data } = await instance.get(`http://localhost:3000/session`);
-          console.log(data);
-          if('error' in data){
-              setSession(false);
-              setLoading(false);
-             // return;
-          }
-          else{
-              let bytes1 = cryptojs.AES.decrypt(data._id, 'MySecretKey');
-              console.log(bytes1);
-              let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
-              
-              let tempid1 = localStorage.getItem("userSession");
-              let bytes = cryptojs.AES.decrypt(tempid1, 'MySecretKey');
-              console.log(bytes);
-             // let decid = JSON.parse(temp);
-             let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)); 
-             
-             
-             if(tempid === decid.toString()){
-              setId(decid);
-              console.log("here");
-                 console.log("works");
-                 setSession(true);
-                  setLoading(false);
-                  
-             }
-             else{
-              setSession(false);
-              setLoading(false); 
-             }
-                 // return;
-          }
-      }
-      catch(e){
-          console.log(e);
-      }
-  }
+        const { data } = await instance.get(`http://localhost:3000/session`);
+        console.log(data);
+        if ("error" in data) {
+          setSession(false);
+          setLoading(false);
+          // return;
+        } else {
+          let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
+          console.log(bytes1);
+          let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
 
-    async function fetchdata() {
-      const instance = axios.create({
-        baseURL: "*",
-        timeout: 20000,
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Access-Control-Allow-Origin": "*",
-        },
-        validateStatus: function (status) {
-          return status < 500; // Resolve only if the status code is less than 500
-        },
-      });
+          let tempid1 = localStorage.getItem("userSession");
+          let bytes = cryptojs.AES.decrypt(tempid1, "MySecretKey");
+          console.log(bytes);
+          // let decid = JSON.parse(temp);
+          let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
 
-      const resp = await instance.get(
-        `http://localhost:3000/userprofile/${paramId.id}`
-      );
-      console.log(resp.data.data.d);
-      if (resp.data.data.res) {
-        setAbout(resp.data.data.d);
-        console.log(about);
+          if (tempid === decid.toString()) {
+            setId(decid);
+            console.log("here");
+            console.log("works");
+            setSession(true);
+          } else {
+            setSession(false);
             setLoading(false);
-        let frnds = resp.data.data.d.friends;
-        if (paramId.id != id) {
-          for (let i = 0; i < frnds.length; i++) {
-            if (frnds[i] == paramId.id) {
-              setAlreadyFriend(true);
-              break;
-            }
           }
+          // return;
         }
-      } else {
-        console.log("user not found");
-        //set state for user profile not found
+      } catch (e) {
+        console.log(e);
       }
     }
 
-
-    if(localStorage.length !== 0){
+    if (localStorage.length !== 0) {
       console.log("here");
       checkSession();
-      if(session){
+      if (session) {
         fetchdata();
         fetchRequestData();
+        setLoading(false);
       }
       //return;
-  }
-  else{
+    } else {
       console.log("here in the outer if");
       setLoading(false);
       setSession(false);
-  }
-    
+    }
   }, [session]);
+  async function fetchdata() {
+    const instance = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
+
+    const resp = await instance.get(
+      `http://localhost:3000/userprofile/${paramId.id}`
+    );
+    console.log(resp.data.data.d);
+    if (resp.data.data.res) {
+      setAbout(resp.data.data.d);
+      console.log(about);
+      setLoading(false);
+      let frnds = resp.data.data.d.friends;
+      setFndData(frnds);
+      if (paramId.id != id) {
+        for (let i = 0; i < frnds.length; i++) {
+          if (frnds[i] == id) {
+            setAlreadyFriend(true);
+            break;
+          }
+        }
+      }
+    } else {
+      console.log("user not found");
+      //set state for user profile not found
+    }
+  }
   async function fetchRequestData() {
     console.log(id);
     await axios
@@ -230,84 +225,147 @@ const Userprofile = (props) => {
     }
   }
 
-if(loading){
-  return(
-  <div>
-      <h1>Loading...</h1>
-  </div>
-  );
-}
-else{
-  if(!session){
+  if (loading) {
     return (
-        <Navigate to="/" replace />
-        );
-  }
-  else{
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  } else {
+    if (!session) {
+      return <Navigate to="/" replace />;
+    } else {
+      console.log(id);
+      console.log(paramId.id);
 
-  console.log(id);
-  console.log(paramId.id);
+      return (
+        <>
+          <Navigation></Navigation>
+          {/* // ---------- Start of User Profile Section ---------- //  */}
+          <section className="user-profile-section">
+            <div className="user-profile-box">
+              <img
+                src={`http://localhost:3000${about.profileImage}`}
+                className="user-profile-pic"
+                alt="User Profile Pic"
+              />
+            </div>
+            <div>
+              {id && id == paramId.id ? null : friend ? (
+                <Button variant="primary">Friends</Button>
+              ) : request ? (
+                <Button variant="primary" onClick={cancelRequest}>
+                  Request Sent
+                </Button>
+              ) : visitedsent ? (
+                <Button variant="primary" disabled>
+                  Request Received
+                </Button>
+              ) : (
+                <Button variant="primary" onClick={sendRequest}>
+                  Add Friend
+                </Button>
+              )}
+            </div>
+          </section>
+          {/* // ---------- End of User Profile Section ---------- //  */}
 
-  return (
-    <>
-      <Navigation></Navigation>
-      {/* // ---------- Start of User Profile Section ---------- //  */}
-      <section className="user-profile-section">
-        <div className="user-profile-box">
-          <img
-            src={`http://localhost:3000${about.profileImage}`}
-            className="user-profile-pic"
-            alt="User Profile Pic"
-          />
-        </div>
-        <div>
-          {id && id == paramId.id ? null : friend ? (
-            <Button variant="primary">Friends</Button>
-          ) : request ? (
-            <Button variant="primary" onClick={cancelRequest}>
-              Request Sent
-            </Button>
-          ) : visitedsent ? (
-            <Button variant="primary" disabled>
-              Request Received
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={sendRequest}>
-              Add Friend
-            </Button>
-          )}
-        </div>
-      </section>
-      {/* // ---------- End of User Profile Section ---------- //  */}
+          {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
 
-      {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
-
-      <section className="user-profiel-tabs-section">
-      <ul className="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+          <section className="user-profiel-tabs-section">
+            <ul
+              className="nav nav-tabs justify-content-center"
+              id="myTab"
+              role="tablist"
+            >
+              <li className="nav-item" role="presentation">
+                <button
+                  className="nav-link w-100 active"
+                  id="home-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#home"
+                  type="button"
+                  role="tab"
+                  aria-controls="home"
+                  aria-selected="true"
+                >
+                  About
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className="nav-link w-100"
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile"
+                  type="button"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                >
+                  Friends
+                </button>
+              </li>
+              {paramId.id == id ? (
                 <li className="nav-item" role="presentation">
-                    <button className="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">About</button>
+                  <button
+                    className="nav-link w-100"
+                    id="contact-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#contact"
+                    type="button"
+                    role="tab"
+                    aria-controls="contact"
+                    aria-selected="false"
+                  >
+                    Edit Profile
+                  </button>
                 </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Friends</button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Edit Profile</button>
-                </li>
+              ) : null}
             </ul>
             <div className="tab-content border border-top-0" id="myTabContent">
-                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div
+                className="tab-pane fade show active"
+                id="home"
+                role="tabpanel"
+                aria-labelledby="home-tab"
+              >
                 <About n={about}></About>
+              </div>
+              <div
+                className="tab-pane fade pt-4 friends-tab"
+                id="profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+                <div className="container">
+                  <div className="row">
+                    {fndData.length > 0 ? (
+                      fndData.map((d, index) => {
+                        return (
+                          <Friends
+                            key={index}
+                            fid={d}
+                            userId={id}
+                            param={paramId.id}
+                          ></Friends>
+                        );
+                      })
+                    ) : (
+                      <h3>No Friends</h3>
+                    )}
+                  </div>
                 </div>
-                <Friends></Friends>
-                <EditProfile about={about}></EditProfile>
+              </div>
+              <EditProfile about={about}></EditProfile>
             </div>
-      </section>
+          </section>
 
-      {/* // ---------- End of User profiel Tabs Section ---------- //  */}
-    </>
-  );
-}
-}
+          {/* // ---------- End of User profiel Tabs Section ---------- //  */}
+        </>
+      );
+    }
+  }
 };
 
 export default Userprofile;

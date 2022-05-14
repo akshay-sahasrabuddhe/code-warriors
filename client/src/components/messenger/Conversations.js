@@ -34,6 +34,7 @@ export default function Conversations({ conversationid, id1, id2, userid }) {
       `http://localhost:3000/userprofile/${searchid}`
     );
     console.log(resp.data.data.d);
+
     if (resp.data.data.res) {
       setInfo(resp.data.data.d);
     } else {
@@ -46,7 +47,7 @@ export default function Conversations({ conversationid, id1, id2, userid }) {
     <div className="conversation">
       <img
         className="conversationImg"
-        src={`http://localhost:3000/${info.profileImage}`}
+        src={`http://localhost:3000${info.profileImage}`}
         alt="profile picture"
       ></img>
       <span className="conversationName">

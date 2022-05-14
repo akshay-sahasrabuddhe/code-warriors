@@ -11,7 +11,7 @@ const Navigation = (props) => {
   let bytes;
   let user;
   let id;
-
+  let eid;
   const [searchTerm, setSearchTerm] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
@@ -50,18 +50,6 @@ const Navigation = (props) => {
       navigate("/");
     }
     console.log(resp);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let term = searchTerm;
-    console.log(term);
-    // await axios
-    //   .post(`http://localhost:3000//addmessage`, { search: searchTerm })
-    //   .then(function (response) {})
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
   };
 
   return (

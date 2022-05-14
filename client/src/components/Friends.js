@@ -14,61 +14,87 @@ import cryptojs from "crypto-js";
 import About from "./About";
 import EditProfile from "./EditProfile";
 
-const Friends = (props) => {
+const Friends = ({ fid, userId, param }) => {
+  console.log(fid);
+  const [info, setInfo] = useState({});
+  useEffect(() => {
+    fetchdata();
+  }, []);
+  async function fetchdata() {
+    const instance = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
 
-    return(
-        <div className="tab-pane fade pt-4 friends-tab" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-sm-4">
-                                <div className="card text-center">
-                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-center">Akshay</h5>
-                                        <a href="#" className="btn btn-primary">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-4">
-                                <div className="card text-center">
-                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-center">Roshan</h5>
-                                        <a href="#" className="btn btn-primary">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-4">
-                                <div className="card text-center">
-                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-center">Juzar</h5>
-                                        <a href="#" className="btn btn-primary">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-4">
-                                <div className="card text-center">
-                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-center">Tapish</h5>
-                                        <a href="#" className="btn btn-primary">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-4">
-                                <div className="card text-center">
-                                    <img src={maleUser} className="friend-list-card-img" alt="User Profile Pic" />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-center">Akhil</h5>
-                                        <a href="#" className="btn btn-primary">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    );
-}
+    const resp = await instance.get(`http://localhost:3000/userprofile/${fid}`);
+    console.log(resp.data.data.d);
+    if (resp.data.data.res) {
+      setInfo(resp.data.data.d);
+    } else {
+      console.log("user not found");
+      //set state for user profile not found
+    }
+  }
+  const instance = axios.create({
+    baseURL: "*",
+    timeout: 20000,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+      keys: userId,
+    },
+    validateStatus: function (status) {
+      return status < 500; // Resolve only if the status code is less than 500
+    },
+  });
+  async function handleRemove(user, fid) {
+    await instance
+      .post(`http://localhost:3000/friend/removefriend`, {
+        userId: user,
+        fId: fid,
+      })
+      .then(function (response) {
+        if (response.data.status) {
+          alert("Friend deleted");
+        } else {
+          alert("Error in Deletion!");
+        }
+      })
+      .catch(function (error) {});
+  }
+  return (
+    <div className="col-sm-4">
+      <div className="card text-center">
+        <img
+          src={`http://localhost:3000${info.profileImage}`}
+          className="friend-list-card-img"
+          alt="User Profile Pic"
+        />
+        <div className="card-body">
+          <h5 className="card-title text-center">
+            {info.firstName + " " + info.lastName}
+          </h5>
+          {param == userId ? (
+            <a
+              className="btn btn-primary"
+              onClick={() => handleRemove(userId, fid)}
+            >
+              Remove
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Friends;
