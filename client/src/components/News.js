@@ -55,11 +55,11 @@ const News = (props) => {
                     console.log("here");
                        console.log("works");
                        setSession(true);
-                        setLoading(false);
+                       // setLoading(false);
                    }
                    else{
                     setSession(false);
-                    setLoading(false); 
+                    //setLoading(false); 
                    }
                 }
             }
