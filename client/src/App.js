@@ -16,6 +16,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Videos from "./components/Videos";
 import ViewRequests from "./components/ViewRequests";
 import Messenger from "./components/messenger/Messenger";
+import Error from "./components/Error"
 function App() {
   return (
     <div className="App">
@@ -40,15 +41,16 @@ function App() {
                 <div className="col-sm-9">
                   <Routes>
                     <Route index path="/" element={<Main />} />
-                    <Route path="/posts" element={<Posts />} />
-                    <Route path="/news" element={<News />} />
-                    <Route path="/weather" element={<Weather />} />
-                    <Route path="/videos" element={<Videos />} />
-                    <Route path="/memories" element={<Memories />} />
-                    <Route path="/userprofile/:id" element={<Userprofile />} />
-                    <Route path="/viewrequests" element={<ViewRequests />} />
-                    <Route path="/messenger" element={<Messenger />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route exact path="/posts" element={<Posts />} />
+                    <Route exact path="/news" element={<News />} />
+                    <Route exact path="/weather" element={<Weather />} />
+                    <Route exact path="/videos" element={<Videos />} />
+                    <Route exact path="/memories" element={<Memories />} />
+                    <Route exact path="/userprofile/:id" element={<Userprofile />} />
+                    <Route exact path="/viewrequests" element={<ViewRequests />} />
+                    <Route exact path="/messenger" element={<Messenger />} />
+                    <Route exact path="/search" element={<Search />} />
+                    <Route path="*" element={<Error />}/>
                   </Routes>
                 </div>
               </div>
