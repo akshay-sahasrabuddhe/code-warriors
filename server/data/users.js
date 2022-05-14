@@ -510,7 +510,6 @@ async function updateProfile(
     lastName,
     email,
     password,
-    dateOfBirth,
     gender,
     interestedIn,
     relationshipStatus
@@ -561,7 +560,6 @@ async function updateData(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -621,13 +619,13 @@ async function updateData(
     }
   }
 
-  if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
+  /* if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
     updateData.dateOfBirth = dateOfBirth;
   }
   else if (dateOfBirth && dateOfBirth == object.dateOfBirth)
   {
     throw "Please enter different date of birth"
-  }
+  } */
   if (gender && gender != object.gender) {
     updateData.gender = gender;
   }
