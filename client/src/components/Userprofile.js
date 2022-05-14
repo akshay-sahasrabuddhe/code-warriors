@@ -161,7 +161,22 @@ const Userprofile = (props) => {
   }, [session]);
   async function fetchRequestData() {
     console.log(id);
-    await axios
+
+    const instance = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
+
+
+    await instance
       .post(`http://localhost:3000/friend/searchrequest`, {
         loggedIn: id,
         Visited: paramId.id,
@@ -254,11 +269,28 @@ else{
       {/* // ---------- Start of User Profile Section ---------- //  */}
       <section className="user-profile-section">
         <div className="user-profile-box">
+        {about.profileImage ? (
           <img
             src={`http://localhost:3000${about.profileImage}`}
             className="user-profile-pic"
             alt="User Profile Pic"
-          />
+          />):(about.gender == "male")?(<img
+            src={maleUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):(about.gender == "female")? (<img
+            src={femaleUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):(about.gender == "other") ? (<img
+            src={otherUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />):  (<img
+            src={otherUser}
+            className="user-profile-pic"
+            alt="User Profile Pic"
+          />) }
         </div>
         <div>
           {id && id == paramId.id ? null : friend ? (

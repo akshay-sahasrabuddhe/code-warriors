@@ -11,12 +11,12 @@ import Memories from "./components/Memories";
 import Userprofile from "./components/Userprofile";
 import Main from "./components/Main";
 import Search from "./components/Search";
+import Error from "./components/Error";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Videos from "./components/Videos";
 import ViewRequests from "./components/ViewRequests";
 import Messenger from "./components/messenger/Messenger";
-import Error from "./components/Error"
 function App() {
   return (
     <div className="App">
@@ -27,7 +27,7 @@ function App() {
         crossorigin="anonymous"
       />
       <header className="App-header">
-        <h1>Welcome to DuckBook</h1>
+        <h1 className="text-center">Welcome to DuckBook</h1>
 
         {/* <Link className='App-link' to='signup'>Signup</Link>
           <Link className='App-link' to='login'>Login</Link> */}
@@ -36,9 +36,9 @@ function App() {
       <div className="App-body">
         <div className="container">
           <div className="row">
-            <div className="col-sm-12 col-lg-9 offset-lg-3">
+            <div className="col-sm-12 col-lg-6 offset-lg-3">
               <div className="row">
-                <div className="col-sm-9">
+                <div className="col-sm-12">
                   <Routes>
                     <Route index path="/" element={<Main />} />
                     <Route exact path="/posts" element={<Posts />} />

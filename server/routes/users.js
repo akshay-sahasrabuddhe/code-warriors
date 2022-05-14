@@ -640,10 +640,11 @@ router.get("/getallusers/:search", async (req, res) => {
 
 
 
-router.get("/getImage", async(req, res)=>{
+router.get("/getImage/:id", async(req, res)=>{
 
-let user= await usersData.getUserById(req.session.user.id)
-
+  console.log(req.params.id);
+let user= await usersData.getUserById(req.params.id)
+console.log(user);
 
 if(user.d.profileImage!='')
 {

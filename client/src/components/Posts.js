@@ -497,10 +497,14 @@ const Posts = (props) => {
      )
     });*/
 
+   
+
   postcontainer =
     Seepost &&
     Seepost.map((n) => {
       console.log(n);
+
+      
 
       async function opendeltemodal(idd) {
         console.log(idd);
@@ -517,6 +521,7 @@ const Posts = (props) => {
           },
         });
         const userdata1 = await instance.get(`http://localhost:3000/session`);
+
         console.log(n.userThatPosted._id);
         console.log(userdata1.data.id);
         if (userdata1.data.id === n.userThatPosted._id) {
@@ -578,6 +583,9 @@ const Posts = (props) => {
             alert("There was some error please try again");
           });
       }
+
+
+
       let imgstr = "";
       if (n.imagePath) {
         imgstr = "http://localhost:3000" + n.imagePath;

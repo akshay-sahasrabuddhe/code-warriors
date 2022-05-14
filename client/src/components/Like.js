@@ -47,7 +47,20 @@ const Like = (props) => {
     // const postdata  = await instance.get(`http://localhost:3000/posts`);
     // console.log(postdata);
 
-    await axios
+    const instancelike = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
+
+    await instancelike
       .post(`http://localhost:3000/posts/like/${likeid}`, likeobj, {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
