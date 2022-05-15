@@ -117,6 +117,19 @@ const Userprofile = (props) => {
       setSession(false);
     }
   }, [session]);
+
+  const instance = axios.create({
+    baseURL: "*",
+    timeout: 20000,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+    validateStatus: function (status) {
+      return status < 500; // Resolve only if the status code is less than 500
+    },
+  });
   async function fetchdata() {
     const instance = axios.create({
       baseURL: "*",
@@ -198,7 +211,7 @@ const Userprofile = (props) => {
   }
   async function sendRequest() {
     if (paramId.id != id) {
-      await axios
+      await instance
         .post(`http://localhost:3000/friend/sendRequest`, {
           sender: id,
           receiver: paramId.id,
@@ -219,7 +232,7 @@ const Userprofile = (props) => {
 
   async function cancelRequest() {
     if (paramId.id != id) {
-      await axios
+      await instance
         .post(`http://localhost:3000/friend/cancelRequest`, {
           sender: id,
           receiver: paramId.id,
