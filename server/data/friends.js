@@ -146,10 +146,22 @@ async function addFriend(userId, senderId) {
     }
     canReq(senderId, userId);
 
-    let data = await conversationData
-      .find({ members: { $in: [userId, senderId] } })
-      .toArray();
-    if (data.length == 0) {
+    // let data = await conversationData
+    //   .find({ members: { $in: [userId, senderId] } })
+    //   .toArray();
+
+    let data = await conversationData.find({}).toArray();
+    let flag = false;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].members[0] == userId || data[i].members[0] == senderId) {
+        if (data[i].members[1] == userId || data[i].members[1] == senderId) {
+          flag = true;
+          break;
+        }
+      }
+    }
+
+    if (!flag) {
       addconvo = await conversationData.insertOne({
         members: [userId, senderId],
       });
