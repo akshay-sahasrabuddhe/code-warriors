@@ -16,12 +16,12 @@ const EditProfile = (props) => {
     let firstName;
   let lastName;
   let email;
-  let pswd;
+  let pswd,password;
   let confirmPswd;
   let dob;
   let gender;
   let relationStatus;
-  let interests;
+  let interests,interestedIn;
   
 
 return(
@@ -126,13 +126,37 @@ return(
                         interests.value = "Prefer not to disclose";
                     }
 
+                    let relstat = "";
+
+                    if(firstName.value == props.about.firstName){
+                        firstName.value = "";
+                    }
+                    if(lastName.value == props.about.lastName){
+                        lastName.value = "";
+                    }
+                    if(email.value == props.about.email){
+                        email.value = "";
+                    }
+                    if(gender.value == props.about.gender){
+                        gender.value = "";
+                    }
+                    console.log(relationStatus.value)
+                    console.log(props.about)
+                    if(relationStatus.value == props.about.relationshipStatus){
+                       
+                        relationStatus.value = "";
+                    }
+                    if(interests.value == props.about.interests){
+                        interests.value = "";
+                    }
+
     
                     let user = {
                         firstName: firstName.value,
                         lastName : lastName.value,
                         email: email.value,
                         password: pswd.value,
-                        dateOfBirth:props.about.dateOfBirth,
+                        // dateOfBirth:props.about.dateOfBirth,
                         gender: gender.value,
                         relationshipStatus: relationStatus.value,
                         interestedIn : interests.value
@@ -161,9 +185,8 @@ return(
             await instance.patch(`http://localhost:3000/updateprofile`, user)
                       .then(function (response) {
                         console.log(response);
-                        
                         if(response.status === 200){
-                            alert("Hey "+user.firstName+", Your profile is updated !!!");
+                            alert("Your profile is updated !!!");
                             flag = true;
                             window.location.reload();
                         }

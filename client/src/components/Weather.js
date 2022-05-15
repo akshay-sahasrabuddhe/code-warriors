@@ -224,7 +224,7 @@ else{
             <div className="cards">
                 <Card id={day?"day":"night"} className="card">
                 <Card.Header>
-                <img className="wicon" src={result.condition.icon}/>{result.condition.text}
+                <img className="wicon" src={result.condition.icon} alt="Weather Image" />{result.condition.text}
                  <h2>{region.data.location.region}</h2>
                 </Card.Header>
                 <Card.Body className="card-body">

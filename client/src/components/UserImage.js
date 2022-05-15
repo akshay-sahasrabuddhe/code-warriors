@@ -60,7 +60,7 @@ const UserImage = (props) => {
       account_circle
     </aside>)
   }else{
-  return(<img className="img-fluid" src={`http://localhost:3000${uimg}`} alt="post image" />)
+  return(<img className="img-fluid user-posted-img rounded-circle" src={`http://localhost:3000${uimg}`} alt="post image" />)
   }
 };
 export default UserImage;

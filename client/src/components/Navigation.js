@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import cryptojs from "crypto-js";
 import { ReactSession } from "react-client-session";
+import UserImage from "./UserImage";
 const Navigation = (props) => {
   const navigate = useNavigate();
   let bytes;
@@ -17,6 +18,7 @@ const Navigation = (props) => {
   const [session, setSession] = useState(false);
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState("");
+  const [usrid, setusrid] = useState("");
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   if (
     localStorage.getItem("user") &&
@@ -95,15 +97,17 @@ const Navigation = (props) => {
           return status < 500; // Resolve only if the status code is less than 500
         },
       });
-      console.log(userId);
+      
       const resp = await instance.get(
         `http://localhost:3000/userprofile/${userId}`
       );
       if (resp.status === 200) {
         //user = resp.data.data.d.firstName+" "+resp.data.data.d.lastName;
         setUser(resp.data.data.d.firstName + " " + resp.data.data.d.lastName);
+        setusrid(resp.data.data.d._id);
       }
     }
+    
 
     if (localStorage.length !== 0) {
       console.log("here");
@@ -282,9 +286,11 @@ const Navigation = (props) => {
         </div>
       </nav>
       <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
-        <a className="nav-link" href={`/userprofile/${id}`}>
-          <aside className="material-icons nav-icons">account_circle</aside>
-          <span>{user}</span>
+        <a className="nav-link pt-2 pb-2" href={`/userprofile/${id}`}>
+          
+            <UserImage id={id}></UserImage>
+          {/* <aside className="material-icons nav-icons">account_circle</aside> */}
+          <span className="ms-3">{user}</span>
         </a>
         {/* <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a> */}
         <a className="nav-link" href="/videos">

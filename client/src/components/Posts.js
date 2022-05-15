@@ -608,7 +608,7 @@ const Posts = (props) => {
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Modal title</h5>
+                  <p className="modal-title">Modal title</p>
                   <button
                     type="button"
                     className="btn-close"
@@ -638,7 +638,7 @@ const Posts = (props) => {
               </div>
             </div>
           </div>
-          <div className="card post-card align-self-center mb-3">
+          <div className="card post-card align-self-center mb-3 scale-in-center">
             <div className="post-row justify-content-between">
               <div className="d-flex justify-content-between">
                 <div className="left-header-box">
@@ -743,6 +743,7 @@ const Posts = (props) => {
               numlikes={n.likes.length}
               numcomments={n.comments.length}
               commentsdata={Seepost}
+              numlikesdata={n.likes}
             ></Like>
           </div>{" "}
         </div>
@@ -785,7 +786,7 @@ const Posts = (props) => {
               <div className="row">
                 <div className="col-sm-12">
                   <div className="write-post-section mb-3">
-                    <div className="card post-card align-self-center text-center">
+                    <div className="card post-card align-self-center text-center scale-in-center">
                       <div className="row">
                         <div className="col-lg-2">
                           <div className="p-3 pe-lg-0">
@@ -829,9 +830,11 @@ const Posts = (props) => {
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
+                  <p className="modal-title" id="exampleModalLabel">
+                  <strong>
                     Create Post
-                  </h5>
+                  </strong>
+                  </p>
                   <button
                     type="button"
                     className="btn-close"
