@@ -142,6 +142,10 @@ router.post("/removefriend", async (req, res) => {
 });
 
 router.get("/findFriend/:Id", async (req, res) => {
+  if(!req.params.Id){
+    res.status(400).json({error:"Please provide ID"});
+    return;
+  }
   try {
     let userId = req.params.Id;
     console.log(userId);

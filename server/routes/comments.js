@@ -93,6 +93,13 @@ router.delete("/:id", async (req, res) => {
     console.log(
       "----------------------------in delecte comment-----------------------"
     );
+    try {
+      let id = req.params.id;
+      let ID = errorhandle.checkAndGetID(id);
+    } catch (e) {
+      res.status(400).json({ error: e });
+      return;
+    }
     oldData = await commentData.get(req.params.id);
     // console.log(oldData.userThatPostedComment._id.toString());
     // console.log(req.session);
