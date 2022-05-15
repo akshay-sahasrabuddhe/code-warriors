@@ -3,6 +3,7 @@ const requests = mongoCollections.friendrequests;
 const users = mongoCollections.users;
 const conversa = mongoCollections.conversations;
 const messages = mongoCollections.messages;
+const cryptojs = require("crypto-js");
 
 let { ObjectId } = require("mongodb");
 const e = require("express");
@@ -16,7 +17,10 @@ async function addmessage(conversationId, sender, message) {
   }
 
   let messageCollection = await messages();
-
+  message = cryptojs.AES.encrypt(
+    JSON.stringify(message),
+    "MySecretKey"
+  ).toString();
   let newMessage = {
     conversationId: conversationId,
     senderId: sender,

@@ -181,7 +181,6 @@ function updateProfileCheck(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -237,7 +236,7 @@ function updateProfileCheck(
     }
   }
 
-  if (dateOfBirth) {
+  /* if (dateOfBirth) {
     if (!isString(dateOfBirth)) {
       throw "Enter dateOfBirth as string";
     } else if (check_for_spaces(dateOfBirth)) {
@@ -251,7 +250,7 @@ function updateProfileCheck(
     if (!(age > 13 && age < 120)) {
       throw "Sorry your age is not appropriate";
     }
-  }
+  } */
 
   if (gender) {
     if (!isString(gender)) {
@@ -320,6 +319,11 @@ function isDate(ExpiryDate) {
     return false;
   }
 
+  let currentYear = new Date().getFullYear();
+  if (year > currentYear) {
+    throw "Invalid year";
+  }
+
   mSeconds = new Date(year, month, day).getTime();
   objDate = new Date();
   objDate.setTime(mSeconds);
@@ -335,56 +339,59 @@ function isDate(ExpiryDate) {
   return true;
 }
 
-
-function isString(x)                    //common code for strings
-{
-  return Object.prototype.toString.call(x) === "[object String]"
+function isString(x) {
+  //common code for strings
+  return Object.prototype.toString.call(x) === "[object String]";
 }
 
-router.get('/session', async(req,res) => {
-    if(req.session.user){
-        res.status(200).json(req.session.user);
-    }else{
-    res.status(404).json({error:"not logged in"});
-    }
+router.get("/session", async (req, res) => {
+  if (req.session.user) {
+    res.status(200).json(req.session.user);
+  } else {
+    res.status(404).json({ error: "not logged in" });
+  }
 });
 
+router.post("/signup", upload.single("file"), async (req, res) => {
+  let imagePath = "";
+  let coverPath;
+  let profile;
+  let cover;
 
-router.post("/signup", upload.single('file') ,async(req,res)=>{
-    let imagePath="";
-    let coverPath;
-    let profile;
-    let cover;
-   
-let img = [];
-//console.log(req.file);
-/*req.files.map((f)=>{
+  let img = [];
+  //console.log(req.file);
+  /*req.files.map((f)=>{
     console.log(f);
 })*/
 
-try{
-
-    signUpCheck(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus)
-}
-
-catch(e)
-{
-    res.status(400).json({error:e}) 
-    return
-}
-
-try{
-  if (errorhandle.checkImage(req.file)) {
-    errorhandle.checkProperImage(req.file);
-    const result = await uploadFile(req.file);
-    await unlinkFile(req.file.path);
-    imagePath = `/images/${result.Key}`;
-  }
-}catch(e){
-    res.status(500).json({error:"Something wrong with the image"}) ;
+  try {
+    signUpCheck(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.email,
+      req.body.password,
+      req.body.dateOfBirth,
+      req.body.gender,
+      req.body.interestedIn,
+      req.body.relationshipStatus
+    );
+  } catch (e) {
+    res.status(400).json({ error: e });
     return;
-}
-/*
+  }
+
+  try {
+    if (errorhandle.checkImage(req.file)) {
+      errorhandle.checkProperImage(req.file);
+      const result = await uploadFile(req.file);
+      await unlinkFile(req.file.path);
+      imagePath = `/images/${result.Key}`;
+    }
+  } catch (e) {
+    res.status(500).json({ error: "Something wrong with the image" });
+    return;
+  }
+  /*
 try{
     const result = await uploadFile(img[1]);
     await unlinkFile(img[1].path);
@@ -395,201 +402,164 @@ try{
     return;
 }
 */
-try{
-   // const result = await uploadFile(req.file);
+  try {
+    // const result = await uploadFile(req.file);
     //await unlinkFile(req.file.path);
     //console.log(result);
     //imagePath = `/users/images/${result.Key}`;
     //console.log(imagePath);
     //console.log("here");
-    let user= await usersData.signUp(req.body.firstName,req.body.lastName,req.body.email,req.body.password,req.body.dateOfBirth,req.body.gender,req.body.interestedIn,req.body.relationshipStatus,imagePath);
-    
-    res.json({signup:"Successful"}).status(200)
+    let user = await usersData.signUp(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.email,
+      req.body.password,
+      req.body.dateOfBirth,
+      req.body.gender,
+      req.body.interestedIn,
+      req.body.relationshipStatus,
+      imagePath
+    );
 
-}
-
-catch(e)
-{
-
-    if(e=='email already exists')
-
-    res.status(400).json({error:e}) 
-
-    else
-    res.status(500).json({error:"Some issue with the server"}) 
-
-}
-
-
-})
-
-
+    res.json({ signup: "Successful" }).status(200);
+  } catch (e) {
+    if (e == "email already exists") res.status(400).json({ error: e });
+    else res.status(500).json({ error: "Some issue with the server" });
+  }
+});
 
 router.get("/images/:key", (req, res) => {
-    console.log(req.params);
-    const key = req.params.key;
-    const readStream = getFileStream(key);
-  
-    readStream.pipe(res);
-  });
+  console.log(req.params);
+  const key = req.params.key;
+  const readStream = getFileStream(key);
 
-  router.get("/cover/:key", (req, res) => {
-    console.log(req.params);
-    const key = req.params.key;
-    const readStream = getFileStream(key);
-  
-    readStream.pipe(res);
-  });
+  readStream.pipe(res);
+});
 
+router.get("/cover/:key", (req, res) => {
+  console.log(req.params);
+  const key = req.params.key;
+  const readStream = getFileStream(key);
 
+  readStream.pipe(res);
+});
 
-router.post('/login', async(req,res)=>{
+router.post("/login", async (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
 
+  try {
+    loginCheck(email, password);
+  } catch (e) {
+    res.status(400).json({ error: e });
+    return;
+  }
 
-    let email=req.body.email;
-    let password=req.body.password;
-        
-    try{
-  
-      loginCheck(email,password)
+  try {
+    const login = await usersData.login(req.body.email, req.body.password);
+    console.log("here");
+
+    let name = login.firstName + " " + login.lastName;
+    let id = login._id;
+    const nameHash = cryptojs.AES.encrypt(
+      JSON.stringify(name),
+      "MySecretKey"
+    ).toString();
+    const idHash = cryptojs.AES.encrypt(
+      JSON.stringify(id),
+      "MySecretKey"
+    ).toString();
+    req.session.user = { name: nameHash, _id: idHash, id: login._id };
+    console.log(nameHash);
+    res.status(200).json({ name: nameHash, _id: idHash });
+  } catch (e) {
+    if (e == "Either the username or password is invalid")
+      res.status(403).json({ error: e });
+    else res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/logout", async (req, res) => {
+  if (req.session.user) {
+    try {
+      usersData.logout(req.session.user.id);
+
+      res.clearCookie("AuthCookie").status(200).json({ user: "logged out" });
+
+      req.session.destroy();
+    } catch (e) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
+
+router.patch("/updateprofile", async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    gender,
+    interestedIn,
+    relationshipStatus,
+  } = req.body;
+
+  try {
+    if (Object.keys(req.body).length == 0) {
+      throw "Please enter data to be changed";
     }
 
-      catch(e)
-    {
-      res.status(400).json({error:e}) 
-      return
-  
+    updateProfileCheck(
+      firstName,
+      lastName,
+      email,
+      password,
+      gender,
+      interestedIn,
+      relationshipStatus
+    );
+  } catch (e) {
+    res.status(400).json({ error: e });
+    return;
+  }
+
+  try {
+    await usersData.updateProfile(
+      req.session.user.id,
+      firstName,
+      lastName,
+      email,
+      password,
+      gender,
+      interestedIn,
+      relationshipStatus
+    );
+
+    res.json({ updateprofile: "Successful" }).status(200);
+  } catch (e) {
+    if (e) {
+      res.status(400).json({ error: e });
+
+      return;
     }
 
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-    try{
-  
-        const login= await usersData.login(req.body.email,req.body.password)
-        console.log("here");
-       
-        let name = login.firstName + " " +login.lastName;
-        let id = login._id;
-        const nameHash = cryptojs.AES.encrypt(JSON.stringify(name), 'MySecretKey').toString();;
-        const idHash =  cryptojs.AES.encrypt(JSON.stringify(id), 'MySecretKey').toString();;
-        req.session.user={name: nameHash , _id : idHash, id:login._id}
-        console.log(nameHash);
-        res.status(200).json({name: nameHash, _id : idHash});
-       
-    }
-  
-        catch(e)
-      {
-          if(e=='Either the username or password is invalid')
-        res.status(403).json({error:e}) 
-        else
-        res.status(500).json({error:"Internal Server Error"})
-    
-      }
+router.get("/getUserData", async (req, res) => {
+  try {
+    /* let bytes = cryptojs.AES.decrypt(req.session.user._id, 'MySecretKey');
 
-  })
+            let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)) */ let userData =
+      await usersData.getUserData(req.session.user.id);
 
-
-  router.get('/logout',async(req,res)=>{
-
-    if(req.session.user)
-    {
-    
-    try{
-
-        usersData.logout(req.session.user.id)
-
-        res.clearCookie('AuthCookie').status(200).json({user: "logged out"})
-
-        req.session.destroy()
-
-    }
-
-    catch(e)
-    {
-        res.status(500).json({error:"Internal Server Error"})  
-
-      
-    }
-
-    }
-  
-    })
-  
-
-
-    router.patch('/updateprofile', async(req,res)=>{
-
-
-        const {firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus}= req.body
-
-
-        try{
-
-          if(Object.keys(req.body).length==0)
-          {
-            throw 'Please enter data to be changed'
-          }
-
-            updateProfileCheck(firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
-        }
-        
-        catch(e)
-        {
-            res.status(400).json({error:e}) 
-            return
-        }
-
-
-        try{
-
-        await usersData.updateProfile(req.session.user.id,firstName,lastName,email,password,dateOfBirth,gender,interestedIn,relationshipStatus)
-
-        res.json({updateprofile:"Successful"}).status(200)
-
-        }
-
-        catch(e)
-        {
-            if(e=="User already exists with this email")
-            {
-                res.status(400).json({error:e}) 
-
-                return
-            }
-
-            res.status(500).json({error:"Internal Server Error"}) 
-        }
-        
-
-
-
-    })
-
-
-
-    router.get('/getUserData', async(req,res)=>{
-
-        try{
-
-            /* let bytes = cryptojs.AES.decrypt(req.session.user._id, 'MySecretKey');
-
-            let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)) */;
-
-            let userData= await usersData.getUserData(req.session.user.id)
-
-                res.status(200).json(userData)
-
-        }
-
-        catch(e)
-        {
-            res.status(500).json({error:"Internal Server Error"})
-        }
-  
-    
-    })
+    res.status(200).json(userData);
+  } catch (e) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 ///this is the conflict part now..............................
-
 
 function check_for_spaces(string) {
   //common code for strings
@@ -600,7 +570,6 @@ function check_for_spaces(string) {
     return true;
   }
 }
-
 
 router.get("/userprofile/:Id", async (req, res) => {
   try {
@@ -624,8 +593,6 @@ router.post("/userprofile/sendRequest", async (req, res) => {
   }
 });
 
-
-
 router.get("/getallusers/:search", async (req, res) => {
   try {
     console.log("reached in routes");
@@ -638,48 +605,29 @@ router.get("/getallusers/:search", async (req, res) => {
   }
 });
 
-
-
-router.get("/getImage/:id", async(req, res)=>{
-
+router.get("/getImage/:id", async (req, res) => {
   console.log(req.params.id);
-let user= await usersData.getUserById(req.params.id)
-console.log(user);
-
-if(user.d.profileImage!='')
-{
-
-  res.status(200).json({profileImage: user.d.profileImage})
-}
-else
-{
-
-  res.status(404).json({error: "NoImage"})
-}
-
-
-
-
-})
-
-router.get("/getImage/:id", async(req, res)=>{
-  console.log(req.params.id);
-  let user= await usersData.getUserById(req.params.id)
+  let user = await usersData.getUserById(req.params.id);
   console.log(user);
-  if(user){
-  if(user.d.profileImage!='')
-  {
-  
-    res.status(200).json({profileImage: user.d.profileImage})
-  }
-}
-  else
-  {
-    res.status(404).json({error: "NoImage"})
-  }
- 
-  })
-  
 
+  if (user.d.profileImage != "") {
+    res.status(200).json({ profileImage: user.d.profileImage });
+  } else {
+    res.status(404).json({ error: "NoImage" });
+  }
+});
+
+router.get("/getImage/:id", async (req, res) => {
+  console.log(req.params.id);
+  let user = await usersData.getUserById(req.params.id);
+  console.log(user);
+  if (user) {
+    if (user.d.profileImage != "") {
+      res.status(200).json({ profileImage: user.d.profileImage });
+    }
+  } else {
+    res.status(404).json({ error: "NoImage" });
+  }
+});
 
 module.exports = router;

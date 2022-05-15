@@ -3,14 +3,13 @@ import Conversations from "./Conversations";
 import Message from "./Message";
 import "./messenger.css";
 import { useNavigate, Navigate } from "react-router-dom";
-
+import cryptojs from "crypto-js";
 import React, { useState, useEffect, useRef } from "react";
 
 import "../../App.css";
 
 import axios from "axios";
 
-import cryptojs from "crypto-js";
 import { io } from "socket.io-client";
 import { data } from "jquery";
 
@@ -135,7 +134,7 @@ export default function Messenger() {
       `http://localhost:3000/conversation/getconvo/${id}`
     );
 
-    console.log(resp.data.result);
+    console.log(resp);
     if (resp.data.result) {
       setConvoData(resp.data.data);
     } else {
@@ -194,13 +193,29 @@ export default function Messenger() {
     //if (!offline) {
     const recId = currrentChat1.members.find((member) => member != id);
     console.log(recId);
+    let encpmsg = cryptojs.AES.encrypt(
+      JSON.stringify(newmessages),
+      "MySecretKey"
+    ).toString();
     socket.current.emit("sendMessage", {
       senderId: id,
       receiverId: recId,
-      message: newmessages,
+      message: encpmsg,
     });
     // }
-    await axios
+    const instance = axios.create({
+      baseURL: "*",
+      timeout: 20000,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve only if the status code is less than 500
+      },
+    });
+    await instance
       .post(`http://localhost:3000/message/addmessage`, newMessage)
       .then(function (response) {
         setMessages([...messages, response.data.newMessage]);

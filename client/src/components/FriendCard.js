@@ -9,6 +9,19 @@ export default function FriendCard(props) {
   useEffect(() => {
     fetchdata();
   }, []);
+  const instance = axios.create({
+    baseURL: "*",
+    timeout: 20000,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+    validateStatus: function (status) {
+      return status < 500; // Resolve only if the status code is less than 500
+    },
+  });
+
   async function fetchdata() {
     const instance = axios.create({
       baseURL: "*",
@@ -35,7 +48,7 @@ export default function FriendCard(props) {
     }
   }
   async function handleAccept() {
-    await axios
+    await instance
       .post(`http://localhost:3000/friend/addfriend`, {
         senderId: props.receiverId,
         userId: props.userId,
@@ -55,7 +68,7 @@ export default function FriendCard(props) {
       });
   }
   async function handleReject() {
-    await axios
+    await instance
       .post(`http://localhost:3000/friend/cancelRequest`, {
         sender: props.receiverId,
         receiver: props.userId,
