@@ -325,6 +325,12 @@ function isDate(ExpiryDate) {
     return false;
   }
 
+  let currentYear = new Date().getFullYear();
+  if(year>currentYear)
+  {
+    throw "Invalid year"
+  }
+
   mSeconds = new Date(year, month, day).getTime();
   objDate = new Date();
   objDate.setTime(mSeconds);
@@ -510,7 +516,6 @@ async function updateProfile(
     lastName,
     email,
     password,
-    dateOfBirth,
     gender,
     interestedIn,
     relationshipStatus
@@ -561,7 +566,6 @@ async function updateData(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -577,17 +581,33 @@ async function updateData(
   if (firstName && firstName != object.firstName) {
     updateData.firstName = firstName;
   }
+  else if (firstName && firstName == object.firstName)
+  {
+    throw "Please enter new first name"
+  }
 
   if (lastName && lastName != object.lastName) {
     updateData.lastName = lastName;
   }
+  else if (lastName && lastName == object.lastName)
+  {
+    throw "Please enter new last name"
+  }
 
   if (email && email.toLowerCase() != object.email) {
-    if ((await findUser(email)) != null) {
-      throw "User already exists with this email";
-    }
+
+    const userinfo = await findUser(email);
+
+  if (userinfo != null) {
+    throw "User already exists with this email";
+  }
 
     updateData.email = email.toLowerCase();
+  }
+
+  else if (email && email.toLowerCase() == object.email)
+  {
+    throw "Please enter new email"
   }
 
   if (password) {
@@ -600,22 +620,40 @@ async function updateData(
 
       updateData.password = hash;
     }
+    else{
+      throw "Please enter new password"
+    }
   }
 
-  if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
+  /* if (dateOfBirth && dateOfBirth != object.dateOfBirth) {
     updateData.dateOfBirth = dateOfBirth;
   }
-
+  else if (dateOfBirth && dateOfBirth == object.dateOfBirth)
+  {
+    throw "Please enter different date of birth"
+  } */
   if (gender && gender != object.gender) {
     updateData.gender = gender;
+  }
+  else if (gender && gender == object.gender)
+  {
+    throw "Please enter new gender"
   }
 
   if (interestedIn && interestedIn != object.interestedIn) {
     updateData.interestedIn = interestedIn;
   }
+  else if (interestedIn && interestedIn == object.interestedIn)
+  {
+    throw "Please enter new interested in"
+  }
 
   if (relationshipStatus && relationshipStatus != object.relationshipStatus) {
     updateData.relationshipStatus = relationshipStatus;
+  }
+  else if (relationshipStatus && relationshipStatus == object.relationshipStatus)
+  {
+    throw "Please enter new relationship status"
   }
 
   return updateData;

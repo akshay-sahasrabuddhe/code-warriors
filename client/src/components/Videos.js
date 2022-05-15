@@ -13,7 +13,7 @@ const Videos = (props) => {
  
     let videoList = null;
     const [videos, setVideos] = useState(undefined);
-    const [loading, setLoading] = useState(undefined);
+    const [loading, setLoading] = useState(true);
     const [session , setSession] = useState(true);
     useEffect(() => {
         async function checkSession(){
@@ -35,7 +35,7 @@ const Videos = (props) => {
                 console.log(data);
                 if('error' in data){
                     setSession(false);
-                    setLoading(true);
+                    //setLoading(true);
                     //return;
                 }
                 else{
@@ -56,11 +56,11 @@ const Videos = (props) => {
                     console.log("here");
                        console.log("works");
                        setSession(true);
-                        setLoading(false);
+                        //setLoading(false);
                    }
                    else{
                     setSession(false);
-                    setLoading(false); 
+                    //setLoading(false); 
                    }
                 }
             }
@@ -77,8 +77,9 @@ const Videos = (props) => {
                 const { data } = await axios.get(url);
                 //const  data  = await fetch(url,{mode:'cors'});
                 if(data){
-                    setLoading(false);
+                    
                     setVideos(data.video_results);
+                    setLoading(false);
                 }
                 console.log(data)
             }
@@ -94,6 +95,7 @@ const Videos = (props) => {
         }
         else{
             setSession(false);
+            setLoading(false);
         }
     },[]);
 
@@ -110,6 +112,14 @@ const Videos = (props) => {
         </Card>
     });
 
+    if(loading){
+        return (
+            <div>
+            <Navigation></Navigation>
+            <span>Loading.....</span>
+            </div>
+            );
+    }
     if(!session){
         //alert("You should login first");
         return (

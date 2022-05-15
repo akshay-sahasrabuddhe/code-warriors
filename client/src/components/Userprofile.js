@@ -73,7 +73,7 @@ const Userprofile = (props) => {
         console.log(data);
         if ("error" in data) {
           setSession(false);
-          setLoading(false);
+          //setLoading(false);
           // return;
         } else {
           let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
@@ -93,7 +93,7 @@ const Userprofile = (props) => {
             setSession(true);
           } else {
             setSession(false);
-            setLoading(false);
+            //setLoading(false);
           }
           // return;
         }
@@ -151,9 +151,10 @@ const Userprofile = (props) => {
     if (resp.data.data.res) {
       setAbout(resp.data.data.d);
       console.log(about);
-      setLoading(false);
+      
       let frnds = resp.data.data.d.friends;
       setFndData(frnds);
+      setLoading(false);
       if (paramId.id != id) {
         for (let i = 0; i < frnds.length; i++) {
           if (frnds[i] == id) {

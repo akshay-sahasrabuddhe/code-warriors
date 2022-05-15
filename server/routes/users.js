@@ -181,7 +181,6 @@ function updateProfileCheck(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -237,7 +236,7 @@ function updateProfileCheck(
     }
   }
 
-  if (dateOfBirth) {
+  /* if (dateOfBirth) {
     if (!isString(dateOfBirth)) {
       throw "Enter dateOfBirth as string";
     } else if (check_for_spaces(dateOfBirth)) {
@@ -251,7 +250,7 @@ function updateProfileCheck(
     if (!(age > 13 && age < 120)) {
       throw "Sorry your age is not appropriate";
     }
-  }
+  } */
 
   if (gender) {
     if (!isString(gender)) {
@@ -318,6 +317,11 @@ function isDate(ExpiryDate) {
 
   if (year < 1000 || year > 3000) {
     return false;
+  }
+
+  let currentYear = new Date().getFullYear();
+  if (year > currentYear) {
+    throw "Invalid year";
   }
 
   mSeconds = new Date(year, month, day).getTime();
@@ -495,7 +499,6 @@ router.patch("/updateprofile", async (req, res) => {
     lastName,
     email,
     password,
-    dateOfBirth,
     gender,
     interestedIn,
     relationshipStatus,
@@ -511,7 +514,6 @@ router.patch("/updateprofile", async (req, res) => {
       lastName,
       email,
       password,
-      dateOfBirth,
       gender,
       interestedIn,
       relationshipStatus
@@ -528,7 +530,6 @@ router.patch("/updateprofile", async (req, res) => {
       lastName,
       email,
       password,
-      dateOfBirth,
       gender,
       interestedIn,
       relationshipStatus
@@ -536,7 +537,7 @@ router.patch("/updateprofile", async (req, res) => {
 
     res.json({ updateprofile: "Successful" }).status(200);
   } catch (e) {
-    if (e == "User already exists with this email") {
+    if (e) {
       res.status(400).json({ error: e });
 
       return;
