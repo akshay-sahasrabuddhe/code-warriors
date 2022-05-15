@@ -7,6 +7,14 @@ const e = require("express");
 
 async function sendReq(sender, receiver) {
   try {
+    if(!sender){
+      throw "Please provide sender";
+    }
+
+    if(!receiver){
+      throw "Please provide receiver";
+    }
+
     let requestdata1 = {
       sender: sender,
       receiver: receiver,
@@ -36,6 +44,18 @@ async function sendReq(sender, receiver) {
   }
 }
 async function searchReq(logUser, visUser) {
+  if(!logUser){
+    throw "please provide data";
+  }
+  if(!logUser.trim().length === 0){
+    throw "please provide data";
+  }
+  if(!visUser){
+    throw "Please provide data";
+  }
+  if(!visUser.trim().length === 0){
+    throw "please provide data";
+  }
   let requestCollection = await requests();
 
   let searchdata1 = await requestCollection.findOne({
@@ -63,6 +83,18 @@ async function searchReq(logUser, visUser) {
 }
 
 async function canReq(sender, receiver) {
+  if(!sender){
+    throw "please provide data";
+  }
+  if(!sender.trim().length === 0){
+    throw "please provide data";
+  }
+  if(!receiver){
+    throw "Please provide data";
+  }
+  if(!receiver.trim().length === 0){
+    throw "please provide data";
+  }
   try {
     let requestCollection = await requests();
     const deletereq1 = await requestCollection.deleteOne({
