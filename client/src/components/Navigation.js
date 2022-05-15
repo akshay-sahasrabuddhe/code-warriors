@@ -287,11 +287,10 @@ const Navigation = (props) => {
       </nav>
       <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
         <a className="nav-link pt-2 pb-2" href={`/userprofile/${id}`}>
-          <aside className="material-icons nav-icons d-flex">
+          
             <UserImage id={id}></UserImage>
-          </aside>
           {/* <aside className="material-icons nav-icons">account_circle</aside> */}
-          <span>{user}</span>
+          <span className="ms-3">{user}</span>
         </a>
         {/* <a className="nav-link" href="/"><aside className="material-icons nav-icons">people_alt</aside><span>Friends</span></a> */}
         <a className="nav-link" href="/videos">
