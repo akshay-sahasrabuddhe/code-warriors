@@ -77,7 +77,7 @@ const Posts = (props) => {
         console.log(data);
         if ("error" in data) {
           setSession(false);
-          //setLoading(false);
+          setLoading(false);
           // return;
         } else {
           let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
@@ -94,10 +94,10 @@ const Posts = (props) => {
             console.log("here");
             console.log("works");
             setSession(true);
-            //setLoading(false);
+            setLoading(false);
           } else {
             setSession(false);
-            //setLoading(false);
+            setLoading(false);
           }
           // return;
         }
@@ -106,15 +106,7 @@ const Posts = (props) => {
       }
     }
 
-    if (localStorage.length !== 0) {
-      console.log("here");
-      checkSession();
-      //return;
-    } else {
-      console.log("here in the outer if");
-      //setLoading(false);
-      //setSession(false);
-    }
+   
 
     async function fetchdata() {
       const instance = axios.create({
@@ -135,8 +127,20 @@ const Posts = (props) => {
       setSeepost(seepostdata.data);
       setLoading(false);
     }
-    fetchdata();
-  }, []);
+    if (localStorage.length !== 0) {
+      console.log("here");
+      checkSession();
+      if(session){
+        fetchdata();
+      }
+      //return;
+    } else {
+      console.log("here in the outer if");
+      setLoading(false);
+      //setSession(false);
+    }
+    
+  }, [session]);
 
   function handleOpenModal(n) {
     console.log(n);

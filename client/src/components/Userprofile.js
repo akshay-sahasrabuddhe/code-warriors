@@ -33,6 +33,7 @@ const Userprofile = (props) => {
   const [fndData, setFndData] = useState([]);
   const [aboutedit, setAboutEdit] = useState(undefined);
   const [loading, setLoading] = useState(true);
+  const [err , setErr] = useState(false);
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   /*if (
     localStorage.getItem("user") &&
@@ -166,6 +167,7 @@ const Userprofile = (props) => {
     } else {
       console.log("user not found");
       //set state for user profile not found
+      setErr(true);
     }
   }
   async function fetchRequestData() {
@@ -263,6 +265,16 @@ const Userprofile = (props) => {
     if (!session) {
       return <Navigate to="/" replace />;
     } else {
+      if(err){
+        return(
+          <div>
+            <Navigation></Navigation>
+            <h1>No user found</h1>
+
+          </div>
+        );
+      }
+      else{
       console.log(id);
       console.log(paramId.id);
 
@@ -418,7 +430,7 @@ const Userprofile = (props) => {
           {/* // ---------- End of User profiel Tabs Section ---------- //  */}
         </>
       );
-    }
+    }}
   }
 };
 

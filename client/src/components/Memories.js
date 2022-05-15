@@ -10,11 +10,14 @@ import { Modal } from "bootstrap";
 import axios from "axios";
 import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import cryptojs from "crypto-js";
 
 const Memories = (props) => {
   const [getmemoriesdata, setgetmemoriesdata] = useState([]);
-
+  const [session, setSession] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [id, setId] = useState("");
   const openComments = (param) => (event) => {
     let a = "";
     if (event.target.tagName == "SPAN") {
@@ -35,6 +38,55 @@ const Memories = (props) => {
     memcomcontainer2 = null;
 
   useEffect(() => {
+
+    async function checkSession() {
+      try {
+        const instance = axios.create({
+          baseURL: "*",
+          timeout: 20000,
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+          validateStatus: function (status) {
+            return status < 500; // Resolve only if the status code is less than 500
+          },
+        });
+
+        const { data } = await instance.get(`http://localhost:3000/session`);
+        console.log(data);
+        if ("error" in data) {
+          setSession(false);
+          //setLoading(false);
+          // return;
+        } else {
+          let bytes1 = cryptojs.AES.decrypt(data._id, "MySecretKey");
+          console.log(bytes1);
+          let tempid = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
+
+          let tempid1 = localStorage.getItem("userSession");
+          let bytes = cryptojs.AES.decrypt(tempid1, "MySecretKey");
+          console.log(bytes);
+          // let decid = JSON.parse(temp);
+          let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+
+          if (tempid === decid.toString()) {
+            setId(decid);
+            console.log("here");
+            console.log("works");
+            setSession(true);
+          } else {
+            setSession(false);
+            //setLoading(false);
+          }
+          // return;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     async function getallmemories() {
       const instance = axios.create({
         baseURL: "*",
@@ -58,8 +110,22 @@ const Memories = (props) => {
       console.log(seecomdata.data[0]);
       setgetmemoriesdata(seecomdata.data[0]);
     }
-    getallmemories();
-  }, []);
+
+    if (localStorage.length !== 0) {
+      console.log("here");
+      checkSession();
+      if (session) {
+        getallmemories();
+        setLoading(false);
+      }
+      //return;
+    } else {
+      console.log("here in the outer if");
+      setLoading(false);
+      setSession(false);
+    }
+
+  }, [session]);
 
   memcomcontainer =
     getmemoriesdata.today &&
@@ -372,7 +438,17 @@ const Memories = (props) => {
         </div>
       );
     });
-
+    if (loading) {
+      return (
+        <div>
+          <h1>Loading...</h1>
+        </div>
+      );
+    } else {
+      if (!session) {
+        return <Navigate to="/" replace />;
+      } else {
+    
   return (
     // ---------- Start of Posts ---------- //
     <>
@@ -405,6 +481,7 @@ const Memories = (props) => {
       </section>
     </>
   );
+      }}
 };
 
 export default Memories;

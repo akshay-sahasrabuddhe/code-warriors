@@ -79,6 +79,14 @@ app.get("/getUserData", async (req, res, next) => {
   }
 });
 
+app.get("/getallusers", async (req, res, next) => {
+  if (!req.session.user) {
+    res.status(403).json({ user: "User is not logged in" });
+  } else {
+    next();
+  }
+});
+
 app.get("/getImage", async (req, res, next) => {
   if (!req.session.user) {
     res.status(403).json({ user: "User is not logged in" });

@@ -5,7 +5,7 @@ import Navigation from "./Navigation";
 import { useNavigate, Navigate } from "react-router-dom";
 import cryptojs from 'crypto-js';
 import '../App.css';
-//Api Key - e0ef8de9236a4c608dcdadbc7f2c3b2c
+
 const API_KEY = 'e0ef8de9236a4c608dcdadbc7f2c3b2c';
 const url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey='+API_KEY;
 const News = (props) => {
@@ -34,8 +34,7 @@ const News = (props) => {
                 console.log(data);
                 if('error' in data){
                     setSession(false);
-                    setLoading(true);
-                    //return;
+           
                 }
                 else{
                     
@@ -46,7 +45,7 @@ const News = (props) => {
                     let id = localStorage.getItem("userSession");
                     let bytes = cryptojs.AES.decrypt(id, 'MySecretKey');
                     console.log(bytes);
-                   // let decid = JSON.parse(temp);
+
                    let decid = JSON.parse(bytes.toString(cryptojs.enc.Utf8)); 
                    
                    
@@ -55,11 +54,9 @@ const News = (props) => {
                     console.log("here");
                        console.log("works");
                        setSession(true);
-                       // setLoading(false);
                    }
                    else{
                     setSession(false);
-                    //setLoading(false); 
                    }
                 }
             }

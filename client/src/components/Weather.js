@@ -110,7 +110,7 @@ const Weather = (props) => {
                 console.log(data);
                 if('error' in data){
                     setSession(false);
-                    setLoading(true);
+                    setLoading(false);
                     //return;
                 }
                 else{
@@ -131,11 +131,11 @@ const Weather = (props) => {
                     console.log("here");
                        console.log("works");
                        setSession(true);
-                        //setLoading(false);
+                        setLoading(false);
                    }
                    else{
                     setSession(false);
-                    //setLoading(false); 
+                    setLoading(false); 
                    }
                 }
             }
@@ -176,12 +176,14 @@ const Weather = (props) => {
         checkSession();
         if(session){
             fetchData();
+
         }
         //return;
     }
     else{
         console.log("here in the outer if");
         setSession(false);
+        setLoading(false);
     }
     
     }, [latitude, longitude]);
