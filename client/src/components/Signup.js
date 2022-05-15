@@ -15,26 +15,6 @@ import "../App.css";
 import axios from "axios";
 import ReactModal from "react-modal";
 
-/*const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: theme.spacing(2),
-  
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: '300px',
-      },
-      '& .MuiButtonBase-root': {
-        margin: theme.spacing(2),
-      },
-      
-    },
-  }));
-  */
-
 ReactModal.setAppElement("#root");
 const customStyles = {
   content: {
@@ -52,11 +32,10 @@ const customStyles = {
 };
 
 const Signup = (props) => {
-  //const classes = useStyles();
+ 
   const [success, setSuccess] = useState(false);
   const [file, setFile] = useState([]);
-  //const [profile,setProfile] = useState(undefined);
-  //const [cover, setCover] = useState(undefined);
+
   const [showModal, setShowModal] = useState(props.isOpen);
   let firstName;
   let lastName;
@@ -76,19 +55,11 @@ const Signup = (props) => {
   const fileSelected1 = (e) => {
     const temp = e.target.files[0];
 
-    //setFile(oldArray => [...oldArray,temp]);
     setFile(temp);
-    //setProfile(temp);
+
   };
 
-  /* const fileSelected2 = (e) => {
-        const temp = e.target.files[0];
-        let cover = JSON.parse(JSON.stringify(temp));
-        cover.name = "cover";
-        setFile(oldArray => [...oldArray,cover]);
-        //setCover(temp);
-    }*/
-
+ 
   let body = null;
 
   if (props.modal === "signup") {
@@ -97,7 +68,7 @@ const Signup = (props) => {
         className="signupForm"
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log(file);
+       
           let btn = document.getElementById("sub");
           btn.disabled = true;
           if (!firstName.value) {
@@ -177,15 +148,13 @@ const Signup = (props) => {
             let birth = new Date(dob.value);
             var month_diff = Date.now() - birth.getTime();
 
-            //convert the calculated difference in date format
             let age_dt = new Date(month_diff);
 
             //extract year from date
             let year = age_dt.getUTCFullYear();
             let y = birth.getFullYear();
             let currentYear = new Date().getFullYear();
-            //console.log(year);
-            //console.log(currentYear);
+           
             if (y > currentYear) {
               alert("Invalid Year");
               dob.value = "";
@@ -194,7 +163,7 @@ const Signup = (props) => {
             }
             //now calculate the age of the user
             let age = Math.abs(year - 1970);
-            console.log(age);
+    
 
             if (!(age > 13 && age < 120)) {
               alert("Should be between age 13 and 120");
@@ -204,7 +173,6 @@ const Signup = (props) => {
             }
           }
           let dateOfBirth = new Date(dob.value + " EST");
-          console.log(dateOfBirth);
 
           dateOfBirth =
             String(dateOfBirth.getMonth() + 1).padStart(2, "0") +
@@ -225,24 +193,16 @@ const Signup = (props) => {
             btn.disabled = false;
             return;
           }
-          // console.log(gender.value);
-
-          /*if((gender.value.toString() !== 'male') || 
-               (gender.value.toString() !== 'female')
-               || (gender.value.toString() !== 'others') ||
-                (gender.value.toString() !== 'nodisclosure')){
-                    alert("Please provide valid gender");
-                   return;
-                }*/
+          
           const relationship = [
             "married",
             "single",
             "inarelation",
             "nodisclosure",
           ];
-          console.log(relationStatus.value);
+         
           if (relationStatus.value) {
-            console.log(relationStatus.value);
+            
             if (!relationship.includes(relationStatus.value)) {
               alert("Please provide valid relation status");
               btn.disabled = false;
@@ -250,11 +210,7 @@ const Signup = (props) => {
             }
           }
 
-          //let image = JSON.stringify(file);
-
-          // console.log(file[0]);
-          //console.log(file[1]);
-
+        
           let user = {
             firstName: firstName.value,
             lastName: lastName.value,
@@ -274,24 +230,13 @@ const Signup = (props) => {
           formData.append("gender", gender.value);
           formData.append("relationshipStatus", relationStatus.value);
           formData.append("interestedIn", interests.value);
-          //formData.append("profileImage", file);
-          //console.log(formData.get('profileImage'));
+    
 
-          //formData.append("user",JSON.stringify(user));
           formData.append("file", file);
-          /*  console.log(file);
-               console.log("Printing object");
-               file.forEach((f) => {
-                   console.log(f);
-                   formData.append("files", f)
-            })*/
-
-          // let temp = JSON.stringify(user);
-          //formData.append("user",temp);
+          
           let flag = false;
           let url = "http:/localhost:3000/signup";
-          //console.log(user);
-          //let msg = await axios.post('http:/localhost:3000/signup', user);
+         
           const { data } = await axios.post(
             `http://localhost:3000/signup`,
             formData,
@@ -305,20 +250,8 @@ const Signup = (props) => {
               },
             }
           );
-          /* .then(function (response) {
-                    console.log(response);
-                    if(response.status === 200){
-                        alert("User registered");
-                        flag = true;
-                    }
-                  })
-                  .catch(function (error) {
-                    console.log(error);
-                    //setSuccess(false);
-                    alert("There was some error please try again");
-                   
-                  });*/
-          console.log(data.error);
+          
+          
           if (!("error" in data)) {
             alert("User registered");
             flag = true;
@@ -343,24 +276,7 @@ const Signup = (props) => {
             accept="image/*"
           />
         </Form.Group>
-        {/* <form method="post" action="/" enctype="multipart/form-data">
-          <label class="mr-sm-2" for="inlineFormCustomSelect">
-            Select a file to upload
-          </label>
-          <div class="form-row align-items-center">
-            <div class="custom-file">
-              <input
-                onChange={fileSelected1}
-                name="file"
-                type="file"
-                accept="image/*"
-              ></input>
-              <label class="custom-file-label" for="customFile">
-                Choose file
-              </label>
-            </div>
-          </div>
-        </form> */}
+        
         <Row className="mb-4">
           <Form.Group as={Col}>
             <FloatingLabel
