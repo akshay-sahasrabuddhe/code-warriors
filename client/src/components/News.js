@@ -88,7 +88,7 @@ const News = (props) => {
             <Card.Body className="card-body">
             <a className="card-link" href={n.url} target="_blank">
                 <Card.Img className="card-img  pb-3" variant="top" 
-                src={n.urlToImage}/>
+                src={n.urlToImage} alt="News Image" />
                 <Card.Title className="card-title">{n.title}</Card.Title></a>
                 <Card.Text className="p">
                     {n.content}

@@ -418,7 +418,7 @@ const Userprofile = (props) => {
                         );
                       })
                     ) : (
-                      <h3>No Friends</h3>
+                      <p>No Friends</p>
                     )}
                   </div>
                 </div>

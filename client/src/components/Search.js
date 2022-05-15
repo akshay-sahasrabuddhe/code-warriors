@@ -109,7 +109,7 @@ const Search = (props) => {
                         <img src={finalstr} className="friend-list-card-img card-img-top" alt="User Profile Pic" style={{height:"174px"}} />
                         </div>
                         <div className="card-body">
-                            <h5 className="card-title text-center search-frds-title">{n.firstName}</h5>
+                            <p className="card-title text-center search-frds-title"><strong> {n.firstName} </strong></p>
                         </div>
                     </div>
                     </a>

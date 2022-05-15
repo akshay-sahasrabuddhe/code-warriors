@@ -324,20 +324,14 @@ const Like = (props) => {
     <>
       <div className="post-row flex-row justify-content-between me-3 ms-3">
         <div className="d-flex flex-row">
-        {flag && flag?
-          <span
-            className="material-icons messanger-dark-color me-2 unlike-show-btn"
-            id={props.mainid}
-          >
-            thumb_up
-          </span>:
+        
           <span
             className="material-icons-outlined messanger-dark-color me-2 unlike-show-btn"
             id={props.mainid}
           >
             thumb_up
           </span>
-          }
+          
           <p className="text-secondary">{likedata}</p>
         </div>
         <div className="d-flex flex-row">

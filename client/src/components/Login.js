@@ -19,7 +19,7 @@ const Login = (props) => {
     return(
       
         <div className="log">
-            <h4>Login Form</h4>
+            <p className="display-6"><strong>Login Form</strong></p>
             <Form className='loginForm' onSubmit={
                 async (e) =>{
                     let btn = document.getElementById("subb");

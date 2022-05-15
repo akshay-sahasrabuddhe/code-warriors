@@ -467,7 +467,7 @@ const Signup = (props) => {
           },
         }}
       >
-        <h4>Signup Form</h4>
+        <p className="display-6"><strong>Signup Form</strong></p>
         <Container>
           <Row>{body}</Row>
           <Row>

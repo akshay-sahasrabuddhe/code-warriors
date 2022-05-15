@@ -328,8 +328,13 @@ h4{
   position: absolute;
 }
 
+.btn.btn-outline-primary{
+  color: #0066ee;
+  border-color:#0066ee ;
+}
+
 .vertical-navigation .nav-link{
-  color:#006AFF;
+  color:#0065f3;
   font-size: 16px;
   text-align: center;
   padding: 5px 30px 5px 15px;
