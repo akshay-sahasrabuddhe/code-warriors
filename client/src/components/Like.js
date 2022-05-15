@@ -18,6 +18,8 @@ const Like = (props) => {
 
   const [commentsdata, setcommentsdata] = useState(props.numcomments);
 
+  const [flag, setflag] = useState(undefined);
+
   const [getcommentsdata, setgetcommentsdata] = useState([]);
   const [editdataid, seteditdataid] = useState(undefined);
   // setlikedata(props.n);
@@ -26,6 +28,9 @@ const Like = (props) => {
   let finallikes = 0;
   let body;
 
+
+
+  
   async function likefunk(likeid) {
     const instance = axios.create({
       baseURL: "*",
@@ -42,6 +47,7 @@ const Like = (props) => {
 
     const data1 = await instance.get(`http://localhost:3000/session`);
     console.log(data1.data.id);
+    
     let likeobj = { userID: data1.data.id };
 
     // const postdata  = await instance.get(`http://localhost:3000/posts`);
@@ -73,6 +79,7 @@ const Like = (props) => {
         if (response.status === 200) {
           console.log();
           console.log();
+         
           setlikedata(response.data.likes.length);
           if (response.data.likes.includes(data1.data.id)) {
             document
@@ -89,6 +96,8 @@ const Like = (props) => {
               .getElementById(`${likeid}`)
               .classList.add("material-icons-outlined");
           }
+        }else{
+          setflag(false);
         }
       })
       .catch(function (error) {
@@ -134,6 +143,38 @@ const Like = (props) => {
       setgetcommentsdata(seecomdata.data);
     }
     getallcomments();
+
+    // async function fetchdata() {
+    //   const instance = axios.create({
+    //     baseURL: "*",
+    //     timeout: 20000,
+    //     withCredentials: true,
+    //     headers: {
+    //       "Content-Type": "application/json;charset=UTF-8",
+    //       "Access-Control-Allow-Origin": "*",
+    //     },
+    //     validateStatus: function (status) {
+    //       return status < 500; // Resolve only if the status code is less than 500
+    //     },
+    //   });
+
+    //   const data1 = await instance.get(`http://localhost:3000/session`);
+    //   console.log(data1.data.id);
+
+
+      
+    // for(let i=0;i<=commentsdata.length;i++){
+    //   if(commentsdata[i].likes.includes(data1.data.id)){
+    //     document
+    //     .getElementById(`${data1.data.id}`)
+    //     .classList.remove("material-icons-outlined");
+    //   document
+    //     .getElementById(`${data1.data.id}`)
+    //     .classList.add("material-icons");
+    //   }
+    // }
+    
+    // }fetchdata();
   }, []);
 
   commentscontainer =
@@ -166,6 +207,8 @@ const Like = (props) => {
           alert("You cannot delete this post.");
         }
       }
+
+      
 
       async function deletecomment(delid) {
         //delid = editdataid
@@ -233,23 +276,7 @@ const Like = (props) => {
 
       return (
         <div>
-          {/* <div className="modal fade" id="commentdeleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Modal title</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>Are you sure to delete this comment ?</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-danger" onClick={deletecomment}>Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
+          
 
           <div className="post-row">
             <div className="left-header-box align-self-center">
@@ -283,16 +310,34 @@ const Like = (props) => {
       );
     });
 
+  // Similar to componentDidMount and componentDidUpdate:
+  // useEffect(() => {
+  //   // Update the document title using the browser API
+  //   if(commentsdata.likes.includes(props.mainid)){
+  //     setflag(true);
+  //   }
+  // });
+
+
+
   return (
     <>
       <div className="post-row flex-row justify-content-between me-3 ms-3">
         <div className="d-flex flex-row">
+        {flag && flag?
+          <span
+            className="material-icons messanger-dark-color me-2 unlike-show-btn"
+            id={props.mainid}
+          >
+            thumb_up
+          </span>:
           <span
             className="material-icons-outlined messanger-dark-color me-2 unlike-show-btn"
             id={props.mainid}
           >
             thumb_up
           </span>
+          }
           <p className="text-secondary">{likedata}</p>
         </div>
         <div className="d-flex flex-row">

@@ -608,7 +608,7 @@ const Posts = (props) => {
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Modal title</h5>
+                  <p className="modal-title">Modal title</p>
                   <button
                     type="button"
                     className="btn-close"
@@ -743,6 +743,7 @@ const Posts = (props) => {
               numlikes={n.likes.length}
               numcomments={n.comments.length}
               commentsdata={Seepost}
+              numlikesdata={n.likes}
             ></Like>
           </div>{" "}
         </div>
@@ -829,9 +830,11 @@ const Posts = (props) => {
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
+                  <p className="modal-title" id="exampleModalLabel">
+                  <strong>
                     Create Post
-                  </h5>
+                  </strong>
+                  </p>
                   <button
                     type="button"
                     className="btn-close"

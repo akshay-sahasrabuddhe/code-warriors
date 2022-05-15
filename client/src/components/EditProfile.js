@@ -126,6 +126,8 @@ return(
                         interests.value = "Prefer not to disclose";
                     }
 
+                    let relstat = "";
+
                     if(firstName.value == props.about.firstName){
                         firstName.value = "";
                     }
@@ -135,17 +137,17 @@ return(
                     if(email.value == props.about.email){
                         email.value = "";
                     }
-                    if(password.value == props.about.password){
-                        password.value = "";
-                    }
                     if(gender.value == props.about.gender){
                         gender.value = "";
                     }
-                    if(relationStatus.value == props.about.relationStatus){
+                    console.log(relationStatus.value)
+                    console.log(props.about)
+                    if(relationStatus.value == props.about.relationshipStatus){
+                       
                         relationStatus.value = "";
                     }
-                    if(interestedIn.value == props.about.interestedIn){
-                        interestedIn.value = "";
+                    if(interests.value == props.about.interests){
+                        interests.value = "";
                     }
 
     
@@ -154,7 +156,7 @@ return(
                         lastName : lastName.value,
                         email: email.value,
                         password: pswd.value,
-                        dateOfBirth:props.about.dateOfBirth,
+                        // dateOfBirth:props.about.dateOfBirth,
                         gender: gender.value,
                         relationshipStatus: relationStatus.value,
                         interestedIn : interests.value
@@ -183,9 +185,8 @@ return(
             await instance.patch(`http://localhost:3000/updateprofile`, user)
                       .then(function (response) {
                         console.log(response);
-                        
                         if(response.status === 200){
-                            alert("Hey "+user.firstName+", Your profile is updated !!!");
+                            alert("Your profile is updated !!!");
                             flag = true;
                             window.location.reload();
                         }

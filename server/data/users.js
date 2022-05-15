@@ -105,6 +105,7 @@ function signUpCheck(
   }
 
   if (!gender) {
+    console.log(gender);
     //gender check
     throw "please enter gender";
   } else if (gender) {
@@ -186,7 +187,6 @@ function updateProfileCheck(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -242,21 +242,21 @@ function updateProfileCheck(
     }
   }
 
-  if (dateOfBirth) {
-    if (!isString(dateOfBirth)) {
-      throw "Enter dateOfBirth as string";
-    } else if (check_for_spaces(dateOfBirth)) {
-      throw "Enter dateOfBirth without spaces";
-    } else if (!isDate(dateOfBirth)) {
-      throw "Please enter a correct DOB in the format mm/dd/yyyy";
-    }
+  // if (dateOfBirth) {
+  //   if (!isString(dateOfBirth)) {
+  //     throw "Enter dateOfBirth as string";
+  //   } else if (check_for_spaces(dateOfBirth)) {
+  //     throw "Enter dateOfBirth without spaces";
+  //   } else if (!isDate(dateOfBirth)) {
+  //     throw "Please enter a correct DOB in the format mm/dd/yyyy";
+  //   }
 
-    let age = dateOfBirthCheck(dateOfBirth);
+  //   let age = dateOfBirthCheck(dateOfBirth);
 
-    if (!(age > 13 && age < 120)) {
-      throw "Sorry your age is not appropriate";
-    }
-  }
+  //   if (!(age > 13 && age < 120)) {
+  //     throw "Sorry your age is not appropriate";
+  //   }
+  // }
 
   if (gender) {
     if (!isString(gender)) {
@@ -494,7 +494,6 @@ async function updateProfile(
   lastName,
   email,
   password,
-  dateOfBirth,
   gender,
   interestedIn,
   relationshipStatus
@@ -504,7 +503,6 @@ async function updateProfile(
     lastName,
     email,
     password,
-    dateOfBirth,
     gender,
     interestedIn,
     relationshipStatus
