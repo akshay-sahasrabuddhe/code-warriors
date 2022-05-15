@@ -11,10 +11,26 @@ const util = require("util");
 const unlinkFile = util.promisify(fs.unlink);
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
-const { uploadFile, getFileStream } = require("../helpers/s3");
+const { uploadFile, uploadUserFile, getFileStream } = require("../helpers/s3");
 const saltRounds = 16;
 const usersData = data.users;
+const path = require("path");
+const im = require("imagemagick");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
+const upload1 = multer({
+  storage: storage,
+});
 function signUpCheck(
   firstName,
   lastName,
@@ -351,8 +367,9 @@ router.get("/session", async (req, res) => {
     res.status(404).json({ error: "not logged in" });
   }
 });
+router.post("/signup", upload1.single("file"), async (req, res) => {
+  console.log(req.file);
 
-router.post("/signup", upload.single("file"), async (req, res) => {
   let imagePath = "";
   let coverPath;
   let profile;
@@ -383,11 +400,15 @@ router.post("/signup", upload.single("file"), async (req, res) => {
   try {
     if (errorhandle.checkImage(req.file)) {
       errorhandle.checkProperImage(req.file);
-      const result = await uploadFile(req.file);
-      await unlinkFile(req.file.path);
-      imagePath = `/images/${result.Key}`;
+      console.log("before func");
+      const result = await uploadUserFile(req.file);
+      console.log("after func");
+      console.log(result + " route");
+      // await unlinkFile(req.file.path);
+      imagePath = `${req.file.filename}`;
     }
   } catch (e) {
+    console.log("image ka" + e);
     res.status(500).json({ error: "Something wrong with the image" });
     return;
   }
@@ -423,6 +444,7 @@ try{
 
     res.json({ signup: "Successful" }).status(200);
   } catch (e) {
+    console.log("data ka error");
     if (e == "email already exists") res.status(400).json({ error: e });
     else res.status(500).json({ error: "Some issue with the server" });
   }
@@ -602,18 +624,6 @@ router.get("/getallusers/:search", async (req, res) => {
     res.status(200).json({ status: true, data: serdata });
   } catch (error) {
     res.status(500).json({ status: false });
-  }
-});
-
-router.get("/getImage/:id", async (req, res) => {
-  console.log(req.params.id);
-  let user = await usersData.getUserById(req.params.id);
-  console.log(user);
-
-  if (user.d.profileImage != "") {
-    res.status(200).json({ profileImage: user.d.profileImage });
-  } else {
-    res.status(404).json({ error: "NoImage" });
   }
 });
 

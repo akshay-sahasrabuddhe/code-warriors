@@ -33,7 +33,7 @@ const Userprofile = (props) => {
   const [fndData, setFndData] = useState([]);
   const [aboutedit, setAboutEdit] = useState(undefined);
   const [loading, setLoading] = useState(true);
-  const [err , setErr] = useState(false);
+  const [err, setErr] = useState(false);
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   /*if (
     localStorage.getItem("user") &&
@@ -152,7 +152,7 @@ const Userprofile = (props) => {
     if (resp.data.data.res) {
       setAbout(resp.data.data.d);
       console.log(about);
-      
+
       let frnds = resp.data.data.d.friends;
       setFndData(frnds);
       setLoading(false);
@@ -265,172 +265,175 @@ const Userprofile = (props) => {
     if (!session) {
       return <Navigate to="/" replace />;
     } else {
-      if(err){
-        return(
+      if (err) {
+        return (
           <div>
             <Navigation></Navigation>
             <h1>No user found</h1>
-
           </div>
         );
-      }
-      else{
-      console.log(id);
-      console.log(paramId.id);
+      } else {
+        console.log(id);
+        console.log(paramId.id);
+        let imgpath = `../../../server/uploads/${about.profileImage}`;
+        return (
+          <>
+            <Navigation></Navigation>
+            {/* // ---------- Start of User Profile Section ---------- //  */}
+            <section className="user-profile-section">
+              <div className="user-profile-box">
+                {about.profileImage ? (
+                  <img
+                    //src={`http://localhost:3000/uploads/${about.profileImage}`}
+                    src={require(imgpath)}
+                    className="user-profile-pic"
+                    alt="User Profile Pic"
+                  />
+                ) : about.gender == "male" ? (
+                  <img
+                    src={maleUser}
+                    className="user-profile-pic"
+                    alt="User Profile Pic"
+                  />
+                ) : about.gender == "female" ? (
+                  <img
+                    src={femaleUser}
+                    className="user-profile-pic"
+                    alt="User Profile Pic"
+                  />
+                ) : about.gender == "other" ? (
+                  <img
+                    src={otherUser}
+                    className="user-profile-pic"
+                    alt="User Profile Pic"
+                  />
+                ) : (
+                  <img
+                    src={otherUser}
+                    className="user-profile-pic"
+                    alt="User Profile Pic"
+                  />
+                )}
+              </div>
+              <div>
+                {id && id == paramId.id ? null : friend ? (
+                  <Button variant="primary">Friends</Button>
+                ) : request ? (
+                  <Button variant="primary" onClick={cancelRequest}>
+                    Request Sent
+                  </Button>
+                ) : visitedsent ? (
+                  <Button variant="primary" disabled>
+                    Request Received
+                  </Button>
+                ) : (
+                  <Button variant="primary" onClick={sendRequest}>
+                    Add Friend
+                  </Button>
+                )}
+              </div>
+            </section>
+            {/* // ---------- End of User Profile Section ---------- //  */}
 
-      return (
-        <>
-          <Navigation></Navigation>
-          {/* // ---------- Start of User Profile Section ---------- //  */}
-          <section className="user-profile-section">
-            <div className="user-profile-box">
-              {about.profileImage ? (
-                <img
-                  src={`http://localhost:3000${about.profileImage}`}
-                  className="user-profile-pic rounded-circle"
-                  alt="User Profile Pic"
-                />
-              ) : about.gender == "male" ? (
-                <img
-                  src={maleUser}
-                  className="user-profile-pic rounded-circle"
-                  alt="User Profile Pic"
-                />
-              ) : about.gender == "female" ? (
-                <img
-                  src={femaleUser}
-                  className="user-profile-pic rounded-circle"
-                  alt="User Profile Pic"
-                />
-              ) : about.gender == "other" ? (
-                <img
-                  src={otherUser}
-                  className="user-profile-pic rounded-circle"
-                  alt="User Profile Pic"
-                />
-              ) : (
-                <img
-                  src={otherUser}
-                  className="user-profile-pic rounded-circle"
-                  alt="User Profile Pic"
-                />
-              )}
-            </div>
-            <div>
-              {id && id == paramId.id ? null : friend ? (
-                <Button variant="primary">Friends</Button>
-              ) : request ? (
-                <Button variant="primary" onClick={cancelRequest}>
-                  Request Sent
-                </Button>
-              ) : visitedsent ? (
-                <Button variant="primary" disabled>
-                  Request Received
-                </Button>
-              ) : (
-                <Button variant="primary" onClick={sendRequest}>
-                  Add Friend
-                </Button>
-              )}
-            </div>
-          </section>
-          {/* // ---------- End of User Profile Section ---------- //  */}
+            {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
 
-          {/* // ---------- Start of User profiel Tabs Section ---------- //  */}
-
-          <section className="user-profiel-tabs-section">
-            <ul
-              className="nav nav-tabs justify-content-center"
-              id="myTab"
-              role="tablist"
-            >
-              <li className="nav-item" role="presentation">
-                <button
-                  className="nav-link w-100 active"
-                  id="home-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#home"
-                  type="button"
-                  role="tab"
-                  aria-controls="home"
-                  aria-selected="true"
-                >
-                  About
-                </button>
-              </li>
-              <li className="nav-item" role="presentation">
-                <button
-                  className="nav-link w-100"
-                  id="profile-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="profile"
-                  aria-selected="false"
-                >
-                  Friends
-                </button>
-              </li>
-              {paramId.id == id ? (
+            <section className="user-profiel-tabs-section">
+              <ul
+                className="nav nav-tabs justify-content-center"
+                id="myTab"
+                role="tablist"
+              >
+                <li className="nav-item" role="presentation">
+                  <button
+                    className="nav-link w-100 active"
+                    id="home-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#home"
+                    type="button"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >
+                    About
+                  </button>
+                </li>
                 <li className="nav-item" role="presentation">
                   <button
                     className="nav-link w-100"
-                    id="contact-tab"
+                    id="profile-tab"
                     data-bs-toggle="tab"
-                    data-bs-target="#contact"
+                    data-bs-target="#profile"
                     type="button"
                     role="tab"
-                    aria-controls="contact"
+                    aria-controls="profile"
                     aria-selected="false"
                   >
-                    Edit Profile
+                    Friends
                   </button>
                 </li>
-              ) : null}
-            </ul>
-            <div className="tab-content border border-top-0" id="myTabContent">
+                {paramId.id == id ? (
+                  <li className="nav-item" role="presentation">
+                    <button
+                      className="nav-link w-100"
+                      id="contact-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#contact"
+                      type="button"
+                      role="tab"
+                      aria-controls="contact"
+                      aria-selected="false"
+                    >
+                      Edit Profile
+                    </button>
+                  </li>
+                ) : null}
+              </ul>
               <div
-                className="tab-pane fade show active"
-                id="home"
-                role="tabpanel"
-                aria-labelledby="home-tab"
+                className="tab-content border border-top-0"
+                id="myTabContent"
               >
-                <About n={about}></About>
-              </div>
-              <div
-                className="tab-pane fade pt-4 friends-tab"
-                id="profile"
-                role="tabpanel"
-                aria-labelledby="profile-tab"
-              >
-                <div className="container">
-                  <div className="row">
-                    {fndData.length > 0 ? (
-                      fndData.map((d, index) => {
-                        return (
-                          <Friends
-                            key={index}
-                            fid={d}
-                            userId={id}
-                            param={paramId.id}
-                          ></Friends>
-                        );
-                      })
-                    ) : (
-                      <p>No Friends</p>
-                    )}
+                <div
+                  className="tab-pane fade show active"
+                  id="home"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                  <About n={about}></About>
+                </div>
+                <div
+                  className="tab-pane fade pt-4 friends-tab"
+                  id="profile"
+                  role="tabpanel"
+                  aria-labelledby="profile-tab"
+                >
+                  <div className="container">
+                    <div className="row">
+                      {fndData.length > 0 ? (
+                        fndData.map((d, index) => {
+                          return (
+                            <Friends
+                              key={index}
+                              fid={d}
+                              userId={id}
+                              param={paramId.id}
+                            ></Friends>
+                          );
+                        })
+                      ) : (
+                        <h3>No Friends</h3>
+                      )}
+                    </div>
                   </div>
                 </div>
+                <EditProfile about={about}></EditProfile>
               </div>
-              <EditProfile about={about}></EditProfile>
-            </div>
-          </section>
+            </section>
 
-          {/* // ---------- End of User profiel Tabs Section ---------- //  */}
-        </>
-      );
-    }}
+            {/* // ---------- End of User profiel Tabs Section ---------- //  */}
+          </>
+        );
+      }
+    }
   }
 };
 
