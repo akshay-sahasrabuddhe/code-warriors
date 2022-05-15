@@ -3,7 +3,7 @@ import img from "./logo512.png";
 import "./message.css";
 import { format } from "timeago.js";
 import axios from "axios";
-
+import cryptojs from "crypto-js";
 export default function Message({ own, message, userid, id1, id2 }) {
   let searchid;
   if (id1 == userid) {
@@ -11,6 +11,11 @@ export default function Message({ own, message, userid, id1, id2 }) {
   } else {
     searchid = id1;
   }
+  let tempmsg = message.message;
+  console.log(message.message);
+  let bytes1 = cryptojs.AES.decrypt(tempmsg, "MySecretKey");
+  console.log(bytes1);
+  let decpmsg = JSON.parse(bytes1.toString(cryptojs.enc.Utf8));
 
   const [info, setInfo] = useState({});
   const [info1, setInfo1] = useState({});
@@ -55,12 +60,12 @@ export default function Message({ own, message, userid, id1, id2 }) {
           className="messageImg"
           src={
             own
-              ? `http://localhost:3000${info.profileImage}`
-              : `http://localhost:3000${info1.profileImage}`
+              ? `http://localhost:3000${info1.profileImage}`
+              : `http://localhost:3000${info.profileImage}`
           }
           alt="profile picture"
         ></img>
-        <p className="messageText">{message.message}</p>
+        <p className="messageText">{decpmsg}</p>
       </div>
       <div className="messageBottom">{format(message.createdAt)}</div>
     </div>

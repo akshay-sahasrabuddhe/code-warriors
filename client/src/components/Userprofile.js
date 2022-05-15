@@ -33,6 +33,7 @@ const Userprofile = (props) => {
   const [fndData, setFndData] = useState([]);
   const [aboutedit, setAboutEdit] = useState(undefined);
   const [loading, setLoading] = useState(true);
+  const [err , setErr] = useState(false);
   //let bytes = cryptojs.AES.decrypt(ReactSession.get('user'), 'MySecretKey');
   /*if (
     localStorage.getItem("user") &&
@@ -117,6 +118,19 @@ const Userprofile = (props) => {
       setSession(false);
     }
   }, [session]);
+
+  const instance = axios.create({
+    baseURL: "*",
+    timeout: 20000,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+    validateStatus: function (status) {
+      return status < 500; // Resolve only if the status code is less than 500
+    },
+  });
   async function fetchdata() {
     const instance = axios.create({
       baseURL: "*",
@@ -153,6 +167,7 @@ const Userprofile = (props) => {
     } else {
       console.log("user not found");
       //set state for user profile not found
+      setErr(true);
     }
   }
   async function fetchRequestData() {
@@ -199,7 +214,7 @@ const Userprofile = (props) => {
   }
   async function sendRequest() {
     if (paramId.id != id) {
-      await axios
+      await instance
         .post(`http://localhost:3000/friend/sendRequest`, {
           sender: id,
           receiver: paramId.id,
@@ -220,7 +235,7 @@ const Userprofile = (props) => {
 
   async function cancelRequest() {
     if (paramId.id != id) {
-      await axios
+      await instance
         .post(`http://localhost:3000/friend/cancelRequest`, {
           sender: id,
           receiver: paramId.id,
@@ -250,6 +265,16 @@ const Userprofile = (props) => {
     if (!session) {
       return <Navigate to="/" replace />;
     } else {
+      if(err){
+        return(
+          <div>
+            <Navigation></Navigation>
+            <h1>No user found</h1>
+
+          </div>
+        );
+      }
+      else{
       console.log(id);
       console.log(paramId.id);
 
@@ -405,7 +430,7 @@ const Userprofile = (props) => {
           {/* // ---------- End of User profiel Tabs Section ---------- //  */}
         </>
       );
-    }
+    }}
   }
 };
 
