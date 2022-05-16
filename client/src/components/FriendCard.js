@@ -86,16 +86,24 @@ export default function FriendCard(props) {
         alert("Cannot Cancel Request: Error Occurred");
       });
   }
+
+  function gouser(iddd){
+    window.open(`/userprofile/${iddd}`);
+  }
+
   return (
     <>
       <div className="col-lg-6" key={props.receiverId}>
         <div className="card align-items-center">
-          <img
+          {/* <img
             //src={`http://localhost:3000${info.profileImage}`}
             src={require("/public/uploads/" + info.profileImage)}
             className="friend-list-card-img"
             alt="User Profile Pic"
-          />
+          /> */}
+          <aside className="material-icons messanger-dark-color post-icon" style={{cursor:"pointer"}} onClick={()=> gouser(info._id)}>
+            account_circle
+          </aside>
           <div className="card-body">
             <h5 className="card-title text-center">
               {info.firstName + " " + info.lastName}
