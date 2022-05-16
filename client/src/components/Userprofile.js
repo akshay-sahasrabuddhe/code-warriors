@@ -15,6 +15,8 @@ import cryptojs from "crypto-js";
 import About from "./About";
 import EditProfile from "./EditProfile";
 import Friends from "./Friends";
+
+//import {}
 const Userprofile = (props) => {
   let firstName;
   let lastName;
@@ -155,7 +157,7 @@ const Userprofile = (props) => {
 
       let frnds = resp.data.data.d.friends;
       setFndData(frnds);
-      setLoading(false);
+      //setLoading(false);
       if (paramId.id != id) {
         for (let i = 0; i < frnds.length; i++) {
           if (frnds[i] == id) {
@@ -284,8 +286,8 @@ const Userprofile = (props) => {
               <div className="user-profile-box">
                 {about.profileImage ? (
                   <img
-                    //src={`http://localhost:3000/uploads/${about.profileImage}`}
-                    src={require(imgpath)}
+                    // src={require("../public/uploads/" + about.profileImage}
+                    src={require("/public/uploads/" + about.profileImage)}
                     className="user-profile-pic"
                     alt="User Profile Pic"
                   />

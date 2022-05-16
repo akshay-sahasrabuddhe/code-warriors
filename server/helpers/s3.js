@@ -17,13 +17,14 @@ const s3 = new S3({
 async function uploadUserFile(file) {
   console.log(file.path);
   console.log("andar aya");
+
   const imageSourcePath = path.join(__dirname, "..", "/", file.path);
   console.log(file.path);
   console.log(imageSourcePath);
   const imageDestinationPath = path.join(
     __dirname,
     "..",
-    "/uploads/",
+    "../client/public/uploads",
     file.filename
   );
   console.log("second");
@@ -33,8 +34,8 @@ async function uploadUserFile(file) {
     im.resize({
       srcPath: imageSourcePath,
       dstPath: imageDestinationPath,
-      width: 100,
-      height: 100,
+      width: 250,
+      height: 250,
     });
 
     console.log("im k andar");

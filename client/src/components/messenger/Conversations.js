@@ -1,7 +1,7 @@
 import "./conversation.css";
 import img from "./logo512.png";
 import React, { useState, useEffect } from "react";
-
+import UserImage from "../UserImage";
 import axios from "axios";
 export default function Conversations({ conversationid, id1, id2, userid }) {
   let searchid;
@@ -45,11 +45,11 @@ export default function Conversations({ conversationid, id1, id2, userid }) {
 
   return (
     <div className="conversation">
-      <img
+      {/* <img
         className="conversationImg"
-        src={`http://localhost:3000${info.profileImage}`}
+        src={require("/public/uploads/" + info.profileImage)}
         alt="profile picture"
-      ></img>
+      ></img> */}
       <span className="conversationName">
         {info.firstName + " " + info.lastName}
       </span>

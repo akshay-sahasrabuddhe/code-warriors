@@ -59,7 +59,7 @@ const UserImage = (props) => {
     return (
       <img
         className="img-fluid user-posted-img rounded-circle"
-        src={`../../../server/uploads/${uimg}`}
+        src={require("/public/uploads/" + uimg)}
         alt="post image"
       />
     );

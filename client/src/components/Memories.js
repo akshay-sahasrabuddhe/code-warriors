@@ -12,6 +12,7 @@ import { Form, FloatingLabel, Button, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useNavigate, Navigate } from "react-router-dom";
 import cryptojs from "crypto-js";
+import UserImage from "./UserImage";
 
 const Memories = (props) => {
   const [getmemoriesdata, setgetmemoriesdata] = useState([]);
@@ -38,7 +39,6 @@ const Memories = (props) => {
     memcomcontainer2 = null;
 
   useEffect(() => {
-
     async function checkSession() {
       try {
         const instance = axios.create({
@@ -124,7 +124,6 @@ const Memories = (props) => {
       setLoading(false);
       setSession(false);
     }
-
   }, [session]);
 
   memcomcontainer =
@@ -134,9 +133,7 @@ const Memories = (props) => {
         <div className="post-row">
           <div className="left-header-box align-self-center">
             <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-              <aside className="material-icons messanger-dark-color post-icon">
-                account_circle
-              </aside>
+              <UserImage id={n.userThatPosted._id}></UserImage>
             </div>
           </div>
           <div className="right-header-box flex-grow-1">
@@ -238,9 +235,7 @@ const Memories = (props) => {
         <div className="post-row">
           <div className="left-header-box align-self-center">
             <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-              <aside className="material-icons messanger-dark-color post-icon">
-                account_circle
-              </aside>
+              <UserImage id={n.userThatPosted._id}></UserImage>
             </div>
           </div>
           <div className="right-header-box flex-grow-1">
@@ -272,9 +267,7 @@ const Memories = (props) => {
             <div className="post-row">
               <div className="left-header-box">
                 <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                  <aside className="material-icons messanger-dark-color post-icon">
-                    account_circle
-                  </aside>
+                  <UserImage id={n.userThatPosted._id}></UserImage>
                 </div>
               </div>
               <div className="right-header-box d-flex align-items-center">
@@ -342,9 +335,7 @@ const Memories = (props) => {
         <div className="post-row">
           <div className="left-header-box align-self-center">
             <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-              <aside className="material-icons messanger-dark-color post-icon">
-                account_circle
-              </aside>
+              <UserImage id={n.userThatPosted._id}></UserImage>
             </div>
           </div>
           <div className="right-header-box flex-grow-1">
@@ -376,9 +367,7 @@ const Memories = (props) => {
             <div className="post-row">
               <div className="left-header-box">
                 <div className="p-2 p-lg-3 pb-0 pb-lg-0 text-center">
-                  <aside className="material-icons messanger-dark-color post-icon">
-                    account_circle
-                  </aside>
+                  <UserImage id={n.userThatPosted._id}></UserImage>
                 </div>
               </div>
               <div className="right-header-box d-flex align-items-center">
@@ -438,50 +427,50 @@ const Memories = (props) => {
         </div>
       );
     });
-    if (loading) {
-      return (
-        <div>
-          <h1>Loading...</h1>
-        </div>
-      );
+  if (loading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  } else {
+    if (!session) {
+      return <Navigate to="/" replace />;
     } else {
-      if (!session) {
-        return <Navigate to="/" replace />;
-      } else {
-    
-  return (
-    // ---------- Start of Posts ---------- //
-    <>
-      <Navigation></Navigation>
-      <section className="section posts-section">
-        <div className="container">
-          <div className="row">
-            <div className="col-sm-12">
-              <div className="read-post-section mb-5">
-                <div className="card-header memories-card-heading border-0">
-                  <strong>Today</strong>
+      return (
+        // ---------- Start of Posts ---------- //
+        <>
+          <Navigation></Navigation>
+          <section className="section posts-section">
+            <div className="container">
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="read-post-section mb-5">
+                    <div className="card-header memories-card-heading border-0">
+                      <strong>Today</strong>
+                    </div>
+                    {memoriescontainer}
+                  </div>
+                  <div className="read-post-section mb-5">
+                    <div className="card-header memories-card-heading border-0">
+                      <strong>A Week Ago</strong>
+                    </div>
+                    {memoriescontainer1}
+                  </div>
+                  <div className="read-post-section mb-5">
+                    <div className="card-header memories-card-heading border-0">
+                      <strong>A Month Ago</strong>
+                    </div>
+                    {memoriescontainer2}
+                  </div>
                 </div>
-                {memoriescontainer}
-              </div>
-              <div className="read-post-section mb-5">
-                <div className="card-header memories-card-heading border-0">
-                  <strong>A Week Ago</strong>
-                </div>
-                {memoriescontainer1}
-              </div>
-              <div className="read-post-section mb-5">
-                <div className="card-header memories-card-heading border-0">
-                  <strong>A Month Ago</strong>
-                </div>
-                {memoriescontainer2}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-      }}
+          </section>
+        </>
+      );
+    }
+  }
 };
 
 export default Memories;

@@ -22,5 +22,5 @@ module.exports = {
   users: getCollectionFn("users"),
   friendrequests: getCollectionFn("friendrequest"),
   conversations: getCollectionFn("conversation"),
-  messages: getCollectionFn("messasge"),
+  messages: getCollectionFn("message"),
 };
