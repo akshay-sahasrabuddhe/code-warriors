@@ -15,15 +15,18 @@ import About from "./About";
 import EditProfile from "./EditProfile";
 
 const Friends = ({ fid, userId, param }) => {
+  const [loading, setLoading] = useState(true);
   console.log(fid);
-  const [info, setInfo] = useState({});
-  useEffect(() => {
-    fetchdata();
+  const [info, setInfo] = useState(undefined);
+  useEffect(async () => {
+    await fetchdata();
+
+    setLoading(false);
   }, []);
   async function fetchdata() {
     const instance = axios.create({
       baseURL: "*",
-      timeout: 20000,
+
       withCredentials: true,
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -71,30 +74,38 @@ const Friends = ({ fid, userId, param }) => {
       })
       .catch(function (error) {});
   }
-  return (
-    <div className="col-sm-4">
-      <div className="card text-center">
-        <img
-          src={`http://localhost:3000${info.profileImage}`}
-          className="friend-list-card-img"
-          alt="User Profile Pic"
-        />
-        <div className="card-body">
-          <h5 className="card-title text-center">
-            {info.firstName + " " + info.lastName}
-          </h5>
-          {param == userId ? (
-            <a
-              className="btn btn-primary"
-              onClick={() => handleRemove(userId, fid)}
-            >
-              Remove
-            </a>
-          ) : null}
+
+  if (loading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  } else {
+    return (
+      <div className="col-sm-4">
+        <div className="card text-center">
+          <aside className="material-icons messanger-dark-color post-icon">
+            account_circle
+          </aside>
+
+          <div className="card-body">
+            <h5 className="card-title text-center">
+              {info.firstName + " " + info.lastName}
+            </h5>
+            {param == userId ? (
+              <a
+                className="btn btn-primary"
+                onClick={() => handleRemove(userId, fid)}
+              >
+                Remove
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default Friends;

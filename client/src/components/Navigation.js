@@ -97,7 +97,7 @@ const Navigation = (props) => {
           return status < 500; // Resolve only if the status code is less than 500
         },
       });
-      
+
       const resp = await instance.get(
         `http://localhost:3000/userprofile/${userId}`
       );
@@ -107,7 +107,6 @@ const Navigation = (props) => {
         setusrid(resp.data.data.d._id);
       }
     }
-    
 
     if (localStorage.length !== 0) {
       console.log("here");
@@ -286,9 +285,8 @@ const Navigation = (props) => {
         </div>
       </nav>
       <nav className="nav flex-column vertical-navigation facebook-light-gray-color">
-        <a className="nav-link pt-2 pb-2" href={`/userprofile/${id}`}>
-          
-            <UserImage id={id}></UserImage>
+        <a className="nav-link pt-2 pb-2" href={`/userprofile/${id.trim()}`}>
+          <UserImage id={id}></UserImage>
           {/* <aside className="material-icons nav-icons">account_circle</aside> */}
           <span className="ms-3">{user}</span>
         </a>

@@ -10,24 +10,6 @@ router.post("/addmessage", async (req, res) => {
   try {
     let senderId = req.body.sender;
     let message = req.body.message;
-    if(!senderId){
-      throw "please provide data";
-    }
-    if(senderId.trim().length === 0){
-      throw "please provide data";
-    }
-    if(!message){
-      throw "please provide data";
-    }
-    if(message.trim().length === 0){
-      throw "please provide data";
-    }
-    if(!req.conversationId){
-      throw "please provide data";
-    }
-    if(req.conversationId.trim().length === 0){
-      throw "please provide data";
-    }
   } catch (error) {
     res.status(400).json({ error: "data not found" });
   }
@@ -52,9 +34,6 @@ router.get("/getmessage/:convoId", async (req, res) => {
   try {
     let convoID = req.params.convoId;
 
-    if (convoID.trim().length === 0) {
-      throw "Id not found";
-    }
     let allmsg = await message.getmessage(convoID);
     res.status(200).json(allmsg);
   } catch (error) {

@@ -56,15 +56,7 @@ export default function Message({ own, message, userid, id1, id2 }) {
   return (
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">
-        <img
-          className="messageImg"
-          src={
-            own
-              ? `http://localhost:3000${info1.profileImage}`
-              : `http://localhost:3000${info.profileImage}`
-          }
-          alt="profile picture"
-        ></img>
+        <img className="messageImg" src={img} alt="profile picture"></img>
         <p className="messageText">{decpmsg}</p>
       </div>
       <div className="messageBottom">{format(message.createdAt)}</div>
